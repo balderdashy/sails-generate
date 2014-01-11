@@ -5,7 +5,7 @@ var scope = {};
 
 generate({
 	targets: {
-		'.': 'new'
+		'.': 'generator'
 	}
 }, scope, function (err) {
 	if (err) throw err;
