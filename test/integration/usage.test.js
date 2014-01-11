@@ -10,7 +10,7 @@ generate({
 				scope.output.push(function () {
 					return 'Test A';
 				});
-				scope.output.push('Current relPath :: '+scope.relPath);
+				scope.output.push('Current destPath :: '+scope.destPath);
 				cb();
 			}
 		},
@@ -20,7 +20,7 @@ generate({
 				'.': {
 					exec: function (scope, cb) {
 						scope.output.push('Test B');
-						scope.output.push('Current relPath :: '+scope.relPath);
+						scope.output.push('Current destPath :: '+scope.destPath);
 						cb();
 					}
 				},
@@ -32,7 +32,7 @@ generate({
 								'.': {
 									exec: function (scope, cb) {
 										scope.output.push('Test C');
-										scope.output.push('Current relPath :: '+scope.relPath);
+										scope.output.push('Current destPath :: '+scope.destPath);
 										cb();
 									}
 								}
