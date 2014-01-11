@@ -13,7 +13,9 @@ generate({
 				scope.output.push('Complete!');
 				cb();
 			}
-		}
+		},
+
+		'./erm': 'whatever'
 	}
 }, scope, function (err) {
 	if (err) throw err;
