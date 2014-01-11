@@ -15,11 +15,30 @@ generate({
 			}
 		},
 
-		'./erm': 'whatever'
+		'./erm': {
+			targets: {
+				'.': {
+					exec: function (scope, cb) {
+						scope.output.push('test');
+						cb();
+					}
+				},
+
+				'evenDeeper': {
+					targets: {
+						'.': {
+							exec: function (scope, cb) {
+								scope.output.push('quite deep.');
+								cb();
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 }, scope, function (err) {
 	if (err) throw err;
-
 	digestScopeOutput(scope);
 });
 
