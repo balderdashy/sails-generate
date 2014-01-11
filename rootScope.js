@@ -1,13 +1,17 @@
 module.exports = {
 	
+	// Configurable misc. options
 	options: {
 		engine: 'ejs',
 		linker: true,
 		adapter: 'sails-disk'
 	},
 
-	output: ['Done!'],
+	// This is where generators can push output
+	// they'd like to share with the user.
+	output: [],
 
+	// Configurable generator definitions
 	modules: {
 
 		// App

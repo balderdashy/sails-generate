@@ -1,15 +1,50 @@
+var _ = require('lodash');
 var generate = require('root-require')('generate');
+
+var scope = {};
 
 generate({
 	targets: {
 		'.': {
 			exec: function (scope, cb) {
 				scope.output.push(function () {
-					return 'done';
+					return 'Dummy generator.';
 				});
+				scope.output.push('Complete!');
 				cb();
 			}
 		}
 	}
-},
-{}, console.log);
+}, scope, function (err) {
+	if (err) throw err;
+
+	digestScopeOutput(scope);
+});
+
+
+
+/**
+ * Call `handleScopeOutputEntry` for each item in
+ * the scope output queue (e.g. log response)
+ * 
+ * @param  {[type]} scope [description]
+ * @return {[type]}       [description]
+ */
+function digestScopeOutput(scope) {
+	_.each(scope.output, function (entry) {
+		if (typeof entry === 'function') {
+			entry = entry(scope);
+		}
+		handleScopeOutputEntry(entry);
+	});
+}
+
+/**
+ * Overridable function to emit output.
+ * 
+ * @param  {[type]} entry [description]
+ * @return {[type]}       [description]
+ */
+function handleScopeOutputEntry (entry) {
+	console.log(entry);
+}

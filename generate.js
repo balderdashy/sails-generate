@@ -44,21 +44,32 @@ function generate (Generator, scope, sb) {
 	async.each(Object.keys(Generator.targets), function (relPath, cb) {
 		var target = Generator.targets[relPath];
 
+		// Create a new scope object for this target,
+		// with references to the important bits of the original.
+		var targetScope = {
+			options: scope.options,
+			modules: scope.modules,
+			output: scope.output,
+			relPath: relPath
+		};
+		
+		
 		// Interpret generator definition
 		if (target.exec) {
-			return target.exec(scope, cb);
+			return target.exec(targetScope, cb);
 		}
 		if (target.folder) {
-			return FolderHelper(scope, cb);
+			return FolderHelper(targetScope, cb);
 		}
 		if (target.template) {
-			return TemplateHelper(scope, cb);
+			return TemplateHelper(targetScope, cb);
 		}
 		if (target.jsonfile) {
-			return JSONFileHelper(scope, cb);
+			return JSONFileHelper(targetScope, cb);
 		}
 
 		if (target.generator) {
+
 			
 			// Normalize the subgenerator reference
 			var subGeneratorRef;
@@ -84,7 +95,7 @@ function generate (Generator, scope, sb) {
 				// Lookup the generator by name if a `module` was specified
 				// (this allows the module for a given generator to be
 				//  overridden.)
-				subGenerator = scope.modules[generator];
+				subGenerator = targetScope.modules[generator];
 			}
 
 
@@ -94,7 +105,7 @@ function generate (Generator, scope, sb) {
 			if (++hops > MAX_HOPS) {
 				return cb(new Error('MAX_HOPS ('+MAX_HOPS+' exceeded!  There is probably a recursive loop in one of your generators.'));
 			}
-			return generate(subGenerator, scope, cb);
+			return generate(subGenerator, targetScope, cb);
 		}
 
 		return cb(new Error('Generator Error: Unrecognized syntax for target "'+relPath+'"'));
