@@ -8,9 +8,9 @@ generate({
 		'.': {
 			exec: function (scope, cb) {
 				scope.output.push(function () {
-					return 'Dummy generator.';
+					return 'Test A';
 				});
-				scope.output.push('Complete!');
+				scope.output.push('Current relPath :: '+scope.relPath);
 				cb();
 			}
 		},
@@ -19,7 +19,8 @@ generate({
 			targets: {
 				'.': {
 					exec: function (scope, cb) {
-						scope.output.push('test');
+						scope.output.push('Test B');
+						scope.output.push('Current relPath :: '+scope.relPath);
 						cb();
 					}
 				},
@@ -27,9 +28,14 @@ generate({
 				'evenDeeper': {
 					targets: {
 						'.': {
-							exec: function (scope, cb) {
-								scope.output.push('quite deep.');
-								cb();
+							targets: {
+								'.': {
+									exec: function (scope, cb) {
+										scope.output.push('Test C');
+										scope.output.push('Current relPath :: '+scope.relPath);
+										cb();
+									}
+								}
 							}
 						}
 					}
