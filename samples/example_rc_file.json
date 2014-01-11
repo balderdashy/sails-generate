@@ -1,0 +1,11 @@
+{
+	"generators": {
+		"options": {
+			"engine": "ejs",
+			"linker": true
+		},
+		"modules" : {
+			"view": "sails-generate-view"
+		}
+	}
+}
