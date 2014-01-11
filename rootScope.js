@@ -6,6 +6,8 @@ module.exports = {
 		adapter: 'sails-disk'
 	},
 
+	output: ['Done!'],
+
 	modules: {
 
 		// App
