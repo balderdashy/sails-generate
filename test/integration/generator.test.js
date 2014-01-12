@@ -3,9 +3,11 @@ var generate = require('root-require')('lib');
 
 generate({
 	targets: {
-		'.': { module: 'generator' }
+		'.': 'generator'
 	}
-}, { }, logReporter());
+}, {
+	args: ['foo']
+}, logReporter());
 
 
 
