@@ -6,12 +6,12 @@ var generate = require('root-require')('lib');
 
 
 
-
+var scope = {};
 generate({
 	targets: {
 		'.': 'new'
 	}
-}, {}, logReporter());
+}, scope, logReporter());
 
 
 
