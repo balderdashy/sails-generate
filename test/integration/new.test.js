@@ -1,17 +1,27 @@
 var _ = require('lodash');
 var generate = require('root-require')('lib');
 
+var sails = require('sails');
 
 
+sails.load({
+	loadHooks: ['moduleloader', 'userconfig']
+}, function (err) {
 
+	if (err) throw err;
 
+	
+	var scope = {
+		sails: sails
+	};
+	generate({
+		targets: {
+			'.': 'new'
+		}
+	}, scope, logReporter());
+	
+});
 
-var scope = {};
-generate({
-	targets: {
-		'.': 'new'
-	}
-}, scope, logReporter());
 
 
 
