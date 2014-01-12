@@ -3,13 +3,19 @@ var generate = require('root-require')('lib');
 
 generate({
 	targets: {
-		'.': 'generator'
+		'.': { module: 'generator' }
 	}
-}, {}, handleOutput());
+}, { }, logReporter());
 
 
 
-function handleOutput () {
+
+
+
+/**
+ * Log reporter
+ */
+function logReporter () {
 	var log = new (require('captains-log'))();
 
 	/**
@@ -18,26 +24,13 @@ function handleOutput () {
 	 * @param  {[type]} output [description]
 	 * @return {[type]}        [description]
 	 */
-	return function handleOutput (err, output) {
+	return function (err, output) {
 		if (err) {
-			var outputFn = _.bind(writeOutput, null, 'error');
 			var errOutput = err instanceof Error?
 				String(err).replace(/^Error:\s/,'')
 				: String(err);
-			return _.each(errOutput.split('\n'), outputFn);
+			return _.each(errOutput.split('\n'), function (item) {log.error(item);});
 		}
-		return _.each(output, writeOutput);
+		return _.each(output, function(item) {log.info(item);});
 	};
-
-	/**
-	 * Overridable function to emit output.
-	 * 
-	 * @param  {String} channel [description]
-	 * @param  {[type]} entry [description]
-	 * @return {[type]}       [description]
-	 */
-	function writeOutput (channel, output) {
-		channel = channel || 'info';
-		log[channel](output);
-	}
 }
