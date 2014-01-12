@@ -10,9 +10,11 @@ sails.load({
 
 	if (err) throw err;
 
-	
+
 	var scope = {
-		sails: sails
+		sails: sails,
+
+		rootPath: process.cwd() + '/.foo'
 	};
 	generate({
 		targets: {
