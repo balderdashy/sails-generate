@@ -7,10 +7,8 @@ generate({
 	targets: {
 		'.': {
 			exec: function (scope, cb) {
-				scope.output.push(function () {
-					return 'Test A';
-				});
-				scope.output.push('Current destPath :: '+scope.destPath);
+				console.log('Test A');
+				console.log('Current destPath :: '+scope.rootPath);
 				cb();
 			}
 		},
@@ -19,8 +17,8 @@ generate({
 			targets: {
 				'.': {
 					exec: function (scope, cb) {
-						scope.output.push('Test B');
-						scope.output.push('Current destPath :: '+scope.destPath);
+						console.log('Test B');
+						console.log('Current destPath :: '+scope.rootPath);
 						cb();
 					}
 				},
@@ -31,8 +29,8 @@ generate({
 							targets: {
 								'.': {
 									exec: function (scope, cb) {
-										scope.output.push('Test C');
-										scope.output.push('Current destPath :: '+scope.destPath);
+										console.log('Test C');
+										console.log('Current destPath :: '+scope.rootPath);
 										cb();
 									}
 								}
@@ -45,33 +43,5 @@ generate({
 	}
 }, scope, function (err) {
 	if (err) throw err;
-	digestScopeOutput(scope);
+	console.log('Done.');
 });
-
-
-
-/**
- * Call `handleScopeOutputEntry` for each item in
- * the scope output queue (e.g. log response)
- * 
- * @param  {[type]} scope [description]
- * @return {[type]}       [description]
- */
-function digestScopeOutput(scope) {
-	_.each(scope.output, function (entry) {
-		if (typeof entry === 'function') {
-			entry = entry(scope);
-		}
-		handleScopeOutputEntry(entry);
-	});
-}
-
-/**
- * Overridable function to emit output.
- * 
- * @param  {[type]} entry [description]
- * @return {[type]}       [description]
- */
-function handleScopeOutputEntry (entry) {
-	console.log(entry);
-}
