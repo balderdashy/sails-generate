@@ -6,7 +6,7 @@ generate({
 		'.': 'generator'
 	}
 }, {
-	args: ['foo']
+	generatorName: 'foobarbar'
 }, logReporter());
 
 
