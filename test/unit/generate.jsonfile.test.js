@@ -4,7 +4,7 @@
 var expect = require('./helpers/expectHandler');
 var assert = require('./helpers/fileAssertions');
 
-var Generator = require('root-require')('bin/generators/_helpers/jsonfile');
+var Generator = require('root-require')('lib/helpers/jsonfile');
 
 
 describe('jsonfile generator', function () {
@@ -17,14 +17,14 @@ describe('jsonfile generator', function () {
 	describe('with missing `data`', function () {
 
 		before(function () {
-			this.options = { pathToNew: this.heap.alloc() };
+			this.options = { rootPath: this.heap.alloc() };
 		});
 
 		it('should trigger `invalid`',expect('invalid'));
 	});
 
 
-	describe('with missing `pathToNew', function () {
+	describe('with missing `rootPath', function () {
 
 		before(function () {
 			this.options = { data: {foo: 'bar'} };
@@ -41,7 +41,7 @@ describe('jsonfile generator', function () {
 
 		before(function () {
 			this.options = {
-				pathToNew: this.heap.alloc(),
+				rootPath: this.heap.alloc(),
 				data: {}
 			};
 		});
@@ -59,12 +59,12 @@ describe('jsonfile generator', function () {
 
 		before(function (cb) {
 			this.options = {
-				pathToNew: this.heap.alloc(),
+				rootPath: this.heap.alloc(),
 				data: { foo: 'bar' }
 			};
 
 			// Create an extra file beforehand to simulate a collision
-			this.heap.touch(this.options.pathToNew, cb);
+			this.heap.touch(this.options.rootPath, cb);
 		});
 
 		it(	'should trigger "alreadyExists" handler', expect({ alreadyExists: true, success: 'Should not override existing file without `options.force`!' }));
@@ -79,13 +79,13 @@ describe('jsonfile generator', function () {
 
 		before(function(cb) {
 			this.options = {
-				pathToNew: this.heap.alloc(),
+				rootPath: this.heap.alloc(),
 				data: { foo: 'bar' },
 				force: true
 			};
 
 			// Create an extra file beforehand to simulate a collision
-			this.heap.touch(this.options.pathToNew, cb);
+			this.heap.touch(this.options.rootPath, cb);
 		});
 
 		it('should trigger `success`', expect('success'));

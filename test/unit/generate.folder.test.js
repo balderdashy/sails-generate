@@ -4,7 +4,7 @@
 var expect = require('./helpers/expectHandler');
 var assert = require('./helpers/fileAssertions');
 
-var Generator = require('root-require')('bin/generators/_helpers/folder');
+var Generator = require('root-require')('lib/helpers/folder');
 
 
 
@@ -17,7 +17,7 @@ describe('folder generator', function () {
 
 
 
-	describe('with missing `pathToNew`', function () {
+	describe('with missing `rootPath`', function () {
 		it('should trigger `invalid`',expect('invalid'));
 	});
 
@@ -27,7 +27,7 @@ describe('folder generator', function () {
 
 		before(function () {
 			this.options = {
-				pathToNew: this.heap.alloc()
+				rootPath: this.heap.alloc()
 			};
 		});
 
@@ -43,7 +43,7 @@ describe('folder generator', function () {
 	describe('with dry run enabled', function () {
 		before(function () {
 			this.options = {
-				pathToNew: this.heap.alloc(),
+				rootPath: this.heap.alloc(),
 				contents: 'foo',
 				dry: true
 			};
@@ -54,7 +54,7 @@ describe('folder generator', function () {
 	});
 
 
-	describe('if file/folder already exists at `pathToNew`', function () {
+	describe('if file/folder already exists at `rootPath`', function () {
 		before(function (){
 			this.options = {};
 		});
@@ -62,8 +62,8 @@ describe('folder generator', function () {
 		describe('(file)', function () {
 			// Create an extra file beforehand to simulate a collision
 			before(function (cb) {
-				this.options.pathToNew = this.heap.alloc();
-				this.heap.touch(this.options.pathToNew, cb);
+				this.options.rootPath = this.heap.alloc();
+				this.heap.touch(this.options.rootPath, cb);
 			});
 			it(	'should trigger "alreadyExists" handler', expect({ alreadyExists: true, success: 'Should not override existing file/directory without `options.force`!' }));
 		});
@@ -71,8 +71,8 @@ describe('folder generator', function () {
 		describe('(directory)', function () {
 			// Create an extra folder beforehand to simulate a collision
 			before(function (cb) {
-				this.options.pathToNew = this.heap.alloc();
-				this.heap.mkdirp(this.options.pathToNew, cb);
+				this.options.rootPath = this.heap.alloc();
+				this.heap.mkdirp(this.options.rootPath, cb);
 			});
 			it(	'should trigger "alreadyExists" handler', expect({ alreadyExists: true, success: 'Should not override existing file/directory without `options.force`!' }));
 		});
@@ -87,10 +87,10 @@ describe('folder generator', function () {
 
 		describe('(file)', function () {
 			before(function(cb) {
-				this.options.pathToNew = this.heap.alloc();
+				this.options.rootPath = this.heap.alloc();
 
 				// Create an extra file beforehand to simulate a collision
-				this.heap.touch(this.options.pathToNew, cb);
+				this.heap.touch(this.options.rootPath, cb);
 			});
 
 			it('should trigger `success`', expect('success'));
@@ -98,10 +98,10 @@ describe('folder generator', function () {
 
 		describe('(directory)', function () {
 			before(function(cb) {
-				this.options.pathToNew = this.heap.alloc();
+				this.options.rootPath = this.heap.alloc();
 				
 				// Create an extra dir beforehand to simulate a collision
-				this.heap.mkdirp(this.options.pathToNew, cb);
+				this.heap.mkdirp(this.options.rootPath, cb);
 			});
 
 			it('should trigger `success`', expect('success'));

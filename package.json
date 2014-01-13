@@ -17,7 +17,8 @@
   },
   "devDependencies": {
     "mocha": "~1.17.0",
-    "captains-log": "~0.10.6"
+    "captains-log": "~0.10.6",
+    "checksum": "~0.1.1"
   },
   "scripts": {
     "test": "mocha"

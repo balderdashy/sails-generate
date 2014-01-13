@@ -1,68 +1,68 @@
-/**
- * Module dependencies
- */
-var expect = require('./helpers/expectHandler');
-var assert = require('./helpers/fileAssertions');
+// /**
+//  * Module dependencies
+//  */
+// var expect = require('./helpers/expectHandler');
+// var assert = require('./helpers/fileAssertions');
 
-var Generator = require('root-require')('bin/generators/factory');
-Generator = Generator('model');
+// var Generator = require('root-require')('bin/generators/factory');
+// Generator = Generator('model');
 
-describe('model generator', function () {
+// describe('model generator', function () {
 
-	before(function () {
-		this.fn = Generator;
-	});
+// 	before(function () {
+// 		this.fn = Generator;
+// 	});
 
-	describe('basic usage', function () {
+// 	describe('basic usage', function () {
 
-		before(function () {
-			this.options = {
-				appPath: this.sailsHeap.dirpath,
-				id: this.sailsHeap.getFilename( this.sailsHeap.alloc() )
-			};
-		});
+// 		before(function () {
+// 			this.options = {
+// 				appPath: this.sailsHeap.dirpath,
+// 				id: this.sailsHeap.getFilename( this.sailsHeap.alloc() )
+// 			};
+// 		});
 
-		it('should work', expect('success'));		
-	});
+// 		it('should work', expect('success'));		
+// 	});
 
-	describe('invalid usage', function () {
-		before(function () {
-			this.options = {
-				appPath: this.sailsHeap.dirpath
-			};
-		});
+// 	describe('invalid usage', function () {
+// 		before(function () {
+// 			this.options = {
+// 				appPath: this.sailsHeap.dirpath
+// 			};
+// 		});
 
-		it('requires `id` option', expect({
-			invalid: true,
-			success: 'Should not hit `success` handler since required `id` parameter was not specified!'
-		}));
-	});
+// 		it('requires `id` option', expect({
+// 			invalid: true,
+// 			success: 'Should not hit `success` handler since required `id` parameter was not specified!'
+// 		}));
+// 	});
 
-	// Make the heap destination look like a Sails app
-	// to test both scenarios
-	describe('when used OUTSIDE of a sails app', function () {
+// 	// Make the heap destination look like a Sails app
+// 	// to test both scenarios
+// 	describe('when used OUTSIDE of a sails app', function () {
 
-		before(function () {
-			this.options = {
-				appPath: this.heap.appPath,
-				id: this.sailsHeap.getFilename( this.sailsHeap.alloc() )
-			};
-		});
+// 		before(function () {
+// 			this.options = {
+// 				appPath: this.heap.appPath,
+// 				id: this.sailsHeap.getFilename( this.sailsHeap.alloc() )
+// 			};
+// 		});
 
-		it('should trigger `notSailsApp`', expect({
-			notSailsApp: true,
-			success: 'Should trigger the `notSailsApp` handler, not `success`!'
-		}));
+// 		it('should trigger `notSailsApp`', expect({
+// 			notSailsApp: true,
+// 			success: 'Should trigger the `notSailsApp` handler, not `success`!'
+// 		}));
 
 
-		describe('with `force` option enabled', function () {
-			before(function () {
-				this.options.force = true;
-				this.options.appPath = this.heap.dirpath;
-			});
+// 		describe('with `force` option enabled', function () {
+// 			before(function () {
+// 				this.options.force = true;
+// 				this.options.appPath = this.heap.dirpath;
+// 			});
 
-			it('should trigger `success`', expect('success'));
-		});
-	});
-});
+// 			it('should trigger `success`', expect('success'));
+// 		});
+// 	});
+// });
 

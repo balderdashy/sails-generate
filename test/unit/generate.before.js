@@ -5,7 +5,7 @@ var async = require('async');
 var FileHeap = require('./helpers/FileHeap');
 // var TemplateManifest = require('./helpers/TemplateManifest');
 
-var GenerateJSONFileHelper = require('root-require')('bin/generators/_helpers/jsonfile');
+var GenerateJSONFileHelper = require('root-require')('lib/helpers/jsonfile');
 
 
 before(function (cb) {
@@ -26,7 +26,7 @@ before(function (cb) {
 		path: '.tmp/someSailsApp/'
 	});
 	GenerateJSONFileHelper({
-		pathToNew: self.sailsHeap.alloc('package.json'),
+		rootPath: self.sailsHeap.alloc('package.json'),
 		data: {
 			dependencies: {
 				sails: '~99.9.99'

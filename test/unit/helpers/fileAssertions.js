@@ -23,7 +23,7 @@ module.exports = {
 	 * @this {Object} options
 	 */
 	fileExists: function (cb) {
-		fs.readFile(this.options.pathToNew, cb);
+		fs.readFile(this.options.rootPath, cb);
 	},
 
 	/**
@@ -32,7 +32,7 @@ module.exports = {
 	 * @this {Object} options
 	 */
 	fileDoesntExist: function (cb) {
-		fs.readFile(this.options.pathToNew, function (err) {
+		fs.readFile(this.options.rootPath, function (err) {
 			if (err && err.code === 'ENOENT') {
 				return cb();
 			}
@@ -49,7 +49,7 @@ module.exports = {
 	 * @this {Object} options
 	 */
 	dirExists: function (cb) {
-		fs.readdir(this.options.pathToNew, cb);
+		fs.readdir(this.options.rootPath, cb);
 	},
 
 
@@ -59,7 +59,7 @@ module.exports = {
 	 * @this {Object} options
 	 */
 	dirDoesntExist: function (cb) {
-		fs.readdir(this.options.pathToNew, function (err) {
+		fs.readdir(this.options.rootPath, function (err) {
 			if (err && err.code === 'ENOENT') {
 				return cb();
 			}
@@ -77,7 +77,7 @@ module.exports = {
 	 */
 	fileIsExactly: function (compareStr) {
 		return function (cb) {
-			fs.readFile(this.options.pathToNew, function (err, contents) {
+			fs.readFile(this.options.rootPath, function (err, contents) {
 				if (err) return cb(err);
 				return cb(null, checksum(compareStr) === checksum(contents));
 			});
@@ -93,7 +93,7 @@ module.exports = {
 	 */
 	fileIsNot: function (compareStr) {
 		return function (cb) {
-			fs.readFile(this.options.pathToNew, function (err, contents) {
+			fs.readFile(this.options.rootPath, function (err, contents) {
 				if (err) return cb(err);
 				return cb(null, checksum(compareStr) !== checksum(contents));
 			});
@@ -110,7 +110,7 @@ module.exports = {
 	 */
 	fileChecksumMatchesTemplate: function (cb) {
 		var templateChecksum = this.templates.file.checksum;
-		fs.readFile(this.options.pathToNew, function (err, contents) {
+		fs.readFile(this.options.rootPath, function (err, contents) {
 			if (err) return cb(err);
 			return cb(null, templateChecksum === checksum(contents));
 		});
