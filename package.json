@@ -11,7 +11,7 @@
     "lodash": "~2.4.1",
     "root-require": "~0.2.0",
     "node-switchback": "0.0.4",
-    "fs-extra": "git://github.com/mikermcneil/node-fs-extra.git",
+    "fs-extra": "0.8.1",
     "ejs": "~0.8.5",
     "merge-defaults": "~0.1.0"
   },
