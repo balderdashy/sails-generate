@@ -13,11 +13,11 @@
     "fs-extra": "0.8.1",
     "ejs": "~0.8.5",
     "merge-defaults": "~0.1.0",
-    "reportback": "~0.1.4"
+    "reportback": "~0.1.4",
+    "captains-log": "~0.11.0"
   },
   "devDependencies": {
     "mocha": "~1.17.0",
-    "captains-log": "~0.10.6",
     "checksum": "~0.1.1"
   },
   "scripts": {
