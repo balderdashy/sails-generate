@@ -14,7 +14,14 @@
     "ejs": "~0.8.5",
     "merge-defaults": "~0.1.0",
     "reportback": "~0.1.4",
-    "captains-log": "~0.11.0"
+    "captains-log": "~0.11.0",
+    "sails-generate-new": "*",
+    "sails-generate-backend": "*",
+    "sails-generate-frontend": "*",
+    "sails-generate-gruntfile": "*",
+    "sails-generate-model": "*",
+    "sails-generate-controller": "*",
+    "sails-generate-views": "*"
   },
   "devDependencies": {
     "mocha": "~1.17.0",
