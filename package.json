@@ -18,11 +18,9 @@
     "sails-generate-gruntfile": "~0.10.0",
     "sails-generate-model": "~0.10.0",
     "sails-generate-controller": "~0.10.0",
-    "sails-generate-views": "~0.10.0"
-  },
-  "optionalDependencies": {
-    "sails-generate-generator": "~0.10.0",
+    "sails-generate-views": "~0.10.0",
     "sails-generate-adapter": "~0.10.0",
+    "sails-generate-generator": "~0.10.0",
     "sails-generate-hook": "~0.10.0"
   },
   "devDependencies": {
