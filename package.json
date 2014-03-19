@@ -20,7 +20,8 @@
     "sails-generate-controller": "~0.10.0",
     "sails-generate-views": "~0.10.0",
     "sails-generate-adapter": "~0.10.0",
-    "sails-generate-generator": "~0.10.0"
+    "sails-generate-generator": "~0.10.0",
+    "sails-generate-views-jade": "~0.10.0"
   },
   "devDependencies": {
     "mocha": "~1.17.0",
