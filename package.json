@@ -17,7 +17,7 @@
     "sails-generate-frontend": "~0.10.0",
     "sails-generate-gruntfile": "~0.10.0",
     "sails-generate-model": "~0.10.0",
-    "sails-generate-controller": "~0.10.0",
+    "sails-generate-controller": "~0.10.7",
     "sails-generate-views": "~0.10.0",
     "sails-generate-adapter": "~0.10.0",
     "sails-generate-generator": "~0.10.0",
