@@ -1,6 +1,6 @@
 {
   "name": "node-generate",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Runs custom generators",
   "main": "lib/index.js",
   "directories": {
