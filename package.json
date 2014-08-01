@@ -1,6 +1,6 @@
 {
   "name": "nodeg",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Run a node generator for applications, utilities, scripts, etc.",
   "bin": {
     "nodeg": "./bin/nodeg.js"
