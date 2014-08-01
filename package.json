@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "Run a node generator for applications, utilities, scripts, etc.",
   "bin": {
-    "sails": "./bin/nodeg.js"
+    "nodeg": "./bin/nodeg.js"
   },
   "directories": {
     "test": "test"
