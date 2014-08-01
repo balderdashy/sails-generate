@@ -1,7 +1,7 @@
 {
-  "name": "node-generate",
-  "version": "0.0.1",
-  "description": "Runs custom generators",
+  "name": "nodeg",
+  "version": "0.0.0",
+  "description": "Run a node generator for applications, utilities, scripts, etc.",
   "main": "lib/index.js",
   "directories": {
     "test": "test"
