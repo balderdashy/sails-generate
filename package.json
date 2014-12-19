@@ -1,6 +1,6 @@
 {
   "name": "sails-generate",
-  "version": "0.12.0",
+  "version": "0.12.1",
   "description": "Runner script for sails generators",
   "main": "lib/index.js",
   "directories": {
@@ -8,20 +8,21 @@
   },
   "dependencies": {
     "async": "~0.2.9",
-    "lodash": "~2.4.1",
     "fs-extra": "~0.8.1",
+    "lodash": "~2.4.1",
     "merge-defaults": "~0.1.0",
     "reportback": "~0.1.8",
-    "sails-generate-new": "~0.10.0",
-    "sails-generate-backend": "~0.12.0",
-    "sails-generate-frontend": "~0.11.0",
-    "sails-generate-gruntfile": "~0.10.0",
-    "sails-generate-api": "~0.10.0",
-    "sails-generate-model": "~0.10.9",
-    "sails-generate-controller": "~0.10.7",
-    "sails-generate-views": "~0.10.0",
     "sails-generate-adapter": "~0.10.0",
+    "sails-generate-api": "~0.10.0",
+    "sails-generate-backend": "~0.12.0",
+    "sails-generate-controller": "~0.10.7",
+    "sails-generate-frontend": "~0.11.0",
     "sails-generate-generator": "~0.10.0",
+    "sails-generate-gruntfile": "~0.10.0",
+    "sails-generate-model": "~0.10.9",
+    "sails-generate-new": "~0.10.0",
+    "sails-generate-sails.io.js": "^0.11.2",
+    "sails-generate-views": "~0.10.0",
     "sails-generate-views-jade": "~0.10.0"
   },
   "devDependencies": {
