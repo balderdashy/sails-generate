@@ -41,5 +41,12 @@
     "automation"
   ],
   "author": "Mike McNeil",
-  "license": "MIT"
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/balderdashy/sails-generate.git"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "http://github.com/balderdashy/sails-generate/issues"
+  }
 }
