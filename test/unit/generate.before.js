@@ -5,12 +5,12 @@ var async = require('async');
 var FileHeap = require('./helpers/FileHeap');
 // var TemplateManifest = require('./helpers/TemplateManifest');
 
-var GenerateJSONFileHelper = require('root-require')('lib/helpers/jsonfile');
+var GenerateJSONFileHelper = require('../../lib/helpers/jsonfile');
 
 
 before(function (cb) {
 	var self = this;
-	
+
 	/*
 	 * Use an allocator to make it easier to manage files
 	 * generated during testing
@@ -36,7 +36,7 @@ before(function (cb) {
 
 
 	/*
-	 * Load template fixtures up front so they're accessible 
+	 * Load template fixtures up front so they're accessible
 	 * throughout the generator tests.
 	 */
 	// var self = this;

@@ -1,5 +1,5 @@
 var _ = require('lodash');
-var generate = require('root-require')('lib');
+var generate = require('../../lib');
 
 var scope = {};
 

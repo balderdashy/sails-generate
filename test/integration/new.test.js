@@ -1,5 +1,5 @@
 var _ = require('lodash');
-var generate = require('root-require')('lib');
+var generate = require('../../lib');
 
 var sails = require('sails');
 
@@ -8,7 +8,7 @@ sails.load({
 	loadHooks: ['moduleloader', 'userconfig']
 }, function (err) {
 
-	if (err) throw err;
+	if (err) { throw err; }
 
 
 	var scope = {
@@ -21,7 +21,7 @@ sails.load({
 			'.': 'new'
 		}
 	}, scope, logReporter());
-	
+
 });
 
 
@@ -37,7 +37,7 @@ function logReporter () {
 	var log = new (require('captains-log'))();
 
 	/**
-	 * 
+	 *
 	 * @param  {[type]} err    [description]
 	 * @param  {[type]} output [description]
 	 * @return {[type]}        [description]

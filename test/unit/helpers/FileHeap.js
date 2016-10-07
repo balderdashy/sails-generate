@@ -1,10 +1,10 @@
 /**
  * Module dependencies
  */
-var fs = require('fs-extra'),
-	async = require('async'),
-	path = require('path'),
-	_ = require('lodash');
+var fs = require('fs-extra');
+var async = require('async');
+var path = require('path');
+var _ = require('lodash');
 
 
 /**
@@ -32,7 +32,7 @@ module.exports = function FileHeap ( options ) {
 
 
 
-	
+
 
 	/**
 	 * Get new pathToNewFile and reserve it

@@ -4,7 +4,7 @@
 var expect = require('./helpers/expectHandler');
 var assert = require('./helpers/fileAssertions');
 
-var Generator = require('root-require')('lib/helpers/file');
+var Generator = require('../../lib/helpers/file');
 
 describe('file generator', function () {
 
@@ -38,7 +38,7 @@ describe('file generator', function () {
 				dry: true
 			};
 		});
-		
+
 		it('should trigger `success`',expect('success'));
 		it('should not actually create a file', assert.fileDoesntExist);
 	});
@@ -94,7 +94,7 @@ describe('file generator', function () {
 		describe('(directory)', function () {
 			before(function(cb) {
 				this.options.rootPath = this.heap.alloc();
-				
+
 				// Create an extra dir beforehand to simulate a collision
 				this.heap.mkdirp(this.options.rootPath, cb);
 			});
