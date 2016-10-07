@@ -10,7 +10,7 @@
     "async": "2.0.1",
     "fs-extra": "0.30.0",
     "lodash": "3.10.1",
-    "reportback": "0.1.9",
+    "reportback": "^2.0.1",
     "sails-generate-action": "^1.0.0",
     "sails-generate-adapter": "~0.10.5",
     "sails-generate-api": "~0.10.0",
