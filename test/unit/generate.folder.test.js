@@ -12,6 +12,9 @@ var helpGenerateFolder = require('../../lib/helpers/folder');
 
 describe('folder generator', function() {
 
+  // Set up generic before+after test lifecycle.
+  runBeforeAndAfter();
+
   before(function() {
     this.fn = helpGenerateFolder;
     this.options = {};

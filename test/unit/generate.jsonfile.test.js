@@ -12,6 +12,9 @@ var helpGenerateJsonFile = require('../../lib/helpers/jsonfile');
 
 describe('jsonfile generator', function() {
 
+  // Set up generic before+after test lifecycle.
+  runBeforeAndAfter();
+
   before(function() {
     this.fn = helpGenerateJsonFile;
   });

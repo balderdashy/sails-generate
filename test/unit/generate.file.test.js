@@ -11,6 +11,9 @@ var helpGenerateFile = require('../../lib/helpers/file');
 
 describe('file generator', function() {
 
+  // Set up generic before+after test lifecycle.
+  runBeforeAndAfter();
+
   before(function() {
     this.fn = helpGenerateFile;
   });

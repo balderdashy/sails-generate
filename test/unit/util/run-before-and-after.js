@@ -3,7 +3,7 @@
  */
 
 var async = require('async');
-var FileHeap = require('./util/FileHeap');
+var FileHeap = require('./FileHeap');
 
 var helpGenerateJsonFile = require('../../../lib/helpers/jsonfile');
 
