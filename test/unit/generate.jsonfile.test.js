@@ -4,96 +4,103 @@
 
 var expect = require('./util/expect-handler');
 var assert = require('./util/file-assertions');
+var runBeforeAndAfter = require('./util/run-before-and-after');
 
 var helpGenerateJsonFile = require('../../lib/helpers/jsonfile');
 
 
 
-describe('jsonfile generator', function () {
+describe('jsonfile generator', function() {
 
-	before(function () {
-		this.fn = helpGenerateJsonFile;
-	});
-
-
-	describe('with missing `data`', function () {
-
-		before(function () {
-			this.options = { rootPath: this.heap.alloc() };
-		});
-
-		it('should trigger `invalid`',expect('invalid'));
-	});
+  before(function() {
+    this.fn = helpGenerateJsonFile;
+  });
 
 
-	describe('with missing `rootPath', function () {
+  describe('with missing `data`', function() {
 
-		before(function () {
-			this.options = { data: {foo: 'bar'} };
-		});
+    before(function() {
+      this.options = {
+        rootPath: this.heap.alloc()
+      };
+    });
 
-		it('should trigger `invalid`',expect('invalid'));
-	});
+    it('should trigger `invalid`', expect('invalid'));
+  });
 
 
+  describe('with missing `rootPath', function() {
 
+    before(function() {
+      this.options = {
+        data: {
+          foo: 'bar'
+        }
+      };
+    });
 
-
-	describe('with empty data', function () {
-
-		before(function () {
-			this.options = {
-				rootPath: this.heap.alloc(),
-				data: {}
-			};
-		});
-
-		it('should trigger `success`', expect('success'));
-		it('should create a file', assert.fileExists);
-
-	});
+    it('should trigger `invalid`', expect('invalid'));
+  });
 
 
 
+  describe('with empty data', function() {
 
+    before(function() {
+      this.options = {
+        rootPath: this.heap.alloc(),
+        data: {}
+      };
+    });
 
-	describe('if file already exists', function () {
+    it('should trigger `success`', expect('success'));
+    it('should create a file', assert.fileExists);
 
-		before(function (cb) {
-			this.options = {
-				rootPath: this.heap.alloc(),
-				data: { foo: 'bar' }
-			};
-
-			// Create an extra file beforehand to simulate a collision
-			this.heap.touch(this.options.rootPath, cb);
-		});
-
-		it(	'should trigger "alreadyExists" handler', expect({ alreadyExists: true, success: 'Should not override existing file without `options.force`!' }));
-
-	});
+  });
 
 
 
+  describe('if file already exists', function() {
+
+    before(function(cb) {
+      this.options = {
+        rootPath: this.heap.alloc(),
+        data: {
+          foo: 'bar'
+        }
+      };
+
+      // Create an extra file beforehand to simulate a collision
+      this.heap.touch(this.options.rootPath, cb);
+    });
+
+    it('should trigger "alreadyExists" handler', expect({
+      alreadyExists: true,
+      success: 'Should not override existing file without `options.force`!'
+    }));
+
+  });
 
 
-	describe('if file already exists and `force` option is true', function () {
 
-		before(function(cb) {
-			this.options = {
-				rootPath: this.heap.alloc(),
-				data: { foo: 'bar' },
-				force: true
-			};
+  describe('if file already exists and `force` option is true', function() {
 
-			// Create an extra file beforehand to simulate a collision
-			this.heap.touch(this.options.rootPath, cb);
-		});
+    before(function(cb) {
+      this.options = {
+        rootPath: this.heap.alloc(),
+        data: {
+          foo: 'bar'
+        },
+        force: true
+      };
 
-		it('should trigger `success`', expect('success'));
+      // Create an extra file beforehand to simulate a collision
+      this.heap.touch(this.options.rootPath, cb);
+    });
 
-	});
+    it('should trigger `success`', expect('success'));
+
+  });
 
 
 });
-

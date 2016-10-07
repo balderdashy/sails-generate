@@ -1,7 +1,9 @@
 /**
  * Module dependencies
  */
+
 var _ = require('lodash');
+
 
 /**
  * @param {Object||String} expectations
@@ -10,39 +12,37 @@ var _ = require('lodash');
  *		- if value === true, this handler is allowed
  *		- otherwise, use the value as an error
  */
-module.exports = function expect ( expectations ) {
-	var handlers = {};
-	if ( typeof expectations === 'string' ) {
-		handlers[expectations] = true;
-	}
-	else if ( typeof expectations === 'object' ) {
-		handlers = _.clone(expectations);
-	}
-	else throw new Error('Invalid usage of `expect()` fixture in tests.');
 
-	return function (cb) {
+module.exports = function expect(expectations) {
+  var handlers = {};
+  if (typeof expectations === 'string') {
+    handlers[expectations] = true;
+  } else if (typeof expectations === 'object') {
+    handlers = _.clone(expectations);
+  } else throw new Error('Invalid usage of `expect()` fixture in tests.');
 
-		// Interpret handlers
-		_.each( Object.keys(handlers), function (handlerName) {
-			if ( handlers[handlerName] === true) {
-				handlers[handlerName] = function ignoreHandlerArguments_itsAlwaysGood () { cb(); };
-			}
-			else {
-				handlers[handlerName] = function incorrectHandlerFired (err) {
-					var testMessage = 'Unexpected callback (' + handlerName + ') fired :: `' + expectations[handlerName] + '`';
+  return function(cb) {
 
-					if ( err instanceof Error ) {
-						err.message = testMessage + (err.message ? ' :: '+err.message : '');
-					}
-					else err = new Error( testMessage + (err ? ' :: '+err : '') );
+    // Interpret handlers
+    _.each(Object.keys(handlers), function(handlerName) {
+      if (handlers[handlerName] === true) {
+        handlers[handlerName] = function ignoreHandlerArguments_itsAlwaysGood() {
+          cb();
+        };
+      } else {
+        handlers[handlerName] = function incorrectHandlerFired(err) {
+          var testMessage = 'Unexpected callback (' + handlerName + ') fired :: `' + expectations[handlerName] + '`';
 
-					return cb(err);
-				};
-			}
-		});
-		
-		// Trigger method
-		this.fn(this.options, handlers);
-	};
+          if (err instanceof Error) {
+            err.message = testMessage + (err.message ? ' :: ' + err.message : '');
+          } else err = new Error(testMessage + (err ? ' :: ' + err : ''));
+
+          return cb(err);
+        };
+      }
+    });
+
+    // Trigger method
+    this.fn(this.options, handlers);
+  };
 };
-
