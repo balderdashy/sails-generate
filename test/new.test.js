@@ -1,40 +1,40 @@
-/**
- * Module dependencies
- */
+// /**
+//  * Module dependencies
+//  */
 
-var _ = require('lodash');
-var generate = require('../lib');
-
-
-
-var sails = require('sails');
+// var _ = require('lodash');
+// var generate = require('../lib');
 
 
-sails.load({
-  loadHooks: ['moduleloader', 'userconfig']
-}, function(err) {
-  if (err) {
-    console.log('Error:',err);
-    return;
-  }
+
+// var sails = require('sails');
 
 
-  generate({
-    targets: {
-      '.': 'new'
-    }
-  }, {
-    sails: sails,
-    rootPath: process.cwd() + '/.foo'
-  }, function (err, output) {
-    if (err) {
-      console.log('Error:', err);
-      return;
-    }
+// sails.load({
+//   loadHooks: ['moduleloader', 'userconfig']
+// }, function(err) {
+//   if (err) {
+//     console.log('Error:',err);
+//     return;
+//   }
 
-    //--•
-    console.log(output);
 
-  });//</generate>
+//   generate({
+//     targets: {
+//       '.': 'new'
+//     }
+//   }, {
+//     sails: sails,
+//     rootPath: process.cwd() + '/.foo'
+//   }, function (err, output) {
+//     if (err) {
+//       console.log('Error:', err);
+//       return;
+//     }
 
-});//</sails.load>
+//     //--•
+//     console.log(output);
+
+//   });//</generate>
+
+// });//</sails.load>

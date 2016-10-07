@@ -1,24 +1,24 @@
-/**
- * Module dependencies
- */
+// /**
+//  * Module dependencies
+//  */
 
-var generate = require('../lib');
+// var generate = require('../lib');
 
 
 
-generate({
-  targets: {
-    '.': 'generator'
-  }
-}, {
-  generatorName: 'foobarbar'
-}, function (err, output) {
-  if (err) {
-    console.log('Error:',err);
-    return;
-  }
+// generate({
+//   targets: {
+//     '.': 'generator'
+//   }
+// }, {
+//   generatorName: 'foobarbar'
+// }, function (err, output) {
+//   if (err) {
+//     console.log('Error:',err);
+//     return;
+//   }
 
-  // --•
-  console.log(output);
+//   // --•
+//   console.log(output);
 
-});
+// });
