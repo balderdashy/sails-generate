@@ -1,17 +1,18 @@
 /**
  * Module dependencies
  */
-var expect = require('./helpers/expectHandler');
-var assert = require('./helpers/fileAssertions');
 
-var Generator = require('../../lib/helpers/folder');
+var expect = require('./util/expect-handler');
+var assert = require('./util/file-assertions');
+
+var helpGenerateFolder = require('../../lib/helpers/folder');
 
 
 
 describe('folder generator', function () {
 
 	before(function () {
-		this.fn = Generator;
+		this.fn = helpGenerateFolder;
 		this.options = {};
 	});
 

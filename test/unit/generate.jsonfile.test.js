@@ -1,16 +1,18 @@
 /**
  * Module dependencies
  */
-var expect = require('./helpers/expectHandler');
-var assert = require('./helpers/fileAssertions');
 
-var Generator = require('../../lib/helpers/jsonfile');
+var expect = require('./util/expect-handler');
+var assert = require('./util/file-assertions');
+
+var helpGenerateJsonFile = require('../../lib/helpers/jsonfile');
+
 
 
 describe('jsonfile generator', function () {
 
 	before(function () {
-		this.fn = Generator;
+		this.fn = helpGenerateJsonFile;
 	});
 
 

@@ -1,11 +1,12 @@
 /**
- * Dependencies
+ * Module dependencies
  */
-var async = require('async');
-var FileHeap = require('./helpers/FileHeap');
-// var TemplateManifest = require('./helpers/TemplateManifest');
 
-var GenerateJSONFileHelper = require('../../lib/helpers/jsonfile');
+var async = require('async');
+var FileHeap = require('./util/FileHeap');
+
+var helpGenerateJsonFile = require('../../lib/helpers/jsonfile');
+
 
 
 before(function (cb) {
@@ -25,7 +26,7 @@ before(function (cb) {
 	self.sailsHeap = new FileHeap({
 		path: '.tmp/someSailsApp/'
 	});
-	GenerateJSONFileHelper({
+	helpGenerateJsonFile({
 		rootPath: self.sailsHeap.alloc('package.json'),
 		data: {
 			dependencies: {
@@ -34,17 +35,6 @@ before(function (cb) {
 		}
 	}, { success: cb });
 
-
-	/*
-	 * Load template fixtures up front so they're accessible
-	 * throughout the generator tests.
-	 */
-	// var self = this;
-	// TemplateManifest.load(function (err) {
-	// 	if (err) return err;
-	// 	self.templates = TemplateManifest;
-	// 	cb();
-	// });
 });
 
 
