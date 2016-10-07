@@ -20,7 +20,6 @@ generate({
  * Log reporter
  */
 function logReporter () {
-  var log = new (require('captains-log'))();
 
   /**
    *
@@ -33,8 +32,8 @@ function logReporter () {
       var errOutput = err instanceof Error?
         String(err).replace(/^Error:\s/,'')
         : String(err);
-      return _.each(errOutput.split('\n'), function (item) {log.error(item);});
+      return _.each(errOutput.split('\n'), function (item) {console.log('error:',item);});
     }
-    return _.each(output, function(item) {log.info(item);});
+    return _.each(output, function(item) {console.log('info:',item);});
   };
 }
