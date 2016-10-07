@@ -7,7 +7,15 @@ Master of ceremonies for generators in the Sails CLI.
 
 To report a bug, [click here](http://sailsjs.com/bugs).
 
-> This is a built-in, private module in the Sails framework.  It is installed automatically when you run `npm install -g sails`.
+> This is a built-in module within the Sails framework.  It is installed automatically when you run `npm install -g sails`.
+
+
+## Contributing
+
+Please observe the guidelines and conventions laid out in the [Sails project contribution guide](http://sailsjs.com/contribute) when opening issues or submitting pull requests.
+
+[![NPM](https://nodei.co/npm/sails-generate.png?downloads=true)](http://npmjs.com/package/sails-generate)
+
 
 ## License
 
