@@ -1,3 +1,7 @@
+/**
+ * Module dependencies
+ */
+
 var _ = require('lodash');
 var generate = require('../lib');
 
@@ -9,9 +13,9 @@ var sails = require('sails');
 sails.load({
   loadHooks: ['moduleloader', 'userconfig']
 }, function(err) {
-
   if (err) {
-    throw err;
+    console.log('Error:',err);
+    return;
   }
 
 
@@ -28,6 +32,7 @@ sails.load({
       return;
     }
 
+    //--•
     console.log(output);
 
   });//</generate>

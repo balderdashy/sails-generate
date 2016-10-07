@@ -1,5 +1,9 @@
+/**
+ * Module dependencies
+ */
+
 var _ = require('lodash');
-var generate = require('../../lib');
+var generate = require('../lib');
 
 
 
@@ -44,6 +48,11 @@ generate({
 		}
 	}
 }, scope, function (err) {
-	if (err) throw err;
+	if (err) {
+    console.log(err);
+    return;
+  }
+
 	console.log('Done.');
+
 });

@@ -9,7 +9,7 @@ var helpGenerateJsonFile = require('../../lib/helpers/jsonfile');
 
 
 
-before(function (cb) {
+before(function (done) {
 	var self = this;
 
 	/*
@@ -33,20 +33,19 @@ before(function (cb) {
 				sails: '~99.9.99'
 			}
 		}
-	}, { success: cb });
+	}, { success: done });
 
 });
 
 
 
 
-after(function (cb) {
+after(function (done) {
 
-	/*
-	 * Clean up loose files afterwards
-	 */
+	// Clean up loose files.
 	async.parallel([
 		this.heap.cleanAll,
 		this.sailsHeap.cleanAll,
-	], cb);
+	], done);
+
 });
