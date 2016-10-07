@@ -52,10 +52,22 @@ describe('jsonfile generator', function () {
 	});
 
 
+  describe('with `data` specified as function', function() {
+    before(function () {
+      this.options = {
+        rootPath: this.heap.alloc(),
+        data: function() {
+          return {foo: 'bar'};
+        }
+      }
+    });
+
+    it('should trigger `success`', expect('success'));
+    it('should put function result into file', assert.fileIsExactly('{"foo":"bar"}'));
+  });
 
 
-
-	describe('if file already exists', function () {
+  describe('if file already exists', function () {
 
 		before(function (cb) {
 			this.options = {
