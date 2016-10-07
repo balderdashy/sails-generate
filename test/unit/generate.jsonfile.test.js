@@ -6,7 +6,7 @@ var expect = require('./util/expect-handler');
 var assert = require('./util/file-assertions');
 var runBeforeAndAfter = require('./util/run-before-and-after');
 
-var helpGenerateJsonFile = require('../../lib/helpers/jsonfile');
+var builtinGenerateJsonfile = require('../../lib/builtins/jsonfile');
 
 
 
@@ -16,7 +16,7 @@ describe('jsonfile generator', function() {
   runBeforeAndAfter();
 
   before(function() {
-    this.fn = helpGenerateJsonFile;
+    this.fn = builtinGenerateJsonfile;
   });
 
 

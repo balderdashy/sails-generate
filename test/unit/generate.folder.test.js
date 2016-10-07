@@ -6,7 +6,7 @@ var expect = require('./util/expect-handler');
 var assert = require('./util/file-assertions');
 var runBeforeAndAfter = require('./util/run-before-and-after');
 
-var helpGenerateFolder = require('../../lib/helpers/folder');
+var builtinGenerateFolder = require('../../lib/builtins/folder');
 
 
 
@@ -16,7 +16,7 @@ describe('folder generator', function() {
   runBeforeAndAfter();
 
   before(function() {
-    this.fn = helpGenerateFolder;
+    this.fn = builtinGenerateFolder;
     this.options = {};
   });
 

@@ -5,7 +5,7 @@
 var async = require('async');
 var FileHeap = require('./FileHeap');
 
-var helpGenerateJsonFile = require('../../../lib/helpers/jsonfile');
+var writeJsonFile = require('../../../lib/builtins/jsonfile');
 
 
 /**
@@ -31,7 +31,7 @@ module.exports = function runBeforeAndAfter() {
     self.sailsHeap = new FileHeap({
       path: '.tmp/someSailsApp/'
     });
-    helpGenerateJsonFile({
+    writeJsonFile({
       rootPath: self.sailsHeap.alloc('package.json'),
       data: {
         dependencies: {

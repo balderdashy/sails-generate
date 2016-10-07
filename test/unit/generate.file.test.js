@@ -6,7 +6,7 @@ var expect = require('./util/expect-handler');
 var assert = require('./util/file-assertions');
 var runBeforeAndAfter = require('./util/run-before-and-after');
 
-var helpGenerateFile = require('../../lib/helpers/file');
+var builtinGenerateFile = require('../../lib/builtins/file');
 
 
 describe('file generator', function() {
@@ -15,7 +15,7 @@ describe('file generator', function() {
   runBeforeAndAfter();
 
   before(function() {
-    this.fn = helpGenerateFile;
+    this.fn = builtinGenerateFile;
   });
 
 
