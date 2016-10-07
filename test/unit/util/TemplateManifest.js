@@ -20,8 +20,8 @@ var _templates = {
 /**
  * Calculate checksums for each template
  * @param {Function} cb
- *		@param {Error} err
- *		@param {Object} templates
+ *    @param {Error} err
+ *    @param {Object} templates
  */
 TemplateManifest.load = function(cb) {
   async.each(Object.keys(_templates), function each(templateID, cb) {

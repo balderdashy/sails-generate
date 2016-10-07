@@ -37,10 +37,10 @@ module.exports = function FileHeap(options) {
    * Get new pathToNewFile and reserve it
    *
    * @param {String} [basename] -
-   *		-- optional--
-   *		This lets you register a particular filename AND
-   *		ITS SUFFIX (e.g. `package.json`) with the heap
-   *		for automatic garbage-collection.
+   *    -- optional--
+   *    This lets you register a particular filename AND
+   *    ITS SUFFIX (e.g. `package.json`) with the heap
+   *    for automatic garbage-collection.
    */
   this.alloc = function(basename) {
 
@@ -133,8 +133,8 @@ module.exports = function FileHeap(options) {
   /**
    * @param {String} pathToFile
    * @param {Function} cb
-   *		@param {Error} err
-   *		@param {String} contents of file
+   *    @param {Error} err
+   *    @param {String} contents of file
    */
   this.read = function(pathToFile, cb) {
     if (!this.contains(pathToFile)) {

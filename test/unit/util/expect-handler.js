@@ -7,10 +7,10 @@ var _ = require('lodash');
 
 /**
  * @param {Object||String} expectations
- *		- if string specified, it is the name of the only valid handler
- *		- if object specified, keys are handlers
- *		- if value === true, this handler is allowed
- *		- otherwise, use the value as an error
+ *    - if string specified, it is the name of the only valid handler
+ *    - if object specified, keys are handlers
+ *    - if value === true, this handler is allowed
+ *    - otherwise, use the value as an error
  */
 
 module.exports = function expect(expectations) {
