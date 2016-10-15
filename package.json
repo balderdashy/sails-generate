@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "async": "2.0.1",
+    "flaverr": "^1.0.0",
     "fs-extra": "0.30.0",
     "lodash": "3.10.1",
     "reportback": "^2.0.1",
