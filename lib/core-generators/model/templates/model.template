@@ -1,0 +1,24 @@
+<% if (lang === 'js') { %>/**
+ * <%= filename %>
+ *
+ * @description :: A model definition.  Represents a database table/collection/etc.
+ * @docs        :: http://sailsjs.com/docs/concepts/models-and-orm/models
+ */
+
+module.exports = {
+
+  attributes: {
+<%= attributes %>
+  }
+
+};
+<%} else if (lang === 'coffee'){ %> # <%= filename %>
+ #
+ # @description :: A model definition.  Represents a database table/collection/etc.
+ # @docs        :: http://sailsjs.com/docs/concepts/models-and-orm/models
+
+module.exports =
+
+<%if (attributes.length > 0){%>  attributes:
+  <%= attributes %>
+<%} else { %>  attributes: {}<%}%><%}%>
