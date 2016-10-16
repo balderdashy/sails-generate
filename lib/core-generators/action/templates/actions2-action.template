@@ -1,5 +1,5 @@
 /**
- * <%= filename %>
+ * <%= relPath %>
  *
  * @description :: Server-side controller action for handling incoming requests.
  * @help        :: See http://sailsjs.com/docs/concepts/controllers
