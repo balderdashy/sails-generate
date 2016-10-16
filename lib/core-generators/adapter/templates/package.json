@@ -12,12 +12,15 @@
     "adapter",
     "sails",
     "waterline",
-    "sails.js",
-    "plugin"
+    "orm",
+    "database-adapter",
+    "sails.js"
   ],
   "author": "<%= author %>",
   "license": "<%= license %>",
-  "dependencies": {},
+  "dependencies": {
+    "lodash": "3.10.1"
+  },
   "devDependencies": {
     "waterline-adapter-tests": <%= JSON.stringify(waterlineSVR) %>,
     "mocha": "3.0.2"

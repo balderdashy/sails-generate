@@ -1,0 +1,27 @@
+{
+  "name": "<%=packageName%>",
+  "version": "1.0.0",
+  "description": "sails generate <%=generatorType %>",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo 'No automated tests have been implemented for this generator yet.'"
+  },
+  "keywords": [
+    "<%=generatorType%>",
+    "generator",
+    "sails",
+    "generate",
+    "plugin"
+  ],
+  "author": "<%= author %>",
+  "license": "<%= license %>",
+  "dependencies": {
+    "lodash": "3.10.1"
+  },
+  "devDependencies": {},
+  "sailsGenerator": {
+    "type": "<%= generatorType %>",
+    "behavior": "Implements or overrides `sails generate <%= generatorType %>`",
+    "sailsVersion": "<%= sailsSVR %>"
+  }
+}
