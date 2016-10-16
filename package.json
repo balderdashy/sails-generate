@@ -11,21 +11,7 @@
     "flaverr": "^1.0.0",
     "fs-extra": "0.30.0",
     "lodash": "3.10.1",
-    "reportback": "^2.0.1",
-    "sails-generate-action": "^1.0.0",
-    "sails-generate-adapter": "~0.10.5",
-    "sails-generate-api": "~0.10.0",
-    "sails-generate-backend": "~0.12.2",
-    "sails-generate-controller": "~0.10.7",
-    "sails-generate-frontend": "^0.12.0",
-    "sails-generate-generator": "~0.10.0",
-    "sails-generate-gruntfile": "~0.10.10",
-    "sails-generate-helper": "^1.0.0",
-    "sails-generate-model": "~0.10.10",
-    "sails-generate-new": "~0.10.19",
-    "sails-generate-sails.io.js": "^0.14.0",
-    "sails-generate-views": "~0.10.5",
-    "sails-generate-views-jade": "~0.10.3"
+    "reportback": "^2.0.1"
   },
   "devDependencies": {
     "checksum": "0.1.1",
