@@ -1,13 +1,13 @@
 # sails-generate
 
 Master of ceremonies for generators in the Sails CLI.
+This is a built-in module within the Sails framework, used by the `sails` command-line interface.  It is installed automatically when you run `npm install sails -g`.
+For customization options, see [Extending Sails > Generators](http://sailsjs.com/docs/concepts/extending-sails/generators).
 
 
 ## Bugs &nbsp; [![NPM version](https://badge.fury.io/js/sails-generate.svg)](http://npmjs.com/package/sails-generate)
 
 To report a bug, [click here](http://sailsjs.com/bugs).
-
-> This is a built-in module within the Sails framework.  It is installed automatically when you run `npm install -g sails`.
 
 
 ## Contributing
