@@ -1,0 +1,33 @@
+{
+  "name": "<%= moduleName %>",
+  "version": "1.0.0",
+  "description": "A <%=adapterName%> adapter for Sails / Waterline",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test/integration/runner -R spec -b"
+  },
+  "repository": <%= JSON.stringify(repository) %>,
+  "keywords": [
+    "<%= adapterName %>",
+    "adapter",
+    "sails",
+    "waterline",
+    "sails.js",
+    "plugin"
+  ],
+  "author": "<%= author %>",
+  "license": "<%= license %>",
+  "dependencies": {},
+  "devDependencies": {
+    "waterline-adapter-tests": <%= JSON.stringify(waterlineSVR) %>,
+    "mocha": "3.0.2"
+  },
+  "waterlineAdapter": {
+    "type": "<%= adapterName %>",
+    "interfaces": [
+      "semantic",
+      "queryable"
+    ],
+    "waterlineVersion": <%= JSON.stringify(waterlineSVR) %>
+  }
+}
