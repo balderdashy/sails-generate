@@ -20,7 +20,7 @@ module.exports = {
   /**
    * @param {Function} cb
    *
-   * @this {Object} options
+   * @this {Dictionary} options
    */
   fileExists: function(cb) {
     fsx.readFile(this.options.rootPath, cb);
@@ -29,7 +29,7 @@ module.exports = {
   /**
    * @param {Function} cb
    *
-   * @this {Object} options
+   * @this {Dictionary} options
    */
   fileDoesntExist: function(cb) {
     fsx.readFile(this.options.rootPath, function(err) {
@@ -45,7 +45,7 @@ module.exports = {
   /**
    * @param {Function} cb
    *
-   * @this {Object} options
+   * @this {Dictionary} options
    */
   dirExists: function(cb) {
     fsx.readdir(this.options.rootPath, cb);
@@ -55,7 +55,7 @@ module.exports = {
   /**
    * @param {Function} cb
    *
-   * @this {Object} options
+   * @this {Dictionary} options
    */
   dirDoesntExist: function(cb) {
     fsx.readdir(this.options.rootPath, function(err) {
@@ -71,7 +71,7 @@ module.exports = {
   /**
    * @param {Function} cb
    *
-   * @this {Object} options
+   * @this {Dictionary} options
    */
   fileIsExactly: function(compareStr) {
     return function(cb) {
@@ -87,7 +87,7 @@ module.exports = {
   /**
    * @param {Function} cb
    *
-   * @this {Object} options
+   * @this {Dictionary} options
    */
   fileIsNot: function(compareStr) {
     return function(cb) {
@@ -103,8 +103,8 @@ module.exports = {
   /**
    * @param {Function} cb
    *
-   * @this {Object} templates
-   * @this {Object} options
+   * @this {Dictionary} templates
+   * @this {Dictionary} options
    */
   fileChecksumMatchesTemplate: function(cb) {
     var templateChecksum = this.templates.file.checksum;
