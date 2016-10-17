@@ -1,4 +1,4 @@
-# <%= moduleName %>
+# <%= packageName %>
 
 Provides easy access to `<%= adapterName %>` from Sails.js & Waterline.
 
@@ -12,7 +12,7 @@ Strict adherence to an adapter specification enables the (re)use of built-in gen
 To install this adapter, run:
 
 ```sh
-$ npm install <%= moduleName %>
+$ npm install <%= packageName %>
 ```
 
 Then [connect the adapter](http://sailsjs.com/docs/reference/configuration/sails-config-connections) to one or more of your app's datastores.

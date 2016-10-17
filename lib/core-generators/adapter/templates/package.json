@@ -1,5 +1,5 @@
 {
-  "name": "<%= moduleName %>",
+  "name": "<%= packageName %>",
   "version": "1.0.0",
   "description": "A <%=adapterName%> adapter for Sails / Waterline",
   "main": "index.js",

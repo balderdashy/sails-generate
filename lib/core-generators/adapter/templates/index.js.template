@@ -1,5 +1,5 @@
 /**
- * Module Dependencies
+ * Module dependencies
  */
 // ...
 // e.g.
@@ -10,7 +10,7 @@
 
 
 /**
- * <%= moduleName %>
+ * <%= packageName %>
  *
  * Most of the methods below are optional.
  *
