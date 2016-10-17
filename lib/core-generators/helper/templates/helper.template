@@ -1,0 +1,88 @@
+/**
+ * <%= relPath %>
+ *
+ * @description :: Server-side helper function.
+ * @help        :: See http://sailsjs.com/docs/concepts/helpers
+ */
+module.exports = {
+
+
+  friendlyName: <%= util.inspect(friendlyName) %>,
+
+
+  description: <%= util.inspect(description) %>,
+
+
+  inputs: {
+    <% if (verbose) { %>
+
+    // Input definitions go here.
+    //
+    // username: {
+    //   description: 'The username to access records for.'
+    //   example: 'sgress454',
+    //   required: true
+    // },
+
+    <% } %>
+  },
+
+
+  exits: {<%
+if (inferredSuccessOutputFriendlyName) { %>
+
+    success: {
+      outputFriendlyName: <%= util.inspect(inferredSuccessOutputFriendlyName) %>,
+      outputExample: '==='
+    }<% }
+
+if (verbose) { %>
+
+    // Exit definitions go here.
+    //
+    // e.g.
+    //
+    // success: {
+    //   outputFriendlyName: 'Average rating',
+    //   outputExample: 3.2
+    // },
+    //
+    // notFound: {
+    //   description: 'No record could be found matching the specified criteria.'
+    // },
+    //
+    // malformedUsername: {
+    //   description: 'Could not use the provided username, because it is not valid.',
+    //   outputFriendlyName: 'API error',
+    //   outputDescription: 'The already-formatted error that should be sent back as response data.'
+    //   outputExample: {
+    //     reason: 'The provided username (`John Snow`) is not valid.',
+    //     resolution: 'Double-check to be sure you are using the correct username.',
+    //     rawError: '==='
+    //   }
+    // }
+
+<% } %>
+
+  },
+
+
+  fn: function (inputs, exits) {<%
+if (inferredSuccessOutputFriendlyName) { %>
+
+    // Get <%= inferredSuccessOutputFriendlyName[0].toLowerCase() + inferredSuccessOutputFriendlyName.slice(1) %>.
+    var <%= _.camelCase(inferredSuccessOutputFriendlyName) %>;
+    // TODO
+
+    // Send back the result through the success exit.
+    return exits.success(<%= _.camelCase(inferredSuccessOutputFriendlyName) %>);
+
+  <% } else { %>
+
+    // All done.
+    return exits.success();
+
+  <% } %>}
+
+
+};
