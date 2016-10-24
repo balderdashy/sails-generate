@@ -18,6 +18,7 @@
   "dependencies": {
     "lodash": "3.10.1"
   },
+  "repository": <%= JSON.stringify(repository) %>,
   "devDependencies": {},
   "sailsGenerator": {
     "type": "<%= generatorType %>",
