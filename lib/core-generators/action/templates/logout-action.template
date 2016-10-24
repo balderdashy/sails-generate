@@ -1,0 +1,51 @@
+module.exports = {
+
+
+  friendlyName: 'Log out',
+
+
+  description: 'Log out of this app.',
+
+
+  extendedDescription:
+  'This action deletes the `me` key from the session of the requesting user agent.  '+
+  'Actual garbage collection of session data depends on this app\'s session store, and '+
+  'potentially also on the '+
+  '[TTL configuration](http://sailsjs.org/documentation/reference/configuration/sails-config-session) '+
+  'you provided for it.',
+
+
+  inputs: {
+
+  },
+
+
+  exits: {
+
+    success: {
+      description: 'The requesting user agent has been successfully logged out.',
+      extendedDescription:
+      'Note that this action calls the success exit _regardless_ of whether or '+
+      'not the user was actually logged in.  If they weren\'t, then this action '+
+      'simply does nothing.'
+    }
+
+  },
+
+
+  fn: function (inputs, exits, env) {
+
+    //  ╦ ╦╦╔═╗╔═╗  ┌─┐┌─┐┌─┐┌─┐┬┌─┐┌┐┌
+    //  ║║║║╠═╝║╣   └─┐├┤ └─┐└─┐││ ││││
+    //  ╚╩╝╩╩  ╚═╝  └─┘└─┘└─┘└─┘┴└─┘┘└┘
+    delete env.req.session.me;
+
+    //  ╔═╗╔═╗╔╗╔╔╦╗  ┬─┐┌─┐┌─┐┌─┐┌─┐┌┐┌┌─┐┌─┐
+    //  ╚═╗║╣ ║║║ ║║  ├┬┘├┤ └─┐├─┘│ ││││└─┐├┤
+    //  ╚═╝╚═╝╝╚╝═╩╝  ┴└─└─┘└─┘┴  └─┘┘└┘└─┘└─┘
+    return exits.success();
+
+  }
+
+
+};
