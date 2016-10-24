@@ -1,4 +1,11 @@
-/**
+<%
+  // If a getter function was provided, then call that to get our template instead.
+  if (getAlternativeTemplate) {
+    %><%= getAlternativeTemplate() %><%
+  }
+  // Otherwise just use the normal template.
+  else {
+%>/**
  * <%= relPath %>
  *
  * @description :: Server-side controller action for handling incoming requests.
@@ -76,3 +83,4 @@ if (verbose) { %>
 
 
 };
+<% } %>
