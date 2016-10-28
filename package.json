@@ -13,7 +13,7 @@
     "lodash": "3.10.1",
     "reportback": "^2.0.1",
     "cross-spawn": "4.0.2",
-    "sails.io.js-dist": "^0.14.0"
+    "sails.io.js-dist": "^1.0.0"
   },
   "devDependencies": {
     "checksum": "0.1.1",
