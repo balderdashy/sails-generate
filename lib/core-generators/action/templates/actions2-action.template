@@ -5,13 +5,13 @@
   }
   // Otherwise just use the normal template.
   else {
-%>/**
+%><% if (verbose) { %>/**
  * <%= relPath %>
  *
  * @description :: Server-side controller action for handling incoming requests.
  * @help        :: See http://sailsjs.com/docs/concepts/controllers
  */
-module.exports = {
+} %>module.exports = {
 
 
   friendlyName: <%= util.inspect(friendlyName) %>,
