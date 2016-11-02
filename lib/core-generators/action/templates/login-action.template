@@ -51,7 +51,7 @@ module.exports = {
       // (see http://sailsjs.com/anatomy/api/responses/not-found-js).
       //
       // To customize the response for _only this_ action, replace `responseType` with `statusCode: 404`
-      // and change the implementation below accordingly (see http://sailsjs.com/docs/concepts/controllers).<% }%>
+      // and change the implementation below accordingly (see http://sailsjs.com/docs/concepts/controllers).<% } %>
     }
 
   },
