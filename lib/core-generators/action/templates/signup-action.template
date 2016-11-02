@@ -197,7 +197,7 @@ module.exports = {
           //  ║  ║ ║║ ╦║║║║  │ │└─┐├┤ ├┬┘
           //  ╩═╝╚═╝╚═╝╩╝╚╝  └─┘└─┘└─┘┴└─
           // Store the user id in the session
-          env.req.session.me = newUserRecord.id;
+          env.req.session.userId = newUserRecord.id;
 
 
           //  ╦═╗╔═╗╔╦╗╦ ╦╦═╗╔╗╔  ┬─┐┌─┐┌─┐┌─┐┌─┐┌┐┌┌─┐┌─┐
