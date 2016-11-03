@@ -43,6 +43,7 @@ module.exports = {
     //  ╔═╗╔═╗╔╗╔╔╦╗  ┬─┐┌─┐┌─┐┌─┐┌─┐┌┐┌┌─┐┌─┐
     //  ╚═╗║╣ ║║║ ║║  ├┬┘├┤ └─┐├─┘│ ││││└─┐├┤
     //  ╚═╝╚═╝╝╚╝═╩╝  ┴└─└─┘└─┘┴  └─┘┘└┘└─┘└─┘
+    //  This persists the now-empty session back to the underlying store.
     return exits.success();
 
   }
