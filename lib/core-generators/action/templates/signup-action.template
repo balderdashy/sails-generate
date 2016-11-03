@@ -138,9 +138,6 @@ module.exports = {
       //  ╚═╗╠═╣╚╗╔╝║╣   │ │└─┐├┤ ├┬┘
       //  ╚═╝╩ ╩ ╚╝ ╚═╝  └─┘└─┘└─┘┴└─
 
-      // Grab a random avatar color from the list
-      var avatarColor = avatarColors[_.random(0, avatarColors.length - 1)];
-
       // Build up the data for the user record
       var newUserData = {
         emailAddress: inputs.emailAddress,
