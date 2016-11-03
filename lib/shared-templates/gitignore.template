@@ -19,9 +19,8 @@ npm-debug.log
 
 
 ############################
-# tmp, editor & OS files
+# editor & OS files
 ############################
-.tmp
 *.swo
 *.swp
 *.swn
@@ -37,4 +36,6 @@ nbproject
 ############################
 # misc
 ############################
+dump.rdb
 ssl
+.tmp

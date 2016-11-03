@@ -4,6 +4,8 @@
   //    │└─┐╠═╣║║║║ ║ ├┬┘│
   //  o└┘└─┘╩ ╩╩╝╚╝ ╩ ┴└─└─┘
   //
+  // > JavaScript code conventions for your Sails app.
+  //
   // This file (`.jshintrc`) exists to help with quality of code
   // throughout your Sails app.  For the sake of convention, the
   // Sails team's recommended settings are included here out of

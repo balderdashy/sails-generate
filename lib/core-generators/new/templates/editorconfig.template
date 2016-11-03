@@ -3,6 +3,8 @@
 #   ║╣  ║║║ ║ ║ ║╠╦╝│  │ ││││├┤ ││ ┬
 #  o╚═╝═╩╝╩ ╩ ╚═╝╩╚═└─┘└─┘┘└┘└  ┴└─┘
 #
+# > Formatting conventions for your Sails app.
+#
 # This file (`.editorconfig`) exists to help
 # maintain consistent formatting throughout the
 # files in your Sails app.
