@@ -12,6 +12,7 @@
     "flaverr": "^1.0.0",
     "fs-extra": "0.30.0",
     "lodash": "3.10.1",
+    "machinepack-process": "^2.0.2",
     "reportback": "^2.0.1",
     "sails.io.js-dist": "^1.0.0"
   },
