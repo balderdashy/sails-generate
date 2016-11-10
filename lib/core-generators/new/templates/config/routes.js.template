@@ -22,7 +22,7 @@
 
 module.exports.routes = {
 
-  <% if (typeof frontend !== 'undefined' && frontend === false) { %>
+  <% if (typeof frontend === 'undefined' || frontend !== false) { %>
   /***************************************************************************
   *                                                                          *
   * Make the view located at `views/homepage.ejs` your home page.            *
