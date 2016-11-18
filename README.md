@@ -2,7 +2,7 @@
 
 Master of ceremonies for generators in the Sails CLI.
 This is a built-in module within the Sails framework, used by the `sails` command-line interface.  It is installed automatically when you run `npm install sails -g`.
-For customization options, see [Extending Sails > Generators](http://sailsjs.com/docs/concepts/extending-sails/generators).
+For customization options, see [Extending Sails > Generators](http://sailsjs.com/documentation/concepts/extending-sails/generators).
 
 
 ## Help
