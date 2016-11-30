@@ -52,7 +52,7 @@ module.exports.globals = {
 
   /****************************************************************************
   *                                                                           *
-  * Whether to expose the `sails` object as a global variable (`sails`),      *
+  * Whether to expose the Sails app instance as a global variable (`sails`),  *
   * making it accessible throughout your app.                                 *
   *                                                                           *
   ****************************************************************************/
