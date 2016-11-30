@@ -24,7 +24,7 @@ module.exports = {
       autoUpdatedAt: true
     },
 
-<%= otherAttributes %>
+<%= attributes %>
   },
 
   primaryKey: 'id'
@@ -51,7 +51,7 @@ module.exports =
       type: 'number'
       autoUpdatedAt: true
 
-<%= otherAttributes %>
+<%= attributes %>
 
   primaryKey: 'id'
 
