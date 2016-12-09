@@ -6,7 +6,7 @@
  * automatically by Sails.
  *
  * For more information on any of these options, check out:
- * http://sailsjs.com/docs/reference/configuration/sails-config-globals
+ * http://sailsjs.com/config/globals
  */
 
 module.exports.globals = {
@@ -52,7 +52,7 @@ module.exports.globals = {
 
   /****************************************************************************
   *                                                                           *
-  * Whether to expose the `sails` object as a global variable (`sails`),      *
+  * Whether to expose the Sails app instance as a global variable (`sails`),  *
   * making it accessible throughout your app.                                 *
   *                                                                           *
   ****************************************************************************/
