@@ -75,7 +75,7 @@ if (verbose) { %>
   },
 
 
-  fn: function (inputs, exits) {
+  fn: function (inputs, exits, env) {
 
     return exits.success();
 
