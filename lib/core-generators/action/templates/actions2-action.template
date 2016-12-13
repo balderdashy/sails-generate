@@ -26,8 +26,8 @@
     // Expected request parameters go here.
     //
     // username: {
-    //   description: 'The username to access records for.'
-    //   example: 'sgress454',
+    //   description: 'The username to access records for, e.g. "sgress454".'
+    //   type: 'string',
     //   required: true
     // },
 

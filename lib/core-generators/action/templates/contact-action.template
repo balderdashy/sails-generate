@@ -10,26 +10,26 @@ module.exports = {
   inputs: {
 
     emailAddress: {
-      description: 'A return email address where we can respond.',
-      example: 'hermione@hogwarts.edu',
+      description: 'A return email address where we can respond, e.g. "hermione@hogwarts.edu".',
+      type: 'string',
       required: true
     },
 
     topic: {
-      description: 'The topic chosen from the contact form dropdown.',
-      example: 'I want to buy stuff',
+      description: 'The topic chosen from the contact form dropdown, e.g. "I want to buy stuff".',
+      type: 'string',
       required: true
     },
 
     humanName: {
-      description: 'The full name of the human sending this message.',
-      example: 'Hermione Granger',
+      description: 'The full name of the human sending this message, e.g. "Hermione Granger".',
+      type: 'string',
       required: true
     },
 
     message: {
       description: 'The custom message, in plain text.',
-      example: 'Hi!  I was wondering if you guys had any cauldrons for sale.  I looked under the "pots and pans" category, but could only find muggle items.  Please let me know ASAP.\n\nSincerely,\nHermione',
+      type: 'string',
       required: true
     },
 

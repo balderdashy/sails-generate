@@ -17,14 +17,14 @@ module.exports = {
   inputs: {
 
     usernameOrEmail: {
-      description: 'The username or email to try in this attempt.',
-      example: 'particlebanana',
+      description: 'The username or email to try in this attempt, e.g. "particlebanana".',
+      type: 'string',
       required: true
     },
 
     password: {
-      description: 'The unencrypted password to try in this attempt.',
-      example: 'passwordlol',
+      description: 'The unencrypted password to try in this attempt, e.g. "passwordlol".',
+      type: 'string',
       required: true
     }
 

@@ -10,30 +10,30 @@ module.exports = {
   inputs: {
 
     emailAddress: {
-      description: 'The email address for the new account.',
+      description: 'The email address for the new account, e.g. "m@example.com".',
       extendedDescription: 'See `helpers/validate-email-address.js` for details about email address validation.',
-      example: 'm@example.com',
+      type: 'string',
       required: true
     },
 
     username: {
-      description: 'The username for the new account.',
+      description: 'The username for the new account, e.g. "mikermcneil".',
       extendedDescription:
       'See `helpers/validate-user-username.js` for details about username validation.  '+
       'To summarize: Username may only contain alphanumeric characters or single dashes (AND WE MEAN SINGLE!  '+
       'No `i------like---ice--cream`.), and cannot begin or end with a dash.  Usernames will always be lowercased.  '+
       'Also, usernames are checked against a blacklist. The words in `constants/username-blacklist.js` are reserved, '+
       'and cannot be used as usernames.',
-      example: 'mikermcneil',
+      type: 'string',
       required: true
     },
 
     password: {
-      description: 'The unencrypted password to use for the new account.',
+      description: 'The unencrypted password to use for the new account, e.g. "passwordlol".',
       extendedDescription:
       'See `helpers/validate-password-strict.js` for details about password validation.  '+
       'To summarize: Password must be at least 7 characters, and max 72 characters.  Anything goes.',
-      example: 'passwordlol',
+      type: 'string',
       required: true
     }
 
