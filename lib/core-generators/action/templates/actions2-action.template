@@ -59,11 +59,7 @@ if (verbose) { %>
     // --or--
     //
     // malformedUsername: {
-    //   statusCode: 400,
-    //   outputExample: {
-    //     reason: 'The provided username (`Jon Snow`) is not valid.',
-    //     resolution: 'Are you Jon?  Double-check to be sure you are using the correct username.'
-    //   }
+    //   statusCode: 400
     // },
     //
     // accessDenied: {
