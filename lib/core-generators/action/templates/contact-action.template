@@ -1,110 +1,72 @@
-module.exports = {
+/**
+ * Module dependencies
+ */
+var stdlib = require('sails-stdlib');
+
+module.exports = function (req, res) {
+
+  var humanName = req.param('humanName');
+  var message = req.param('message');
+  var emailAddress = req.param('emailAddress');
+  var topic = req.param('topic');
+
+  if (!humanName) { return res.badRequest(new Error('Missing `humanName` param')); }
+  if (!message) { return res.badRequest(new Error('Missing `message` param')); }
+  if (!emailAddress) { return res.badRequest(new Error('Missing `emailAddress` param')); }
+  if (!topic) { return res.badRequest(new Error('Missing `topic` param')); }
 
 
-  friendlyName: 'Contact',
+  // Build a summary string for the incoming message.
+  var messageSummary =
+  'From: ' + humanName + ' <' + emailAddress + '>\n\n' +
+  'Topic: ' + topic + '\n\n' +
+  'Message: \n\n' + message;
 
 
-  description: 'Send a message from the contact form.',
+  // Check that an internal recipient email address is configured,
+  // and that all required Mailgun credentials are set up.
+  if (!sails.config.custom.internalEmail || !sails.config.custom.mailgunApiKey || !sails.config.custom.mailgunApiDomain) {
 
-
-  inputs: {
-
-    emailAddress: {
-      description: 'A return email address where we can respond, e.g. "hermione@hogwarts.edu".',
-      type: 'string',
-      required: true
-    },
-
-    topic: {
-      description: 'The topic chosen from the contact form dropdown, e.g. "I want to buy stuff".',
-      type: 'string',
-      required: true
-    },
-
-    humanName: {
-      description: 'The full name of the human sending this message, e.g. "Hermione Granger".',
-      type: 'string',
-      required: true
-    },
-
-    message: {
-      description: 'The custom message, in plain text.',
-      type: 'string',
-      required: true
-    },
-
-  },
-
-
-  exits: {
-
-    success: {
-      description: 'The message was sent successfully.'
+    var errMsg = 'Cannot deliver incoming message from contact form because:\n';
+    if (!sails.config.custom.internalEmail) {
+      errMsg += ' • there is no internal email address configured for this app (`sails.config.custom.internalEmail`)\n';
+    }
+    if (!sails.config.custom.mailgunApiKey) {
+      errMsg += ' • a required Mailgun credential is missing from this app\'s configuration (`sails.config.custom.mailgunApiKey`)\n';
+    }
+    if (!sails.config.custom.mailgunApiDomain) {
+      errMsg += ' • a required Mailgun credential is missing from this app\'s configuration (`sails.config.custom.mailgunApiDomain`)\n';
     }
 
-  },
-
-
-  fn: function(inputs, exits, env) {
-
-    // Import dependencies
-    var stdlib = require('sails-stdlib');
-
-    // Build a summary string for the incoming message.
-    var messageSummary =
-    'From: ' + inputs.humanName + ' <' + inputs.emailAddress + '>\n\n' +
-    'Topic: ' + inputs.topic + '\n\n' +
-    'Message: \n\n' + inputs.message;
-
-
-    // Check that an internal recipient email address is configured,
-    // and that all required Mailgun credentials are set up.
-    if (!sails.config.custom.internalEmail || !sails.config.custom.mailgunApiKey || !sails.config.custom.mailgunApiDomain) {
-
-      var errMsg = 'Cannot deliver incoming message from contact form because:\n';
-      if (!sails.config.custom.internalEmail) {
-        errMsg += ' • there is no internal email address configured for this app (`sails.config.custom.internalEmail`)\n';
-      }
-      if (!sails.config.custom.mailgunApiKey) {
-        errMsg += ' • a required Mailgun credential is missing from this app\'s configuration (`sails.config.custom.mailgunApiKey`)\n';
-      }
-      if (!sails.config.custom.mailgunApiDomain) {
-        errMsg += ' • a required Mailgun credential is missing from this app\'s configuration (`sails.config.custom.mailgunApiDomain`)\n';
-      }
-
-      errMsg += '\n'+
-      'Here is a summary of the incoming correspondence, just so we at least have it in our logs:\n'+
-      '------------------\n'+
-      messageSummary+'\n'+
-      '------------------';
-      return exits.error(new Error(errMsg));
-    }
-    // --•
-
-
-    //  ╔═╗╔═╗╔╗╔╔╦╗  ┌─┐┌─┐┌┐┌┌┬┐┌─┐┌─┐┌┬┐  ┌─┐┌┬┐┌─┐┬┬
-    //  ╚═╗║╣ ║║║ ║║  │  │ ││││ │ ├─┤│   │   ├┤ │││├─┤││
-    //  ╚═╝╚═╝╝╚╝═╩╝  └─┘└─┘┘└┘ ┴ ┴ ┴└─┘ ┴   └─┘┴ ┴┴ ┴┴┴─┘
-    stdlib('mailgun').sendPlaintextEmail({
-      apiKey: sails.config.custom.mailgunApiKey,
-      domain: sails.config.custom.mailgunDomain,
-      toName: 'Internal contact',
-      toEmail: sails.config.custom.internalEmail,
-      subject: 'New message from contact form',
-      message: messageSummary,
-      fromName: 'Sailsbot',
-      fromEmail: 'noreply@example.com'
-    }).exec({
-      error: function(err) {
-        return exits.error(err);
-      },
-      success: function() {
-        return exits.success();
-      }
-    }); // </ stdlib('mailgun').sendPlaintextEmail().exec() />
-
+    errMsg += '\n'+
+    'Here is a summary of the incoming correspondence, just so we at least have it in our logs:\n'+
+    '------------------\n'+
+    messageSummary+'\n'+
+    '------------------';
+    return res.serverError(new Error(errMsg));
   }
+  // --•
 
 
-};
+  //  ╔═╗╔═╗╔╗╔╔╦╗  ┌─┐┌─┐┌┐┌┌┬┐┌─┐┌─┐┌┬┐  ┌─┐┌┬┐┌─┐┬┬
+  //  ╚═╗║╣ ║║║ ║║  │  │ ││││ │ ├─┤│   │   ├┤ │││├─┤││
+  //  ╚═╝╚═╝╝╚╝═╩╝  └─┘└─┘┘└┘ ┴ ┴ ┴└─┘ ┴   └─┘┴ ┴┴ ┴┴┴─┘
+  stdlib('mailgun').sendPlaintextEmail({
+    apiKey: sails.config.custom.mailgunApiKey,
+    domain: sails.config.custom.mailgunDomain,
+    toName: 'Internal contact',
+    toEmail: sails.config.custom.internalEmail,
+    subject: 'New message from contact form',
+    message: messageSummary,
+    fromName: 'Sailsbot',
+    fromEmail: 'noreply@example.com'
+  }).exec({
+    error: function(err) {
+      return res.serverError(err);
+    },
+    success: function() {
+      return res.ok();
+    }
+  }); // </ stdlib('mailgun').sendPlaintextEmail().exec() />
 
+}
