@@ -1,0 +1,13 @@
+<% if (verbose) { %>/**
+ * <%= relPath %>
+ *
+ * @description :: Server-side controller action for handling incoming requests.
+ * @help        :: See http://sailsjs.com/docs/concepts/actions-and-controllers
+ */
+<% } %>module.exports = function (req, res) {
+<% if (inferredViewTemplatePath) { %>
+  return res.view(<%= util.inspect(inferredViewTemplatePath) %>);
+<% } else { %>
+  return res.ok();
+<% } %>
+};

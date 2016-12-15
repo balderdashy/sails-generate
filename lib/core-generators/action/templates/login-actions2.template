@@ -1,0 +1,124 @@
+module.exports = {
+
+
+  friendlyName: 'Login',
+
+
+  description: 'Log in using the provided username/email and password combination.',
+
+
+  extendedDescription:
+  'This action attempts to look up the user record in the database with the '+
+  'specified username (or email address).  Then, if such a user exists, it uses '+
+  'bcrypt to compare the hashed password from the database with the provided password '+
+  'attempt.',
+
+
+  inputs: {
+
+    usernameOrEmail: {
+      description: 'The username or email to try in this attempt, e.g. "particlebanana".',
+      type: 'string',
+      required: true
+    },
+
+    password: {
+      description: 'The unencrypted password to try in this attempt, e.g. "passwordlol".',
+      type: 'string',
+      required: true
+    }
+
+  },
+
+
+  exits: {
+
+    success: {
+      description: 'The requesting user agent has been successfully logged in.',
+      extendedDescription:
+      'Under the covers, this stores the id of the logged-in user in the session '+
+      'under the `userId` key.  The next time this user agent sends a request, assuming '+
+      'it includes a cookie (like a web browser), Sails will automatically make this '+
+      'user id available as `req.session.userId` in the corresponding action.'
+    },
+
+    notFound: {
+      description: 'The provided username/email and password combination does not '+
+      'match any user in the database.',
+      responseType: 'notFound'<% if (verbose) { %>,
+      // This uses the `notFound` response located in `api/responses/notFound.js`.
+      // To customize the generic "notFound" response across this entire app, change that file
+      // (see http://sailsjs.com/anatomy/api/responses/not-found-js).
+      //
+      // To customize the response for _only this_ action, replace `responseType` with `statusCode: 404`
+      // and change the implementation below accordingly (see http://sailsjs.com/docs/concepts/controllers).<% } %>
+    }
+
+  },
+
+
+  fn: function (inputs, exits, env) {
+
+    // Import dependencies
+    var stdlib = require('sails-stdlib');
+
+
+    //  ╔═╗╦╔╗╔╔╦╗  ┬ ┬┌─┐┌─┐┬─┐
+    //  ╠╣ ║║║║ ║║  │ │└─┐├┤ ├┬┘
+    //  ╚  ╩╝╚╝═╩╝  └─┘└─┘└─┘┴└─
+    // Look up by either username or email address.
+    User.findOne({
+      or: [
+        {
+          emailAddress: inputs.usernameOrEmail
+        },
+        {
+          username: inputs.usernameOrEmail
+        }
+      ]
+    })
+    .exec(function(err, userRecord) {
+      if(err) {
+        return exits.error(err);
+      }
+
+      // If there was no user, exit thru "notFound".
+      if(!userRecord) {
+        return exits.notFound();
+      }
+
+
+      //  ╔═╗╦ ╦╔═╗╔═╗╦╔═  ┌─┐┌─┐┌─┐┌─┐┬ ┬┌─┐┬─┐┌┬┐
+      //  ║  ╠═╣║╣ ║  ╠╩╗  ├─┘├─┤└─┐└─┐││││ │├┬┘ ││
+      //  ╚═╝╩ ╩╚═╝╚═╝╩ ╩  ┴  ┴ ┴└─┘└─┘└┴┘└─┘┴└──┴┘
+      stdlib('passwords').checkPassword({
+        passwordAttempt: inputs.password,
+        encryptedPassword: userRecord.password
+      }).exec({
+        error: function(err) {
+          return exits.error(err);
+        },
+        incorrect: function () {
+          // If the password doesn't match, then also
+          // exit thru "notFound" to prevent sniffing.
+          return exits.notFound();
+        },
+        success: function (){
+
+          //  ╦  ╔═╗╔═╗╦╔╗╔
+          //  ║  ║ ║║ ╦║║║║
+          //  ╩═╝╚═╝╚═╝╩╝╚╝
+          env.req.session.userId = userRecord.id;
+
+          //  ╦═╗╔═╗╔╦╗╦ ╦╦═╗╔╗╔  ┬─┐┌─┐┌─┐┌─┐┌─┐┌┐┌┌─┐┌─┐
+          //  ╠╦╝║╣  ║ ║ ║╠╦╝║║║  ├┬┘├┤ └─┐├─┘│ ││││└─┐├┤
+          //  ╩╚═╚═╝ ╩ ╚═╝╩╚═╝╚╝  ┴└─└─┘└─┘┴  └─┘┘└┘└─┘└─┘
+          return exits.success();
+
+        }//</on success>
+      });//</checkPassword().exec()>
+    });//</User.find().exec()>
+
+  }
+
+};
