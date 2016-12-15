@@ -1,214 +1,159 @@
-module.exports = {
+/**
+ * Module dependencies
+ */
+var stdlib = require('sails-stdlib');
+
+module.exports = function (req, res) {
+
+  var username = req.param('username');
+  var password = req.param('password');
+  var emailAddress = req.param('emailAddress');
+
+  if (!username) { return res.badRequest(new Error('Missing `username` param')); }
+  if (!password) { return res.badRequest(new Error('Missing `password` param')); }
+  if (!emailAddress) { return res.badRequest(new Error('Missing `emailAddress` param')); }
+
+  //  ╦╔╗╔╔═╗╦ ╦╔╦╗  ┬  ┬┌─┐┬  ┬┌┬┐┌─┐┌┬┐┬┌─┐┌┐┌┌─┐
+  //  ║║║║╠═╝║ ║ ║   └┐┌┘├─┤│  │ ││├─┤ │ ││ ││││└─┐
+  //  ╩╝╚╝╩  ╚═╝ ╩    └┘ ┴ ┴┴─┘┴─┴┘┴ ┴ ┴ ┴└─┘┘└┘└─┘
+
+  // Strictly validate the password.
+  try {
+    sails.helpers.validateUserPasswordStrict({
+      string: password
+    }).execSync();
+  } catch (e) {
+    switch (e.exit) {
+      case undefined:
+      case 'error':
+        return res.serverError(new Error('Consistency violation: Unexpected internal error (i.e. bug in our code) when validating the password provided during signup.  Details: '+e.stack));
+      default:
+        return res.serverError(new Error('Server-side validation failed for provided password.  This should NEVER happen in normal use of this app (because it SHOULD have been validated/coerced on the front-end).  So, either there is a bug somewhere (potentially in our front-end code), or this is a deliberate poke at our API from a curious individual.  Details: '+e.stack));
+    }
+  }
+
+  // Strictly validate username
+  // (Note that coercion must take place on the front-end before sending the request.)
+  try {
+    sails.helpers.validateUserUsername({
+      string: username,
+      strict: true
+    }).execSync();
+  } catch (e) {
+    switch (e.exit) {
+      case undefined:
+      case 'error':
+        return res.serverError(new Error('Consistency violation: Unexpected internal error (i.e. bug in our code) when validating the username provided during signup.  Details: '+e.stack));
+      case 'notAvailable':
+      case 'inUse':
+        return res.badRequest(new Error('That email address is already in use'));
+      default:
+        return res.serverError(new Error('Server-side validation failed for provided username (`'+username+'`).  This should NEVER happen in normal use of this app (because it SHOULD have been validated/coerced on the front-end).  So, either there is a bug somewhere (potentially in our front-end code), or this is a deliberate poke at our API from a curious individual.  Details: '+e.stack));
+    }
+  }
+
+  // Strictly validate the email address.
+  // (Note that coercion must take place on the front-end before sending the request.)
+  try {
+    sails.helpers.validateEmailAddress({
+      string: emailAddress,
+      strict: true
+    }).execSync();
+  } catch (e) {
+    switch (e.exit) {
+      case undefined:
+      case 'error':
+        return res.serverError(new Error('Consistency violation: Unexpected internal error (i.e. bug in our code) when validating the email address provided during signup.  Details: '+e.stack));
+      default:
+        return res.serverError(new Error('Server-side validation failed for provided email address (`'+emailAddress+'`).  This should NEVER happen in normal use of this app (because it SHOULD have been validated/coerced on the front-end).  So, either there is a bug somewhere (potentially in our front-end code), or this is a deliberate poke at our API from a curious individual.  Details: '+e.stack));
+    }
+  }
 
 
-  friendlyName: 'Signup',
+  //  ╔═╗╔╗╔╔═╗╦═╗╦ ╦╔═╗╔╦╗  ┌─┐┌─┐┌─┐┌─┐┬ ┬┌─┐┬─┐┌┬┐
+  //  ║╣ ║║║║  ╠╦╝╚╦╝╠═╝ ║   ├─┘├─┤└─┐└─┐││││ │├┬┘ ││
+  //  ╚═╝╝╚╝╚═╝╩╚═ ╩ ╩   ╩   ┴  ┴ ┴└─┘└─┘└┴┘└─┘┴└──┴┘
 
-
-  description: 'Sign up for a new account.',
-
-
-  inputs: {
-
-    emailAddress: {
-      description: 'The email address for the new account, e.g. "m@example.com".',
-      extendedDescription: 'See `helpers/validate-email-address.js` for details about email address validation.',
-      type: 'string',
-      required: true
-    },
-
-    username: {
-      description: 'The username for the new account, e.g. "mikermcneil".',
-      extendedDescription:
-      'See `helpers/validate-user-username.js` for details about username validation.  '+
-      'To summarize: Username may only contain alphanumeric characters or single dashes (AND WE MEAN SINGLE!  '+
-      'No `i------like---ice--cream`.), and cannot begin or end with a dash.  Usernames will always be lowercased.  '+
-      'Also, usernames are checked against a blacklist. The words in `constants/username-blacklist.js` are reserved, '+
-      'and cannot be used as usernames.',
-      type: 'string',
-      required: true
-    },
-
-    password: {
-      description: 'The unencrypted password to use for the new account, e.g. "passwordlol".',
-      extendedDescription:
-      'See `helpers/validate-password-strict.js` for details about password validation.  '+
-      'To summarize: Password must be at least 7 characters, and max 72 characters.  Anything goes.',
-      type: 'string',
-      required: true
+  stdlib('passwords').encryptPassword({
+    password: password
+  }).exec(function(err, hashed) {
+    if(err) {
+      return res.serverError(new Error('Cannot encrypt password.  Details: '+err.stack));
     }
 
-  },
+    //  ╔═╗╔═╗╦  ╦╔═╗  ┬ ┬┌─┐┌─┐┬─┐
+    //  ╚═╗╠═╣╚╗╔╝║╣   │ │└─┐├┤ ├┬┘
+    //  ╚═╝╩ ╩ ╚╝ ╚═╝  └─┘└─┘└─┘┴└─
+
+    // Build up the data for the user record
+    var newUserData = {
+      emailAddress: emailAddress,
+      username: username,
+      password: hashed,
+      humanName: ''<% if (verbose){%>,
+      // And initial values for other attributes; e.g.
+      // plan: 'free', // << all new users default to the "free" plan
+      // isSuspended: false<% } %>
+    };
+
+    // Try to create a user record.
+    User.create(newUserData)
+    .exec(function(err, newUserRecord) {
+      try {
 
 
-  exits: {
+        //  ╔╗╔╔═╗╔═╗╔═╗╔╦╗╦╔═╗╔╦╗╔═╗  ┌─┐┬─┐┬─┐┌─┐┬─┐
+        //  ║║║║╣ ║ ╦║ ║ ║ ║╠═╣ ║ ║╣   ├┤ ├┬┘├┬┘│ │├┬┘
+        //  ╝╚╝╚═╝╚═╝╚═╝ ╩ ╩╩ ╩ ╩ ╚═╝  └─┘┴└─┴└─└─┘┴└─
+        // Inspect the error and figure out what type of exit to return
+        if(err) {
 
-    success: {
-      description: 'The new user account was created in the database, and the requesting user agent '+
-      'has been logged in.'
-    },
-
-    emailAlreadyInUse: {
-      statusCode: 409,
-      description: 'The provided email address is already in use.',
-    },
-
-    usernameAlreadyInUse: {
-      statusCode: 409,
-      description: 'The provided username is already in use.',
-    }
-
-  },
-
-
-  fn: function (inputs, exits, env) {
-
-    // Import dependencies
-    var stdlib = require('sails-stdlib');
-
-
-    //  ╦╔╗╔╔═╗╦ ╦╔╦╗  ┬  ┬┌─┐┬  ┬┌┬┐┌─┐┌┬┐┬┌─┐┌┐┌┌─┐
-    //  ║║║║╠═╝║ ║ ║   └┐┌┘├─┤│  │ ││├─┤ │ ││ ││││└─┐
-    //  ╩╝╚╝╩  ╚═╝ ╩    └┘ ┴ ┴┴─┘┴─┴┘┴ ┴ ┴ ┴└─┘┘└┘└─┘
-
-    // Strictly validate the password.
-    try {
-      sails.helpers.validateUserPasswordStrict({
-        string: inputs.password
-      }).execSync();
-    } catch (e) {
-      switch (e.exit) {
-        case undefined:
-        case 'error':
-          return exits.error(new Error('Consistency violation: Unexpected internal error (i.e. bug in our code) when validating the password provided during signup.  Details: '+e.stack));
-        default:
-          return exits.error(new Error('Server-side validation failed for provided password.  This should NEVER happen in normal use of this app (because it SHOULD have been validated/coerced on the front-end).  So, either there is a bug somewhere (potentially in our front-end code), or this is a deliberate poke at our API from a curious individual.  Details: '+e.stack));
-      }
-    }
-
-    // Strictly validate username
-    // (Note that coercion must take place on the front-end before sending the request.)
-    try {
-      sails.helpers.validateUserUsername({
-        string: inputs.username,
-        strict: true
-      }).execSync();
-    } catch (e) {
-      switch (e.exit) {
-        case undefined:
-        case 'error':
-          return exits.error(new Error('Consistency violation: Unexpected internal error (i.e. bug in our code) when validating the username provided during signup.  Details: '+e.stack));
-        case 'notAvailable':
-        case 'inUse':
-          return exits.usernameAlreadyInUse();
-        default:
-          return exits.error(new Error('Server-side validation failed for provided username (`'+inputs.username+'`).  This should NEVER happen in normal use of this app (because it SHOULD have been validated/coerced on the front-end).  So, either there is a bug somewhere (potentially in our front-end code), or this is a deliberate poke at our API from a curious individual.  Details: '+e.stack));
-      }
-    }
-
-    // Strictly validate the email address.
-    // (Note that coercion must take place on the front-end before sending the request.)
-    try {
-      sails.helpers.validateEmailAddress({
-        string: inputs.emailAddress,
-        strict: true
-      }).execSync();
-    } catch (e) {
-      switch (e.exit) {
-        case undefined:
-        case 'error':
-          return exits.error(new Error('Consistency violation: Unexpected internal error (i.e. bug in our code) when validating the email address provided during signup.  Details: '+e.stack));
-        default:
-          return exits.error(new Error('Server-side validation failed for provided email address (`'+inputs.emailAddress+'`).  This should NEVER happen in normal use of this app (because it SHOULD have been validated/coerced on the front-end).  So, either there is a bug somewhere (potentially in our front-end code), or this is a deliberate poke at our API from a curious individual.  Details: '+e.stack));
-      }
-    }
-
-
-    //  ╔═╗╔╗╔╔═╗╦═╗╦ ╦╔═╗╔╦╗  ┌─┐┌─┐┌─┐┌─┐┬ ┬┌─┐┬─┐┌┬┐
-    //  ║╣ ║║║║  ╠╦╝╚╦╝╠═╝ ║   ├─┘├─┤└─┐└─┐││││ │├┬┘ ││
-    //  ╚═╝╝╚╝╚═╝╩╚═ ╩ ╩   ╩   ┴  ┴ ┴└─┘└─┘└┴┘└─┘┴└──┴┘
-
-    stdlib('passwords').encryptPassword({
-      password: inputs.password
-    }).exec(function(err, hashed) {
-      if(err) {
-        return exits.error(new Error('Cannot encrypt password.  Details: '+err.stack));
-      }
-
-      //  ╔═╗╔═╗╦  ╦╔═╗  ┬ ┬┌─┐┌─┐┬─┐
-      //  ╚═╗╠═╣╚╗╔╝║╣   │ │└─┐├┤ ├┬┘
-      //  ╚═╝╩ ╩ ╚╝ ╚═╝  └─┘└─┘└─┘┴└─
-
-      // Build up the data for the user record
-      var newUserData = {
-        emailAddress: inputs.emailAddress,
-        username: inputs.username,
-        password: hashed,
-        humanName: ''<% if (verbose){%>,
-        // And initial values for other attributes; e.g.
-        // plan: 'free', // << all new users default to the "free" plan
-        // isSuspended: false<% } %>
-      };
-
-      // Try to create a user record.
-      User.create(newUserData)
-      .exec(function(err, newUserRecord) {
-        try {
-
-
-          //  ╔╗╔╔═╗╔═╗╔═╗╔╦╗╦╔═╗╔╦╗╔═╗  ┌─┐┬─┐┬─┐┌─┐┬─┐
-          //  ║║║║╣ ║ ╦║ ║ ║ ║╠═╣ ║ ║╣   ├┤ ├┬┘├┬┘│ │├┬┘
-          //  ╝╚╝╚═╝╚═╝╚═╝ ╩ ╩╩ ╩ ╩ ╚═╝  └─┘┴└─┴└─└─┘┴└─
-          // Inspect the error and figure out what type of exit to return
-          if(err) {
-
-            // Check for a validation error (aka UNIQUENESS)
-            if(err.code !== 'E_VALIDATION') {
-              return exits.error(err);
-            }
-
-            // Grab the first invalid attribute and see what caused it. In this
-            // case it *SHOULD* only ever be the violation of a uniqueness constraint.
-            var invalidAttribute = _.first(_.keys(err.invalidAttributes));
-            var duplicateError = _.find(err.invalidAttributes[invalidAttribute], { rule: 'unique'} );
-
-            // If a duplicate error was found, call the correct exit based on
-            // what the attribute was.
-            if(duplicateError) {
-              if(invalidAttribute === 'emailAddress') {
-                return exits.emailAlreadyInUse();
-              }
-
-              if(invalidAttribute === 'username') {
-                return exits.usernameAlreadyInUse();
-              }
-            }
-
-            // Otherwise just exit with the error.
-            return exits.error(err);
+          // Check for a validation error (aka UNIQUENESS)
+          if(err.code !== 'E_VALIDATION') {
+            return res.serverError(err);
           }
 
-          // --•
-          // If we made it here, the user record was successfully created.
+          // Grab the first invalid attribute and see what caused it. In this
+          // case it *SHOULD* only ever be the violation of a uniqueness constraint.
+          var invalidAttribute = _.first(_.keys(err.invalidAttributes));
+          var duplicateError = _.find(err.invalidAttributes[invalidAttribute], { rule: 'unique'} );
 
-          //  ╦  ╔═╗╔═╗╦╔╗╔  ┬ ┬┌─┐┌─┐┬─┐
-          //  ║  ║ ║║ ╦║║║║  │ │└─┐├┤ ├┬┘
-          //  ╩═╝╚═╝╚═╝╩╝╚╝  └─┘└─┘└─┘┴└─
-          // Store the user id in the session
-          env.req.session.userId = newUserRecord.id;
+          // If a duplicate error was found, call the correct exit based on
+          // what the attribute was.
+          if(duplicateError) {
+            if(invalidAttribute === 'emailAddress') {
+              return res.badRequest(new Error('That email address is already in use'));
+            }
+
+            if(invalidAttribute === 'username') {
+              return res.badRequest(new Error('That username is already in use'));
+            }
+          }
+
+          // Otherwise just exit with the error.
+          return res.serverError(err);
+        }
+
+        // --•
+        // If we made it here, the user record was successfully created.
+
+        //  ╦  ╔═╗╔═╗╦╔╗╔  ┬ ┬┌─┐┌─┐┬─┐
+        //  ║  ║ ║║ ╦║║║║  │ │└─┐├┤ ├┬┘
+        //  ╩═╝╚═╝╚═╝╩╝╚╝  └─┘└─┘└─┘┴└─
+        // Store the user id in the session
+        req.session.userId = newUserRecord.id;
 
 
-          //  ╦═╗╔═╗╔╦╗╦ ╦╦═╗╔╗╔  ┬─┐┌─┐┌─┐┌─┐┌─┐┌┐┌┌─┐┌─┐
-          //  ╠╦╝║╣  ║ ║ ║╠╦╝║║║  ├┬┘├┤ └─┐├─┘│ ││││└─┐├┤
-          //  ╩╚═╚═╝ ╩ ╚═╝╩╚═╝╚╝  ┴└─└─┘└─┘┴  └─┘┘└┘└─┘└─┘
-          // If everything went ok, call the success exit.
-          return exits.success();
+        //  ╦═╗╔═╗╔╦╗╦ ╦╦═╗╔╗╔  ┬─┐┌─┐┌─┐┌─┐┌─┐┌┐┌┌─┐┌─┐
+        //  ╠╦╝║╣  ║ ║ ║╠╦╝║║║  ├┬┘├┤ └─┐├─┘│ ││││└─┐├┤
+        //  ╩╚═╚═╝ ╩ ╚═╝╩╚═╝╚╝  ┴└─└─┘└─┘┴  └─┘┘└┘└─┘└─┘
+        // If everything went ok, call the success exit.
+        return res.ok();
 
-        } catch (e){ return exits.error(e); }
+      } catch (e){ return res.serverError(e); }
 
-      }); // </ User.create().exec() >
+    }); // </ User.create().exec() >
 
-    }); // </ stdlib('passwords').encryptPassword().exec() >
-
-  }
+  }); // </ stdlib('passwords').encryptPassword().exec() >
 
 };
