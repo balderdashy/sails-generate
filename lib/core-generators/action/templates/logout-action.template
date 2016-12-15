@@ -11,4 +11,4 @@ module.exports = function (req, res) {
   //  This persists the now-empty session back to the underlying store.
   return res.ok();
 
-}
+};
