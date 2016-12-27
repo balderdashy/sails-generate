@@ -9,25 +9,8 @@ module.exports = {
 
   attributes: {
 
-    id: {
-      required: true,
-      unique: true
-    },
-
-    createdAt: {
-      type: 'number',
-      autoCreatedAt: true
-    },
-
-    updatedAt: {
-      type: 'number',
-      autoUpdatedAt: true
-    },
-
 <%= attributes %>
-  },
-
-  primaryKey: 'id'
+  }
 
 };
 <%} else if (lang === 'coffee'){ %> # <%= filename %>
@@ -39,20 +22,6 @@ module.exports =
 
   attributes:
 
-    id:
-      required: true
-      unique: true
-
-    createdAt:
-      type: 'number'
-      autoCreatedAt: true
-
-    updatedAt:
-      type: 'number'
-      autoUpdatedAt: true
-
 <%= attributes %>
-
-  primaryKey: 'id'
 
 <%}%>
