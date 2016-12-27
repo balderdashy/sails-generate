@@ -23,7 +23,7 @@
  * If you do go that route, it's conventional in Node to create a `./lib` directory for your private submodules
  * and load them at the top of the file with other dependencies.  e.g. var update = `require('./lib/update')`;
  */
-module.exports = (function () {
+module.exports = (function <%=adapterMainFnName%> () {
 
 
   // You'll want to maintain a reference to each connection
