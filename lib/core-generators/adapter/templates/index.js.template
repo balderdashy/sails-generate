@@ -1,13 +1,10 @@
 /**
  * Module dependencies
  */
-// ...
-// e.g.
-// var _ = require('lodash');
-// var mysql = require('node-mysql');
-// ...
 
-
+var _ = require('lodash');
+var async = require('async');
+// var myDbDriver = require('nodejs-driver-for-some-awesome-db');
 
 /**
  * <%= packageName %>
@@ -25,50 +22,21 @@
  */
 module.exports = (function <%=adapterMainFnName%> () {
 
-
-  // You'll want to maintain a reference to each connection
-  // that gets registered with this adapter.
-  var connections = {};
-
-
-
-  // You may also want to store additional, private data
-  // per-connection (esp. if your data store uses persistent
-  // connections).
+  // Private var to track of all the datastores that use this adapter.  In order for your adapter
+  // to support advanced features like transactions and native queries, you'll need
+  // to expose this var publicly as well.  See the `registerDatastore` method for more info.
   //
-  // Keep in mind that models can be configured to use different databases
-  // within the same app, at the same time.
-  //
-  // i.e. if you're writing a MariaDB adapter, you should be aware that one
-  // model might be configured as `host="localhost"` and another might be using
-  // `host="foo.com"` at the same time.  Same thing goes for user, database,
-  // password, or any other config.
-  //
-  // You don't have to support this feature right off the bat in your
-  // adapter, but it ought to get done eventually.
-  //
+  var datastores = {};
 
+
+  // The main adapter object.
   var adapter = {
 
-    // Set to true if this adapter supports (or requires) things like data types, validations, keys, etc.
-    // If true, the schema for models using this adapter will be automatically synced when the server starts.
-    // Not terribly relevant if your data store is not SQL/schemaful.
-    //
-    // If setting syncable, you should consider the migrate option,
-    // which allows you to set how the sync will be performed.
-    // It can be overridden globally in an app (config/adapters.js)
-    // and on a per-model basis.
-    //
-    // IMPORTANT:
-    // `migrate` is not a production data migration solution!
-    // In production, always use `migrate: safe`
-    //
-    // drop   => Drop schema and data, then recreate it
-    // alter  => Drop/add columns as necessary.
-    // safe   => Don't change anything (good for production DBs)
-    //
-    syncable: false,
+    // The identity of this adapter, to be referenced by datastore configurations in a Sails app.
+    identity: '<%=identity%>',
 
+    // Waterline Adapter API Version
+    adapterApiVersion: 1,
 
     // Default configuration for connections
     defaults: {
@@ -80,164 +48,497 @@ module.exports = (function <%=adapterMainFnName%> () {
       // customThings: ['eh']
     },
 
+    //  ╔═╗═╗ ╦╔═╗╔═╗╔═╗╔═╗  ┌─┐┬─┐┬┬  ┬┌─┐┌┬┐┌─┐
+    //  ║╣ ╔╩╦╝╠═╝║ ║╚═╗║╣   ├─┘├┬┘│└┐┌┘├─┤ │ ├┤
+    //  ╚═╝╩ ╚═╩  ╚═╝╚═╝╚═╝  ┴  ┴└─┴ └┘ ┴ ┴ ┴ └─┘
+    //  ┌┬┐┌─┐┌┬┐┌─┐┌─┐┌┬┐┌─┐┬─┐┌─┐┌─┐
+    //   ││├─┤ │ ├─┤└─┐ │ │ │├┬┘├┤ └─┐
+    //  ─┴┘┴ ┴ ┴ ┴ ┴└─┘ ┴ └─┘┴└─└─┘└─┘
+    // This allows outside access to the datastores, for use in advanced ORM methods like `.runTransaction()`.
+    datastores: datastores,
 
-
+    //  ╦═╗╔═╗╔═╗╦╔═╗╔╦╗╔═╗╦═╗  ┌┬┐┌─┐┌┬┐┌─┐┌─┐┌┬┐┌─┐┬─┐┌─┐
+    //  ╠╦╝║╣ ║ ╦║╚═╗ ║ ║╣ ╠╦╝   ││├─┤ │ ├─┤└─┐ │ │ │├┬┘├┤
+    //  ╩╚═╚═╝╚═╝╩╚═╝ ╩ ╚═╝╩╚═  ─┴┘┴ ┴ ┴ ┴ ┴└─┘ ┴ └─┘┴└─└─┘
     /**
+     * Register a new datastore with this adapter.  This often involves creating a new connection
+     * to the underlying database layer (e.g. MySQL, mongo, or a local file).
      *
-     * This method runs when a model is initially registered
-     * at server-start-time.  This is the only required method.
+     * Waterline calls this method once for every datastore that is configured to use this adapter.
+     * This method is optional but strongly recommended.
      *
-     * @param  {[type]}   connection [description]
-     * @param  {[type]}   collection [description]
-     * @param  {Function} cb         [description]
-     * @return {[type]}              [description]
+     * @param  {Dictionary}   datastoreConfig  Dictionary of configuration options for this datastore (e.g. host, port, etc.)
+     * @param  {Dictionary}   models           Dictionary of model schemas using this datastore.
+     * @param  {Function}     cb               Callback after successfully registering the datastore.
      */
-    registerConnection: function(connection, collections, cb) {
 
-      if(!connection.identity) return cb(new Error('Connection is missing an identity.'));
-      if(connections[connection.identity]) return cb(new Error('Connection is already registered.'));
+    registerDatastore: function registerDatastore(datastoreConfig, models, cb) {
 
-      // Add in logic here to initialize connection
-      // e.g. connections[connection.identity] = new Database(connection, collections);
-      connections[connection.identity] = connection;
+      // Get the unique identity for this datastore.
+      var identity = datastoreConfig.identity;
+      if (!identity) {
+        return cb(new Error('Invalid datastore config. A datastore should contain a unique identity property.'));
+      }
 
-      cb();
+      // Validate that the datastore isn't already initialized
+      if (datastores[identity]) {
+        throw new Error('Datastore `' + identity + '` is already registered.');
+      }
+
+      // Do any custom connection logic here.
+      // var dbConnectionInstance = myDbDriver.connect(datastoreConfig.url);
+      //
+      // Then save information about the datastore to the `datastores` dictionary.
+      // The values in this dictionary are completely up to the adapter, but there
+      // are a couple of reserved keys:
+      //
+      // `manager`: If provided, this should be a "connection manager" -- an object
+      //            that the underlying driver can use to create new database connections.
+      //            For example, in sails-postgresql, `manager` encapsulates a connection pool
+      //            that the machinepack-postgresql driver uses.  The actual form of the manager
+      //            object is completely dependent on the driver.
+      //
+      // `driver` : A reference to the underlying driver, for instance `machinepack-postgresql`
+      //            for the `sails-postgresql` adapter.
+      //
+      // `config  : Configuration options for the datastore.  Typically this will be derived
+      //            (or copied directly) from the `datastoreConfig` argument to this method.
+
+      datastores[identity] = {
+        config: datastoreConfig,
+        // dbConnection: dbConnectionInstance
+      };
+
+      // Wait one tick and return.
+      setImmediate(function done() {
+        return cb();
+      });
+
     },
 
 
+    //  ╔╦╗╔═╗╔═╗╦═╗╔╦╗╔═╗╦ ╦╔╗╔  ┌─┐┌─┐┌┐┌┌┐┌┌─┐┌─┐┌┬┐┬┌─┐┌┐┌
+    //   ║ ║╣ ╠═╣╠╦╝ ║║║ ║║║║║║║  │  │ │││││││├┤ │   │ ││ ││││
+    //   ╩ ╚═╝╩ ╩╩╚══╩╝╚═╝╚╩╝╝╚╝  └─┘└─┘┘└┘┘└┘└─┘└─┘ ┴ ┴└─┘┘└┘
     /**
-     * Fired when a model is unregistered, typically when the server
+     * Fired when a datastore is unregistered, typically when the server
      * is killed. Useful for tearing-down remaining open connections,
      * etc.
      *
-     * @param  {Function} cb [description]
-     * @return {[type]}      [description]
+     * @param  {String} identity  (optional) The datastore to teardown.  If not provided, all datastores will be torn down.
+     * @param  {Function} cb     Callback
      */
-    // Teardown a Connection
-    teardown: function (conn, cb) {
+    teardown: function (identity, cb) {
 
-      if (typeof conn == 'function') {
-        cb = conn;
-        conn = null;
+      // If no specific identity was sent, teardown all the datastores
+      if (!identity || identity === null) {
+        datastoreIdentities = datastoreIdentities.concat(_.keys(datastores));
+      } else {
+        datastoreIdentities.push(identity);
       }
-      if (!conn) {
-        connections = {};
-        return cb();
-      }
-      if(!connections[conn]) return cb();
-      delete connections[conn];
-      cb();
+
+      // Teardown each datastore, and call the callback when finished.
+      async.eachSeries(datastoreIdentities, function teardownDatastore(datastoreIdentity, next) {
+
+        delete datastores[datastoreIdentity];
+        return next();
+
+      }, function doneTearingDown(err) {
+        return cb(err);
+      });
+
     },
 
 
-    // Return attributes
-    describe: function (connection, collection, cb) {
-      // Add in logic here to describe a collection (e.g. DESCRIBE TABLE logic)
-      return cb();
-    },
+    //  ██████╗  ██████╗ ██╗
+    //  ██╔══██╗██╔═══██╗██║
+    //  ██║  ██║██║   ██║██║
+    //  ██║  ██║██║▄▄ ██║██║
+    //  ██████╔╝╚██████╔╝███████╗
+    //  ╚═════╝  ╚══▀▀═╝ ╚══════╝
+    //
+    // Methods related to manipulating data stored in the database.
 
+
+    //  ╔═╗╦═╗╔═╗╔═╗╔╦╗╔═╗  ┬─┐┌─┐┌─┐┌─┐┬─┐┌┬┐
+    //  ║  ╠╦╝║╣ ╠═╣ ║ ║╣   ├┬┘├┤ │  │ │├┬┘ ││
+    //  ╚═╝╩╚═╚═╝╩ ╩ ╩ ╚═╝  ┴└─└─┘└─┘└─┘┴└──┴┘
     /**
-     *
-     * REQUIRED method if integrating with a schemaful
-     * (SQL-ish) database.
-     *
+     * Add a new row to the table
+     * @param  {String}       datastoreName The name of the datastore to perform the query on.
+     * @param  {Dictionary}   query         The stage-3 query to perform.
+     * @param  {Function}     cb            Callback
      */
-    define: function (connection, collection, definition, cb) {
-      // Add in logic here to create a collection (e.g. CREATE TABLE logic)
+    create: function create(datastoreName, query, cb) {
+
+      // Get a reference to the datastore.
+      var datastore = datastores[datastoreName];
+
+      // When implementing this method, this is where you'll
+      // perform the query and return the result, e.g.:
+      //
+      // datastore.dbConnection.create(query, function(err, result) {
+      //   if (err) {return cb(err);}
+      //   return cb(undefined, result);
+      // });
+      //
+      // Note that depending on the value of `query.meta.fetch`,
+      // you may be expected to return the array of documents
+      // that were created as the second argument to the callback.
+
+
+      // But for now, this method is just a no-op.
       return cb();
+
     },
 
+
+    //  ╔═╗╦═╗╔═╗╔═╗╔╦╗╔═╗  ╔═╗╔═╗╔═╗╦ ╦  ┬─┐┌─┐┌─┐┌─┐┬─┐┌┬┐
+    //  ║  ╠╦╝║╣ ╠═╣ ║ ║╣   ║╣ ╠═╣║  ╠═╣  ├┬┘├┤ │  │ │├┬┘ ││
+    //  ╚═╝╩╚═╚═╝╩ ╩ ╩ ╚═╝  ╚═╝╩ ╩╚═╝╩ ╩  ┴└─└─┘└─┘└─┘┴└──┴┘
     /**
-     *
-     * REQUIRED method if integrating with a schemaful
-     * (SQL-ish) database.
-     *
+     * Add multiple new rows to the table
+     * @param  {String}       datastoreName The name of the datastore to perform the query on.
+     * @param  {Dictionary}   query         The stage-3 query to perform.
+     * @param  {Function}     cb            Callback
      */
-    drop: function (connection, collection, relations, cb) {
-      // Add in logic here to delete a collection (e.g. DROP TABLE logic)
+    createEach: function createEach(datastoreName, query, cb) {
+
+      // Get a reference to the datastore.
+      var datastore = datastores[datastoreName];
+
+      // When implementing this method, this is where you'll
+      // perform the query and return the result, e.g.:
+      //
+      // datastore.dbConnection.createEach(query, function(err, result) {
+      //   if (err) {return cb(err);}
+      //   return cb(undefined, result);
+      // });
+      //
+      // Note that depending on the value of `query.meta.fetch`,
+      // you may be expected to return the array of documents
+      // that were created as the second argument to the callback.
+
+
+      // But for now, this method is just a no-op.
       return cb();
+
     },
 
+
+    //  ╔═╗╔═╗╦  ╔═╗╔═╗╔╦╗  ┌─┐ ┬ ┬┌─┐┬─┐┬ ┬
+    //  ╚═╗║╣ ║  ║╣ ║   ║   │─┼┐│ │├┤ ├┬┘└┬┘
+    //  ╚═╝╚═╝╩═╝╚═╝╚═╝ ╩   └─┘└└─┘└─┘┴└─ ┴
     /**
-     *
-     * REQUIRED method if users expect to call Model.find(), Model.findOne(),
-     * or related.
-     *
-     * You should implement this method to respond with an array of instances.
-     * Waterline core will take care of supporting all the other different
-     * find methods/usages.
-     *
+     * Select Query Logic
+     * @param  {String}       datastoreName The name of the datastore to perform the query on.
+     * @param  {Dictionary}   query         The stage-3 query to perform.
+     * @param  {Function}     cb            Callback
      */
-    find: function (connection, collection, options, cb) {
+    find: function find(datastoreName, query, cb) {
+
+      // Get a reference to the datastore.
+      var datastore = datastores[datastoreName];
+
+      // When implementing this method, this is where you'll
+      // perform the query and return the result, e.g.:
+      //
+      // datastore.dbConnection.find(query, function(err, result) {
+      //   if (err) {return cb(err);}
+      //   return cb(undefined, result);
+      // });
+
+      // But for now, this method is just a no-op.
       return cb();
+
     },
 
-    create: function (connection, collection, values, cb) {
+
+    //  ╦ ╦╔═╗╔╦╗╔═╗╔╦╗╔═╗  ┌─┐ ┬ ┬┌─┐┬─┐┬ ┬
+    //  ║ ║╠═╝ ║║╠═╣ ║ ║╣   │─┼┐│ │├┤ ├┬┘└┬┘
+    //  ╚═╝╩  ═╩╝╩ ╩ ╩ ╚═╝  └─┘└└─┘└─┘┴└─ ┴
+    /**
+     * Update one or more models in the table
+     * @param  {String}       datastoreName The name of the datastore to perform the query on.
+     * @param  {Dictionary}   query         The stage-3 query to perform.
+     * @param  {Function}     cb            Callback
+     */
+    update: function update(datastoreName, query, cb) {
+
+      // Get a reference to the datastore.
+      var datastore = datastores[datastoreName];
+
+      // When implementing this method, this is where you'll
+      // perform the query and return the result, e.g.:
+      //
+      // datastore.dbConnection.update(query, function(err, result) {
+      //   if (err) {return cb(err);}
+      //   return cb(undefined, result);
+      // });
+      //
+      // Note that depending on the value of `query.meta.fetch`,
+      // you may be expected to return the array of documents
+      // that were updated as the second argument to the callback.
+
+      // But for now, this method is just a no-op.
       return cb();
+
     },
 
-    update: function (connection, collection, options, values, cb) {
+
+    //  ╔╦╗╔═╗╔═╗╔╦╗╦═╗╔═╗╦ ╦  ┌─┐ ┬ ┬┌─┐┬─┐┬ ┬
+    //   ║║║╣ ╚═╗ ║ ╠╦╝║ ║╚╦╝  │─┼┐│ │├┤ ├┬┘└┬┘
+    //  ═╩╝╚═╝╚═╝ ╩ ╩╚═╚═╝ ╩   └─┘└└─┘└─┘┴└─ ┴
+    /**
+     * Delete one or more records in a table
+     * @param  {String}       datastoreName The name of the datastore to perform the query on.
+     * @param  {Dictionary}   query         The stage-3 query to perform.
+     * @param  {Function}     cb            Callback
+     */
+    destroy: function destroy(datastoreName, query, cb) {
+
+      // Get a reference to the datastore.
+      var datastore = datastores[datastoreName];
+
+      // When implementing this method, this is where you'll
+      // perform the query and return the result, e.g.:
+      //
+      // datastore.dbConnection.destroy(query, function(err, result) {
+      //   if (err) {return cb(err);}
+      //   return cb(undefined, result);
+      // });
+      //
+      // Note that depending on the value of `query.meta.fetch`,
+      // you may be expected to return the array of documents
+      // that were destroyed as the second argument to the callback.
+
+      // But for now, this method is just a no-op.
       return cb();
+
     },
 
-    destroy: function (connection, collection, options, cb) {
+
+    // NOTE - If you don't want to support native joins, remove this method completely!
+    // Without this method, Waterline will handle joins by sending multiple queries to
+    // the adapter and joining the results itself.
+    //
+    //  ╔╗╔╔═╗╔╦╗╦╦  ╦╔═╗   ┬┌─┐┬┌┐┌  ┌─┐┬ ┬┌─┐┌─┐┌─┐┬─┐┌┬┐
+    //  ║║║╠═╣ ║ ║╚╗╔╝║╣    ││ │││││  └─┐│ │├─┘├─┘│ │├┬┘ │
+    //  ╝╚╝╩ ╩ ╩ ╩ ╚╝ ╚═╝  └┘└─┘┴┘└┘  └─┘└─┘┴  ┴  └─┘┴└─ ┴
+    /**
+     * Perform a "find" query with one or more native joins.
+     * @param  {String}       datastoreName The name of the datastore to perform the query on.
+     * @param  {Dictionary}   query         The stage-3 query to perform.
+     * @param  {Function}     cb            Callback
+     */
+    join: function join(datastoreName, query, cb) {
+
+      // Get a reference to the datastore.
+      var datastore = datastores[datastoreName];
+
+      // When implementing this method, this is where you'll
+      // perform the query and return the result, e.g.:
+      //
+      // datastore.dbConnection.join(query, function(err, result) {
+      //   if (err) {return cb(err);}
+      //   return cb(undefined, result);
+      // });
+
+      // But for now, this method is just a no-op.
       return cb();
-    }
 
-    /*
-
-    // Custom methods defined here will be available on all models
-    // which are hooked up to this adapter:
-    //
-    // e.g.:
-    //
-    foo: function (connection, collection, options, cb) {
-      return cb(null,"ok");
     },
-    bar: function (connection, collection, options, cb) {
-      if (!options.jello) return cb("Failure!");
-      else return cb();
-      destroy: function (connection, collection, options, values, cb) {
-       return cb();
-     }
 
-    // So if you have three models:
-    // Tiger, Sparrow, and User
-    // 2 of which (Tiger and Sparrow) implement this custom adapter,
-    // then you'll be able to access:
+
+    //  ╔═╗╦  ╦╔═╗  ┌─┐ ┬ ┬┌─┐┬─┐┬ ┬
+    //  ╠═╣╚╗╔╝║ ╦  │─┼┐│ │├┤ ├┬┘└┬┘
+    //  ╩ ╩ ╚╝ ╚═╝  └─┘└└─┘└─┘┴└─ ┴
+    /**
+     * Find out the average of the query.
+     * @param  {String}       datastoreName The name of the datastore to perform the query on.
+     * @param  {Dictionary}   query         The stage-3 query to perform.
+     * @param  {Function}     cb            Callback
+     */
+    avg: function avg(datastoreName, query, cb) {
+
+      // Get a reference to the datastore.
+      var datastore = datastores[datastoreName];
+
+      // When implementing this method, this is where you'll
+      // perform the query and return the result, e.g.:
+      //
+      // datastore.dbConnection.find(query, function(err, result) {
+      //   if (err) {return cb(err);}
+      //   var sum = _.reduce(result, function(memo, row) { return memo + row[query.numericAttrName]; }, 0);
+      //   var avg = sum / result.length;
+      //   return cb(undefined, avg);
+      // });
+
+      // But for now, this method is just a no-op.
+      return cb();
+
+    },
+
+
+    //  ╔═╗╦ ╦╔╦╗  ┌─┐ ┬ ┬┌─┐┬─┐┬ ┬
+    //  ╚═╗║ ║║║║  │─┼┐│ │├┤ ├┬┘└┬┘
+    //  ╚═╝╚═╝╩ ╩  └─┘└└─┘└─┘┴└─ ┴
+    /**
+     * Find out the sum of the query.
+     * @param  {String}       datastoreName The name of the datastore to perform the query on.
+     * @param  {Dictionary}   query         The stage-3 query to perform.
+     * @param  {Function}     cb            Callback
+     */
+    sum: function sum(datastoreName, query, cb) {
+
+      // Get a reference to the datastore.
+      var datastore = datastores[datastoreName];
+
+      // When implementing this method, this is where you'll
+      // perform the query and return the result, e.g.:
+      //
+      // datastore.dbConnection.find(query, function(err, result) {
+      //   if (err) {return cb(err);}
+      //   var sum = _.reduce(result, function(memo, row) { return memo + row[query.numericAttrName]; }, 0);
+      //   return cb(undefined, sum);
+      // });
+
+      // But for now, this method is just a no-op.
+      return cb();
+
+    },
+
+
+    //  ╔═╗╔═╗╦ ╦╔╗╔╔╦╗  ┌─┐ ┬ ┬┌─┐┬─┐┬ ┬
+    //  ║  ║ ║║ ║║║║ ║   │─┼┐│ │├┤ ├┬┘└┬┘
+    //  ╚═╝╚═╝╚═╝╝╚╝ ╩   └─┘└└─┘└─┘┴└─ ┴
+    /**
+     * Return the number of matching records.
+     * @param  {String}       datastoreName The name of the datastore to perform the query on.
+     * @param  {Dictionary}   query         The stage-3 query to perform.
+     * @param  {Function}     cb            Callback
+     */
+    count: function count(datastoreName, query, cb) {
+
+      // Get a reference to the datastore.
+      var datastore = datastores[datastoreName];
+
+      // When implementing this method, this is where you'll
+      // perform the query and return the result, e.g.:
+      //
+      // datastore.dbConnection.count(query, function(err, result) {
+      //   if (err) {return cb(err);}
+      //   return cb(undefined, result);
+      // });
+
+      // But for now, this method is just a no-op.
+      return cb();
+
+    },
+
+
+    //  ██████╗ ██████╗ ██╗
+    //  ██╔══██╗██╔══██╗██║
+    //  ██║  ██║██║  ██║██║
+    //  ██║  ██║██║  ██║██║
+    //  ██████╔╝██████╔╝███████╗
+    //  ╚═════╝ ╚═════╝ ╚══════╝
     //
-    // Tiger.foo(...)
-    // Tiger.bar(...)
-    // Sparrow.foo(...)
-    // Sparrow.bar(...)
+    // Methods related to modifying the underlying data structure of the
+    // database.
+
+    //  ╔╦╗╔═╗╔═╗╦╔╗╔╔═╗  ┌┬┐┌─┐┌┐ ┬  ┌─┐
+    //   ║║║╣ ╠╣ ║║║║║╣    │ ├─┤├┴┐│  ├┤
+    //  ═╩╝╚═╝╚  ╩╝╚╝╚═╝   ┴ ┴ ┴└─┘┴─┘└─┘
+    /**
+     * Build a new table in the database.
+     *
+     * (This is used to allow Sails to do auto-migrations)
+     *
+     * @param  {String}       datastoreName The name of the datastore containing the table to create.
+     * @param  {String}       tableName     The name of the table to create.
+     * @param  {Dictionary}   definition    The table definition.
+     * @param  {Function}     cb            Callback
+     */
+    define: function define(datastoreName, tableName, definition, cb) {
+
+      // Get a reference to the datastore.
+      var datastore = datastores[datastoreName];
+
+      // When implementing this method, this is where you'll
+      // create the table, e.g.:
+      //
+      // datastore.dbConnection.createTable(tableName, definition, function(err) {
+      //   if (err) {return cb(err);}
+      //   return cb();
+      // });
+
+      // But for now, this method is just a no-op.
+      return cb();
+
+    },
 
 
-    // Example success usage:
+    //  ╔╦╗╦═╗╔═╗╔═╗  ┌┬┐┌─┐┌┐ ┬  ┌─┐
+    //   ║║╠╦╝║ ║╠═╝   │ ├─┤├┴┐│  ├┤
+    //  ═╩╝╩╚═╚═╝╩     ┴ ┴ ┴└─┘┴─┘└─┘
+    /**
+     * Remove a table from the database.
+     *
+     * @param  {String}       datastoreName The name of the datastore containing the table to create.
+     * @param  {String}       tableName     The name of the table to create.
+     * @param  {undefined}    relations     Currently unused
+     * @param  {Function}     cb            Callback
+     */
+    drop: function drop(datastoreName, tableName, relations, cb) {
+
+      // Get a reference to the datastore.
+      var datastore = datastores[datastoreName];
+
+      // When implementing this method, this is where you'll
+      // drop the table, e.g.:
+      //
+      // datastore.dbConnection.dropTable(tableName, function(err) {
+      //   if (err) {return cb(err);}
+      //   return cb();
+      // });
+
+      // But for now, this method is just a no-op.
+      return cb();
+
+    },
+
+
+    // NOTE - If your adapter doesn't support sequence entities (like PostgreSQL), you can
+    // safely remove this method.
     //
-    // (notice how the first argument goes away:)
-    Tiger.foo({}, function (err, result) {
-      if (err) return console.error(err);
-      else console.log(result);
+    //  ╔═╗╔═╗╔╦╗  ┌─┐┌─┐┌─┐ ┬ ┬┌─┐┌┐┌┌─┐┌─┐
+    //  ╚═╗║╣  ║   └─┐├┤ │─┼┐│ │├┤ ││││  ├┤
+    //  ╚═╝╚═╝ ╩   └─┘└─┘└─┘└└─┘└─┘┘└┘└─┘└─┘
+    /**
+     * Set a sequence in an auto-incrementing primary key to a known value.
+     * @param  {String}       datastoreName The name of the datastore containing the table to create.
+     * @param  {String}       sequenceName  The name of the sequence to update.
+     * @param  {Integer}      sequenceValue The new value for the sequence.
+     * @param  {Function}     cb            Callback
+     */
+    setSequence: function setSequence(datastoreName, sequenceName, sequenceValue, cb, meta) {
 
-      // outputs: ok
-    });
+      // Get a reference to the datastore.
+      var datastore = datastores[datastoreName];
 
-    // Example error usage:
-    //
-    // (notice how the first argument goes away:)
-    Sparrow.bar({test: 'yes'}, function (err, result){
-      if (err) console.error(err);
-      else console.log(result);
+      // When implementing this method, this is where you'll
+      // update the sequence, e.g.:
+      //
+      // datastore.dbConnection.setSequenceVal(sequenceName, sequenceValue, function(err) {
+      //   if (err) {return cb(err);}
+      //   return cb();
+      // });
 
-      // outputs: Failure!
-    })
+      // But for now, this method is just a no-op.
+      return cb();
 
-
-
-
-    */
-
-
+    },
 
 
   };
