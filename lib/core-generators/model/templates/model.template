@@ -10,7 +10,7 @@ module.exports = {
   attributes: {
 
 <%= attributes %>
-  }
+  },
 
 };
 <%} else if (lang === 'coffee'){ %> # <%= filename %>
