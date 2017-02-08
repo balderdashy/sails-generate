@@ -1,0 +1,26 @@
+# <%- id %>
+
+A [Sails JS](http://sailsjs.org) hook.
+
+### Installation
+
+`npm install <%= id %> --save`
+
+### Usage
+
+Usage info goes here...
+
+### Configuration
+
+Parameter      | Type                | Default | Details
+-------------- | ------------------- | ------- | :---------------------------------:
+someConfigParam | ((string)) | `foobar` | Some configuration option users can set for this hook.
+
+#### Example
+
+An example use of this hook, if applicable:
+
+```javascript
+sails.hooks['<%-hookName%>'].doAThing();
+
+```
