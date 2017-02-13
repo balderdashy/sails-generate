@@ -20,7 +20,7 @@ module.exports = function res<%= _.capitalize(id) %>(data) {
   var res = this.res;
 
   // Determine the status code to set.
-  var statusCodeToSet = 501;
+  var statusCodeToSet = res.statusCode || 501;
 
   // Log a message, if desired.
   sails.log('Ran custom response: res.<%= id %>()');
