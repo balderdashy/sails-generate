@@ -35,6 +35,7 @@ module.exports = function res<%= _.capitalize(id) %>(data) {
   if (_.isError(data)) {
     if (!_.isFunction(data.toJSON)) {
       data = data.stack;
+      return res.send(data);
     }
   }
 
