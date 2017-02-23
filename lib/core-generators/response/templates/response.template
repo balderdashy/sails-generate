@@ -30,12 +30,13 @@ module.exports = function res<%= _.capitalize(id) %>(data) {
     return res.sendStatus(statusCodeToSet);
   }
 
-  // If the data is an Error instance, then log it as verbose (just in case it's important.)
-  // Also, if it doesn't have a custom .toJSON(), use its stack instead (otherwise res.json() will turn it into an empty dictionary).
-  // (But if this is running in a production environment, don't send it at all.)
   if (_.isError(data)) {
-    sails.log.verbose('Custom response `res.<%= id %>()` called with an Error:', data);
+    // If the provided data is an Error instance, then log it as verbose.
+    sails.log.verbose('Custom response `res.foobar()` called with an Error:', data);
 
+    // If the error doesn't have a custom .toJSON(), use its `stack` instead--
+    // otherwise res.json() would turn it into an empty dictionary.
+    // (If this is production, don't send a response body at all.)
     if (!_.isFunction(data.toJSON)) {
       if (process.env.NODE_ENV === 'production') {
         return res.sendStatus(statusCodeToSet);
