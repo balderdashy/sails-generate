@@ -1,6 +1,6 @@
 {
   "name": "sails-generate",
-  "version": "1.10.3",
+  "version": "1.10.4",
   "description": "Runner script for sails generators",
   "main": "lib/index.js",
   "directories": {
