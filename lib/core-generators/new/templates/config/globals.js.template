@@ -11,12 +11,12 @@
 
 module.exports.globals = {
 
-  <% if (_.contains(without, 'lodash')) { %>// This app was generated without the `lodash` package.
+<% if (_.contains(without, 'lodash')) { %>  // This app was generated without the `lodash` package.
   // To use Lodash, run `npm install lodash --save` and require it in the file(s) where you need it.
   // Or, to expose it as a global, change this line to say `require('lodash')` (instead of `false`)
   _: false,
-  <% }
-  else { %>/****************************************************************************
+<% }
+  else { %>  /****************************************************************************
   *                                                                           *
   * Whether to expose the locally-installed `lodash` as a global variable     *
   * (`_`), making  it accessible throughout your app.                         *
@@ -26,15 +26,14 @@ module.exports.globals = {
 
   _: require('lodash'),<% } %>
 
-  <% if (_.contains(without, 'async')) { %>// This app was generated without the `async` package.
+<% if (_.contains(without, 'async')) { %>// This app was generated without the `async` package.
   // To use `async`, run `npm install async --save` and require it in the file(s) where you need it.
   // Or, to expose it as a global, change this line to say `require('async')` (instead of `false`)
   async: false,
   <% }
-  else { %>
-  /****************************************************************************
+  else { %>  /****************************************************************************
   *                                                                           *
-  * Whether to expose the locally-installed `async` as a global variable  
+  * Whether to expose the locally-installed `async` as a global variable      *
   * (`async`), making it accessible throughout your app.                      *
   * (See the link above for help.)                                            *
   *                                                                           *
@@ -58,6 +57,6 @@ module.exports.globals = {
   *                                                                           *
   ****************************************************************************/
 
-  sails: true
+  sails: true,
 
 };
