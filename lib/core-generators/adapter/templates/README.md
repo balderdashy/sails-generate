@@ -15,7 +15,7 @@ To install this adapter, run:
 $ npm install <%= packageName %>
 ```
 
-Then [connect the adapter](http://sailsjs.com/docs/reference/configuration/sails-config-connections) to one or more of your app's datastores.
+Then [connect the adapter](http://sailsjs.com/documentation/reference/configuration/sails-config-datastores) to one or more of your app's datastores.
 
 ## Usage
 
@@ -23,52 +23,38 @@ Visit [Models & ORM](http://sailsjs.com/docs/concepts/models-and-orm) in the doc
 
 ## Questions?
 
-See [Extending Sails > Adapters > Custom Adapters](http://sailsjs.com/docs/concepts/extending-sails/adapters/custom-adapters) in the [Sails documentation](http://sailsjs.com/documentation), or check out [recommended support options](http://sailsjs.com/support).
+See [Extending Sails > Adapters > Custom Adapters](http://sailsjs.com/documentation/concepts/extending-sails/adapters/custom-adapters) in the [Sails documentation](http://sailsjs.com/documentation), or check out [recommended support options](http://sailsjs.com/support).
 
 <a href="http://sailsjs.com" target="_blank" title="Node.js framework for building realtime APIs."><img src="https://github-camo.global.ssl.fastly.net/9e49073459ed4e0e2687b80eaf515d87b0da4a6b/687474703a2f2f62616c64657264617368792e6769746875622e696f2f7361696c732f696d616765732f6c6f676f2e706e67" width=60 alt="Sails.js logo (small)"/></a>
 
 
 ## Compatibility
 
-### Methods
+This adapter implements the following methods:
 
-This adapter exposes the following methods:
-
-##### `find()`
-
-+ **Status**
-  + Planned
-
-##### `create()`
-
-+ **Status**
-  + Planned
-
-##### `update()`
-
-+ **Status**
-  + Planned
-
-##### `destroy()`
-
-+ **Status**
-  + Planned
-
-
-### Interfaces
-
->TODO:
->Specify the interfaces this adapter will support.
->e.g. `This adapter implements the **semantic** and **queryable** interfaces.`
->
->For more information, check out [Extending Sails > Custom Adapters](http://sailsjs.com/docs/concepts/extending-sails/adapters) in the Sails docs.
+| Method               | Status            | Category      |
+|:---------------------|:------------------|:--------------|
+| registerDatastore    | _**in progress**_ | LIFECYCLE     |
+| teardown             | _**in progress**_ | LIFECYCLE     |
+| create               | Planned           | DML           |
+| createEach           | Planned           | DML           |
+| update               | Planned           | DML           |
+| destroy              | Planned           | DML           |
+| find                 | Planned           | DQL           |
+| join                 | _**???**_         | DQL           |
+| count                | Planned           | DQL           |
+| sum                  | Planned           | DQL           |
+| avg                  | Planned           | DQL           |
+| define               | Planned           | DDL           |
+| drop                 | Planned           | DDL           |
+| setSequence          | _**???**_         | DDL           |
 
 
 ## License
 
 This <%= adapterName %> adapter is available under the **<%= license %> license**.
 
-The [Sails framework](http://sailsjs.com) is free and open-source under the [MIT License](http://sailsjs.com/license).
+As for [Waterline](http://waterlinejs.org) and the [Sails framework](http://sailsjs.com)?  They're free and open-source under the [MIT License](http://sailsjs.com/license).
 
 
 ![image_squidhome@2x.png](http://i.imgur.com/RIvu9.png)

@@ -4,33 +4,35 @@
   "description": "A <%=adapterName%> adapter for Sails / Waterline",
   "main": "index.js",
   "scripts": {
-    "test": "node test/integration/runner -R spec -b"
+    "test": "node test/run-standard-tests",
+    "pretest": "npm run lint",
+    "lint": "node ./node_modules/eslint/bin/eslint *.js **/*.js"
   },
   "repository": <%= JSON.stringify(repository) %>,
   "keywords": [
-    "<%= adapterName %>",
+    <%= JSON.stringify(adapterName) %>,
     "adapter",
     "sails",
+    "sails.js",
     "waterline",
     "orm",
-    "database-adapter",
-    "sails.js"
+    "database-adapter"
   ],
   "author": "<%= author %>",
   "license": "<%= license %>",
   "dependencies": {
-    "lodash": "3.10.1"
+    "@sailshq/lodash": "^3.10.2"
   },
   "devDependencies": {
-    "waterline-adapter-tests": <%= JSON.stringify(waterlineSVR) %>,
-    "mocha": "3.0.2"
+    "eslint": "3.5.0",
+    "waterline-adapter-tests": <%= JSON.stringify(waterlineAdapterTestsSVR) %>
   },
   "waterlineAdapter": {
-    "type": "<%= adapterName %>",
+    "type": <%= JSON.stringify(adapterName) %>,
     "interfaces": [
       "semantic",
       "queryable"
     ],
-    "waterlineVersion": <%= JSON.stringify(waterlineSVR) %>
+    "features": []
   }
 }
