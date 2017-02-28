@@ -70,23 +70,33 @@ module.exports = {
     //  ║║║║╠═╝║ ║ ║   └┐┌┘├─┤│  │ ││├─┤ │ ││ ││││└─┐
     //  ╩╝╚╝╩  ╚═╝ ╩    └┘ ┴ ┴┴─┘┴─┴┘┴ ┴ ┴ ┴└─┘┘└┘└─┘
 
-    // Strictly validate the password.
+    // Strictly validate the password and username.
+    // (Note that coercion should have already taken place on the front-end
+    // before sending the request-- this is just to be safe.  Also note that
+    // these validations are redundant.)
     try {
-      sails.helpers.validateUserPasswordStrict({
-        string: inputs.password
-      }).execSync();
-    } catch (e) {
-      switch (e.exit) {
-        case undefined:
+      User.validate('password', inputs.password);
+    } catch (err) {
+      if (err.name === 'UsageError') {
+        return exits.error(new Error(
+          'Server-side validation failed for provided password.  This probably should NEVER happen '+
+          'in normal use of this backend (because this data SHOULD have been validated/coerced on '+
+          'the front-end).  So, either there is a bug somewhere (potentially in our front-end code), '+
+          'or this is a deliberate poke at our API from a curious individual.  Details: '+err.message
+        ));
+      }
+      else {
+        return exits.error(new Error('Consistency violation: Unexpected internal error (i.e. bug in our code) when validating the password provided during signup.  Details: '+e.stack));
+      }
+      switch (e.name) {
+        case 'UsageError':
+          swi
         case 'error':
-          return exits.error(new Error('Consistency violation: Unexpected internal error (i.e. bug in our code) when validating the password provided during signup.  Details: '+e.stack));
         default:
-          return exits.error(new Error('Server-side validation failed for provided password.  This should NEVER happen in normal use of this app (because it SHOULD have been validated/coerced on the front-end).  So, either there is a bug somewhere (potentially in our front-end code), or this is a deliberate poke at our API from a curious individual.  Details: '+e.stack));
       }
     }
 
     // Strictly validate username
-    // (Note that coercion must take place on the front-end before sending the request.)
     try {
       sails.helpers.validateUserUsername({
         string: inputs.username,
@@ -154,7 +164,6 @@ module.exports = {
       .exec(function(err, newUserRecord) {
         try {
 
-
           //  ╔╗╔╔═╗╔═╗╔═╗╔╦╗╦╔═╗╔╦╗╔═╗  ┌─┐┬─┐┬─┐┌─┐┬─┐
           //  ║║║║╣ ║ ╦║ ║ ║ ║╠═╣ ║ ║╣   ├┤ ├┬┘├┬┘│ │├┬┘
           //  ╝╚╝╚═╝╚═╝╚═╝ ╩ ╩╩ ╩ ╩ ╚═╝  └─┘┴└─┴└─└─┘┴└─
@@ -188,7 +197,7 @@ module.exports = {
           }
 
           // --•
-          // If we made it here, the user record was successfully created.
+          // IWMIH (if we made it here), the user record was successfully created.
 
           //  ╦  ╔═╗╔═╗╦╔╗╔  ┬ ┬┌─┐┌─┐┬─┐
           //  ║  ║ ║║ ╦║║║║  │ │└─┐├┤ ├┬┘
@@ -196,14 +205,13 @@ module.exports = {
           // Store the user id in the session
           env.req.session.userId = newUserRecord.id;
 
-
-          //  ╦═╗╔═╗╔╦╗╦ ╦╦═╗╔╗╔  ┬─┐┌─┐┌─┐┌─┐┌─┐┌┐┌┌─┐┌─┐
-          //  ╠╦╝║╣  ║ ║ ║╠╦╝║║║  ├┬┘├┤ └─┐├─┘│ ││││└─┐├┤
-          //  ╩╚═╚═╝ ╩ ╚═╝╩╚═╝╚╝  ┴└─└─┘└─┘┴  └─┘┘└┘└─┘└─┘
-          // If everything went ok, call the success exit.
-          return exits.success();
-
         } catch (e){ return exits.error(e); }
+
+        //  ╔═╗╔═╗╔╗╔╔╦╗  ┬─┐┌─┐┌─┐┌─┐┌─┐┌┐┌┌─┐┌─┐
+        //  ╚═╗║╣ ║║║ ║║  ├┬┘├┤ └─┐├─┘│ ││││└─┐├┤
+        //  ╚═╝╚═╝╝╚╝═╩╝  ┴└─└─┘└─┘┴  └─┘┘└┘└─┘└─┘
+        // If everything went ok, call the success exit.
+        return exits.success();
 
       }); // </ User.create().exec() >
 
