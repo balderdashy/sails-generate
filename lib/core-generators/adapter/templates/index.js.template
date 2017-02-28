@@ -204,7 +204,7 @@ module.exports = {
 
     // Sanity check:
     if (_.isUndefined(dsEntry)) {
-      return done(new Error('Consistency violation: Attempting to tear down a datastore entry which is no longer registered!  This is usually due to a race condition in userland code (e.g. attempting to tear down the same ORM instance more than once), or it could be due to a bug in this adapter.  (If you get stumped, reach out at http://sailsjs.com/support.)'));
+      return done(new Error('Consistency violation: Attempting to tear down a datastore (`'+datastoreName+'`) which is not currently registered with this adapter.  This is usually due to a race condition in userland code (e.g. attempting to tear down the same ORM instance more than once), or it could be due to a bug in this adapter.  (If you get stumped, reach out at http://sailsjs.com/support.)'));
     }
 
 

@@ -1,8 +1,8 @@
 <%if (verbose) { %>/**
  * <%= relPath %>
  *
- * @description :: Server-side controller action for handling incoming requests.
- * @help        :: See http://sailsjs.com/docs/concepts/controllers
+ * @description :: Server-side action for handling incoming requests.
+ * @help        :: See http://sailsjs.com/docs/concepts/actions
  */
 <% } %>module.exports = {
 
@@ -49,7 +49,7 @@ if (verbose) { %>
     //   responseType: 'redirect'
     // },
     //
-    // --or--
+    // --and/or--
     //
     // malformedUsername: {
     //   statusCode: 400
@@ -64,7 +64,7 @@ if (verbose) { %>
   },
 
 
-  fn: function (inputs, exits, env) {
+  fn: function (inputs, exits) {
 
     return exits.success();
 

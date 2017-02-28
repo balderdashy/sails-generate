@@ -9,7 +9,7 @@ if (lang === 'js') { %>/**
  * <%= entity %>
  *
  * @description :: Server-side actions for handling incoming requests.
- * @help        :: See http://sailsjs.com/docs/concepts/controllers
+ * @help        :: See http://sailsjs.com/docs/concepts/actions
  */
 
 module.exports = {
@@ -23,7 +23,7 @@ module.exports = {
 else if (lang === 'coffee') { %> # <%= entity %>
  #
  # @description :: Server-side actions for handling incoming requests.
- # @help        :: See http://sailsjs.com/docs/concepts/controllers
+ # @help        :: See http://sailsjs.com/docs/concepts/actions
 module.exports =
   <% if (actionFns.length > 0) {
   %><%= actionFns %><% }
