@@ -101,11 +101,19 @@ module.exports = {
    * Register a new datastore with this adapter.  This usually involves creating a new
    * connection manager (e.g. MySQL pool or MongoDB client) for the underlying database layer.
    *
-   * Waterline calls this method once for every datastore that is configured to use this adapter.
-   *
+   * > Waterline calls this method once for every datastore that is configured to use this adapter.
+   * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    * @param  {Dictionary}   datastoreConfig            Dictionary (plain JavaScript object) of configuration options for this datastore (e.g. host, port, etc.)
-   * @param  {Dictionary}   physicalModelsReport       The physical models using this datastore, keyed by "tableName".  WARNING: This is in a bit of an unusual format.
-   * @param  {Function}     done                       A callback to trigger after successfully registering this datastore.
+   * @param  {Dictionary}   physicalModelsReport       Experimental: The physical models using this datastore (keyed by "tableName"-- NOT by `identity`!).  This may change in a future release of the adapter spec.
+   *         @property {Dictionary} *  [Info about a physical model using this datastore.  WARNING: This is in a bit of an unusual format.]
+   *                   @property {String} primaryKey        [the name of the primary key attribute (NOT the column name-- the attribute name!)]
+   *                   @property {Dictionary} definition    [the physical-layer report from waterline-schema.  NOTE THAT THIS IS NOT A NORMAL MODEL DEF!]
+   *                   @property {String} tableName         [the model's `tableName` (same as the key this is under, just here for convenience)]
+   *                   @property {String} identity          [the model's `identity`]
+   * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+   * @param  {Function}     done                       A callback to trigger after successfully registering this datastore, or if an error is encountered.
+   *               @param {Error?}
+   * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    */
   registerDatastore: function (datastoreConfig, physicalModelsReport, done) {
 
@@ -182,9 +190,12 @@ module.exports = {
    * each relevant datastore when the server is killed, or when Waterline
    * is shut down after a series of tests.  Useful for destroying the manager
    * (i.e. terminating any remaining open connections, etc.).
-   *
+   * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    * @param  {String} datastoreName   The unique name (identity) of the datastore to un-register.
-   * @param  {Function} done
+   * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+   * @param  {Function} done          Callback
+   *               @param {Error?}
+   * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    */
   teardown: function (datastoreName, done) {
 
@@ -239,17 +250,24 @@ module.exports = {
    * > you may be expected to return the physical record that was
    * > created (a dictionary) as the second argument to the callback.
    * > (Otherwise, exclude the 2nd argument or send back `undefined`.)
-   *
+   * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    * @param  {String}       datastoreName The name of the datastore to perform the query on.
    * @param  {Dictionary}   query         The stage-3 query to perform.
+   * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    * @param  {Function}     done          Callback
    *               @param {Error?}
    *               @param {Dictionary?}
+   * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    */
   create: function (datastoreName, query, done) {
 
     // Look up the datastore entry (manager/driver/config).
     var dsEntry = registeredDatastores[datastoreName];
+
+    // Sanity check:
+    if (_.isUndefined(dsEntry)) {
+      return done(new Error('Consistency violation: Cannot do that with datastore (`'+datastoreName+'`) because no matching datastore entry is registered in this adapter!  This is usually due to a race condition (e.g. a lifecycle callback still running after the ORM has been torn down), or it could be due to a bug in this adapter.  (If you get stumped, reach out at http://sailsjs.com/support.)'));
+    }
 
     // Perform the query (and if relevant, send back a result.)
     //
@@ -273,17 +291,24 @@ module.exports = {
    * > you may be expected to return the array of physical records
    * > that were created as the second argument to the callback.
    * > (Otherwise, exclude the 2nd argument or send back `undefined`.)
-   *
+   * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    * @param  {String}       datastoreName The name of the datastore to perform the query on.
    * @param  {Dictionary}   query         The stage-3 query to perform.
+   * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    * @param  {Function}     done            Callback
    *               @param {Error?}
    *               @param {Array?}
+   * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    */
   createEach: function (datastoreName, query, done) {
 
     // Look up the datastore entry (manager/driver/config).
     var dsEntry = registeredDatastores[datastoreName];
+
+    // Sanity check:
+    if (_.isUndefined(dsEntry)) {
+      return done(new Error('Consistency violation: Cannot do that with datastore (`'+datastoreName+'`) because no matching datastore entry is registered in this adapter!  This is usually due to a race condition (e.g. a lifecycle callback still running after the ORM has been torn down), or it could be due to a bug in this adapter.  (If you get stumped, reach out at http://sailsjs.com/support.)'));
+    }
 
     // Perform the query (and if relevant, send back a result.)
     //
@@ -308,17 +333,24 @@ module.exports = {
    * > you may be expected to return the array of physical records
    * > that were updated as the second argument to the callback.
    * > (Otherwise, exclude the 2nd argument or send back `undefined`.)
-   *
+   * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    * @param  {String}       datastoreName The name of the datastore to perform the query on.
    * @param  {Dictionary}   query         The stage-3 query to perform.
+   * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    * @param  {Function}     done            Callback
    *               @param {Error?}
    *               @param {Array?}
+   * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    */
   update: function (datastoreName, query, done) {
 
     // Look up the datastore entry (manager/driver/config).
     var dsEntry = registeredDatastores[datastoreName];
+
+    // Sanity check:
+    if (_.isUndefined(dsEntry)) {
+      return done(new Error('Consistency violation: Cannot do that with datastore (`'+datastoreName+'`) because no matching datastore entry is registered in this adapter!  This is usually due to a race condition (e.g. a lifecycle callback still running after the ORM has been torn down), or it could be due to a bug in this adapter.  (If you get stumped, reach out at http://sailsjs.com/support.)'));
+    }
 
     // Perform the query (and if relevant, send back a result.)
     //
@@ -342,17 +374,24 @@ module.exports = {
    * > you may be expected to return the array of physical records
    * > that were destroyed as the second argument to the callback.
    * > (Otherwise, exclude the 2nd argument or send back `undefined`.)
-   *
+   * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    * @param  {String}       datastoreName The name of the datastore to perform the query on.
    * @param  {Dictionary}   query         The stage-3 query to perform.
+   * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    * @param  {Function}     done            Callback
    *               @param {Error?}
    *               @param {Array?}
+   * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    */
   destroy: function (datastoreName, query, done) {
 
     // Look up the datastore entry (manager/driver/config).
     var dsEntry = registeredDatastores[datastoreName];
+
+    // Sanity check:
+    if (_.isUndefined(dsEntry)) {
+      return done(new Error('Consistency violation: Cannot do that with datastore (`'+datastoreName+'`) because no matching datastore entry is registered in this adapter!  This is usually due to a race condition (e.g. a lifecycle callback still running after the ORM has been torn down), or it could be due to a bug in this adapter.  (If you get stumped, reach out at http://sailsjs.com/support.)'));
+    }
 
     // Perform the query (and if relevant, send back a result.)
     //
@@ -386,17 +425,24 @@ module.exports = {
    *  ╠╣ ║║║║ ║║
    *  ╚  ╩╝╚╝═╩╝
    * Find matching records.
-   *
+   * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    * @param  {String}       datastoreName The name of the datastore to perform the query on.
    * @param  {Dictionary}   query         The stage-3 query to perform.
+   * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    * @param  {Function}     done            Callback
    *               @param {Error?}
    *               @param {Array}  [matching physical records]
+   * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    */
   find: function (datastoreName, query, done) {
 
     // Look up the datastore entry (manager/driver/config).
     var dsEntry = registeredDatastores[datastoreName];
+
+    // Sanity check:
+    if (_.isUndefined(dsEntry)) {
+      return done(new Error('Consistency violation: Cannot do that with datastore (`'+datastoreName+'`) because no matching datastore entry is registered in this adapter!  This is usually due to a race condition (e.g. a lifecycle callback still running after the ORM has been torn down), or it could be due to a bug in this adapter.  (If you get stumped, reach out at http://sailsjs.com/support.)'));
+    }
 
     // Perform the query and send back a result.
     //
@@ -423,17 +469,24 @@ module.exports = {
    * > support native joins, e.g. Mongo) remove this method completely!  Without this method,
    * > Waterline will handle `.populate()` using its built-in join polyfill (aka "polypopulate"),
    * > which sends multiple queries to the adapter and joins the results in-memory.
-   *
+   * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    * @param  {String}       datastoreName The name of the datastore to perform the query on.
    * @param  {Dictionary}   query         The stage-3 query to perform.
+   * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    * @param  {Function}     done          Callback
    *               @param {Error?}
    *               @param {Array}  [matching physical records, populated according to the join instructions]
+   * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    */
   join: function (datastoreName, query, done) {
 
     // Look up the datastore entry (manager/driver/config).
     var dsEntry = registeredDatastores[datastoreName];
+
+    // Sanity check:
+    if (_.isUndefined(dsEntry)) {
+      return done(new Error('Consistency violation: Cannot do that with datastore (`'+datastoreName+'`) because no matching datastore entry is registered in this adapter!  This is usually due to a race condition (e.g. a lifecycle callback still running after the ORM has been torn down), or it could be due to a bug in this adapter.  (If you get stumped, reach out at http://sailsjs.com/support.)'));
+    }
 
     // Perform the query and send back a result.
     //
@@ -452,17 +505,24 @@ module.exports = {
    *  ║  ║ ║║ ║║║║ ║
    *  ╚═╝╚═╝╚═╝╝╚╝ ╩
    * Get the number of matching records.
-   *
+   * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    * @param  {String}       datastoreName The name of the datastore to perform the query on.
    * @param  {Dictionary}   query         The stage-3 query to perform.
+   * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    * @param  {Function}     done          Callback
    *               @param {Error?}
    *               @param {Number}  [the number of matching records]
+   * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    */
   count: function (datastoreName, query, done) {
 
     // Look up the datastore entry (manager/driver/config).
     var dsEntry = registeredDatastores[datastoreName];
+
+    // Sanity check:
+    if (_.isUndefined(dsEntry)) {
+      return done(new Error('Consistency violation: Cannot do that with datastore (`'+datastoreName+'`) because no matching datastore entry is registered in this adapter!  This is usually due to a race condition (e.g. a lifecycle callback still running after the ORM has been torn down), or it could be due to a bug in this adapter.  (If you get stumped, reach out at http://sailsjs.com/support.)'));
+    }
 
     // Perform the query and send back a result.
     //
@@ -480,17 +540,24 @@ module.exports = {
    *  ╔═╗╦ ╦╔╦╗
    *  ╚═╗║ ║║║║
    *  ╚═╝╚═╝╩ ╩
-   *
+   * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    * @param  {String}       datastoreName The name of the datastore to perform the query on.
    * @param  {Dictionary}   query         The stage-3 query to perform.
+   * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    * @param  {Function}     done          Callback
    *               @param {Error?}
    *               @param {Number}  [the sum]
+   * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    */
   sum: function (datastoreName, query, done) {
 
     // Look up the datastore entry (manager/driver/config).
     var dsEntry = registeredDatastores[datastoreName];
+
+    // Sanity check:
+    if (_.isUndefined(dsEntry)) {
+      return done(new Error('Consistency violation: Cannot do that with datastore (`'+datastoreName+'`) because no matching datastore entry is registered in this adapter!  This is usually due to a race condition (e.g. a lifecycle callback still running after the ORM has been torn down), or it could be due to a bug in this adapter.  (If you get stumped, reach out at http://sailsjs.com/support.)'));
+    }
 
     // Perform the query and send back a result.
     //
@@ -508,17 +575,24 @@ module.exports = {
    *  ╔═╗╦  ╦╔═╗
    *  ╠═╣╚╗╔╝║ ╦
    *  ╩ ╩ ╚╝ ╚═╝
-   *
+   * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    * @param  {String}       datastoreName The name of the datastore to perform the query on.
    * @param  {Dictionary}   query         The stage-3 query to perform.
+   * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    * @param  {Function}     done          Callback
    *               @param {Error?}
    *               @param {Number}  [the average ("mean")]
+   * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    */
   avg: function (datastoreName, query, done) {
 
     // Look up the datastore entry (manager/driver/config).
     var dsEntry = registeredDatastores[datastoreName];
+
+    // Sanity check:
+    if (_.isUndefined(dsEntry)) {
+      return done(new Error('Consistency violation: Cannot do that with datastore (`'+datastoreName+'`) because no matching datastore entry is registered in this adapter!  This is usually due to a race condition (e.g. a lifecycle callback still running after the ORM has been torn down), or it could be due to a bug in this adapter.  (If you get stumped, reach out at http://sailsjs.com/support.)'));
+    }
 
     // Perform the query and send back a result.
     //
@@ -553,16 +627,24 @@ module.exports = {
    * Build a new physical model (e.g. table/etc) to use for storing records in the database.
    *
    * (This is used for schema migrations.)
-   *
+   * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    * @param  {String}       datastoreName The name of the datastore containing the table to create.
    * @param  {String}       tableName     The name of the table to create.
    * @param  {Dictionary}   definition    The physical model definition (not a normal Sails/Waterline model-- log this for details.)
+   * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    * @param  {Function}     done           Callback
+   *               @param {Error?}
+   * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    */
   define: function (datastoreName, tableName, definition, done) {
 
     // Look up the datastore entry (manager/driver/config).
     var dsEntry = registeredDatastores[datastoreName];
+
+    // Sanity check:
+    if (_.isUndefined(dsEntry)) {
+      return done(new Error('Consistency violation: Cannot do that with datastore (`'+datastoreName+'`) because no matching datastore entry is registered in this adapter!  This is usually due to a race condition (e.g. a lifecycle callback still running after the ORM has been torn down), or it could be due to a bug in this adapter.  (If you get stumped, reach out at http://sailsjs.com/support.)'));
+    }
 
     // Define the physical model (e.g. table/etc.)
     //
@@ -583,16 +665,24 @@ module.exports = {
    * Drop a physical model (table/etc.) from the database, including all of its records.
    *
    * (This is used for schema migrations.)
-   *
+   * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    * @param  {String}       datastoreName The name of the datastore containing the table to create.
    * @param  {String}       tableName     The name of the table to create.
    * @param  {Ref}          unused        Currently unused (do not use this argument.)
+   * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    * @param  {Function}     done          Callback
+   *               @param {Error?}
+   * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    */
   drop: function (datastoreName, tableName, unused, done) {
 
     // Look up the datastore entry (manager/driver/config).
     var dsEntry = registeredDatastores[datastoreName];
+
+    // Sanity check:
+    if (_.isUndefined(dsEntry)) {
+      return done(new Error('Consistency violation: Cannot do that with datastore (`'+datastoreName+'`) because no matching datastore entry is registered in this adapter!  This is usually due to a race condition (e.g. a lifecycle callback still running after the ORM has been torn down), or it could be due to a bug in this adapter.  (If you get stumped, reach out at http://sailsjs.com/support.)'));
+    }
 
     // Drop the physical model (e.g. table/etc.)
     //
@@ -617,16 +707,24 @@ module.exports = {
    *
    * > NOTE - If your adapter doesn't support sequence entities (like PostgreSQL),
    * > you should remove this method.
-   *
+   * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    * @param  {String}       datastoreName   The name of the datastore containing the table/etc.
    * @param  {String}       sequenceName    The name of the sequence to update.
    * @param  {Number}       sequenceValue   The new value for the sequence (e.g. 1)
+   * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    * @param  {Function}     done
+   *               @param {Error?}
+   * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    */
   setSequence: function (datastoreName, sequenceName, sequenceValue, done) {
 
     // Look up the datastore entry (manager/driver/config).
     var dsEntry = registeredDatastores[datastoreName];
+
+    // Sanity check:
+    if (_.isUndefined(dsEntry)) {
+      return done(new Error('Consistency violation: Cannot do that with datastore (`'+datastoreName+'`) because no matching datastore entry is registered in this adapter!  This is usually due to a race condition (e.g. a lifecycle callback still running after the ORM has been torn down), or it could be due to a bug in this adapter.  (If you get stumped, reach out at http://sailsjs.com/support.)'));
+    }
 
     // Update the sequence.
     //
