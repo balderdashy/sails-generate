@@ -628,8 +628,8 @@ module.exports = {
    *
    * (This is used for schema migrations.)
    * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-   * @param  {String}       datastoreName The name of the datastore containing the table to create.
-   * @param  {String}       tableName     The name of the table to create.
+   * @param  {String}       datastoreName The name of the datastore containing the table to define.
+   * @param  {String}       tableName     The name of the table to define.
    * @param  {Dictionary}   definition    The physical model definition (not a normal Sails/Waterline model-- log this for details.)
    * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    * @param  {Function}     done           Callback
@@ -666,8 +666,8 @@ module.exports = {
    *
    * (This is used for schema migrations.)
    * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-   * @param  {String}       datastoreName The name of the datastore containing the table to create.
-   * @param  {String}       tableName     The name of the table to create.
+   * @param  {String}       datastoreName The name of the datastore containing the table to drop.
+   * @param  {String}       tableName     The name of the table to drop.
    * @param  {Ref}          unused        Currently unused (do not use this argument.)
    * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    * @param  {Function}     done          Callback
