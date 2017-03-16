@@ -4,7 +4,9 @@
   "description": "sails generate <%=generatorType %>",
   "main": "index.js",
   "scripts": {
-    "test": "echo 'No automated tests have been implemented for this generator yet.'"
+    "test": "echo 'No further automated tests have been implemented for this generator yet.'",
+    "pretest": "npm run lint",
+    "lint": "node ./node_modules/eslint/bin/eslint . --max-warnings=0"
   },
   "keywords": [
     "<%=generatorType%>",
@@ -18,8 +20,10 @@
   "dependencies": {
     "lodash": "<%= typeof lodashSVR !== 'undefined' ? lodashSVR : '3.10.1' %>"
   },
+  "devDependencies": {
+    "eslint": "3.5.0"
+  },
   "repository": <%= JSON.stringify(repository) %>,
-  "devDependencies": {},
   "sailsGenerator": {
     "type": "<%= generatorType %>",
     "behavior": "Implements or overrides `sails generate <%= generatorType %>`",

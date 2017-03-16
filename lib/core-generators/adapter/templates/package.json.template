@@ -6,7 +6,7 @@
   "scripts": {
     "test": "node test/run-standard-tests",
     "pretest": "npm run lint",
-    "lint": "node ./node_modules/eslint/bin/eslint *.js **/*.js"
+    "lint": "node ./node_modules/eslint/bin/eslint . --max-warnings=0"
   },
   "repository": <%= JSON.stringify(repository) %>,
   "keywords": [
@@ -31,7 +31,8 @@
     "type": <%= JSON.stringify(adapterName) %>,
     "interfaces": [
       "semantic",
-      "queryable"
+      "queryable",
+      "associations"
     ],
     "features": []
   }
