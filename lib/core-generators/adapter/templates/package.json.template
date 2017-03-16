@@ -19,7 +19,7 @@
     "database-adapter"
   ],
   "author": "<%= author %>",
-  "license": "<%= license %>",
+  "license": "<%= typeof license !== 'undefined' ? license : '' %>",
   "dependencies": {
     "@sailshq/lodash": "^3.10.2"
   },

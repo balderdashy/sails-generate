@@ -14,9 +14,9 @@
     "plugin"
   ],
   "author": "<%= author %>",
-  "license": "<%= license %>",
+  "license": "<%= typeof license !== 'undefined' ? license : '' %>",
   "dependencies": {
-    "lodash": "3.10.1"
+    "lodash": "<%= typeof lodashSVR !== 'undefined' ? lodashSVR : '3.10.1' %>"
   },
   "repository": <%= JSON.stringify(repository) %>,
   "devDependencies": {},
