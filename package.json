@@ -23,9 +23,9 @@
     "mocha": "3.0.2"
   },
   "scripts": {
-    "test": "node ./node_modules/mocha/bin/mocha",
-    "pretest": "npm run lint",
-    "lint": "node ./node_modules/eslint/bin/eslint . --max-warnings=0"
+    "test": "nodever=`node -e \"console.log('\\`node -v\\`'[1]);\"` && if [ $nodever != \"0\" ]; then npm run lint; fi && npm run custom-tests",
+    "custom-tests": "node ./node_modules/mocha/bin/mocha -b",
+    "lint": "node ./node_modules/eslint/bin/eslint . --max-warnings=0 --ignore-pattern 'test/'"
   },
   "keywords": [
     "sails",
