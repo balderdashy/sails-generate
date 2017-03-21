@@ -1,0 +1,32 @@
+{
+  //   ╔═╗╔═╗╦  ╦╔╗╔╔╦╗┬─┐┌─┐  ┌─┐┬  ┬┌─┐┬─┐┬─┐┬┌┬┐┌─┐
+  //   ║╣ ╚═╗║  ║║║║ ║ ├┬┘│    │ │└┐┌┘├┤ ├┬┘├┬┘│ ││├┤
+  //  o╚═╝╚═╝╩═╝╩╝╚╝ ╩ ┴└─└─┘  └─┘ └┘ └─┘┴└─┴└─┴─┴┘└─┘
+  // An override for the top-level .eslintrc file that changes the set of supported
+  // globals.  (Since JavaScript code in the `assets/` folder is intended for the
+  // browser, a different set of globals should be supported.  For example, instead
+  // of Node.js/Sails globals like `sails` and `process`, you have access to browser
+  // globals like `window`.)
+  //
+  // See .eslintrc in the root directory of this Sails app for more info.
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  "extends": [
+    "../.eslintrc"
+  ],
+
+  "env": {
+    "browser": true,
+    "node": false,
+    "mocha": false
+  },
+
+  "globals": {
+    "sails": false,
+    "_": false,
+    "async": false,
+    // TODO: inject globalIds of models?
+    // (and services if possible)
+  }
+
+}
