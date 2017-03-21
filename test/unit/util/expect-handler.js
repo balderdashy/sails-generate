@@ -19,14 +19,14 @@ module.exports = function expect(expectations) {
     handlers[expectations] = true;
   } else if (typeof expectations === 'object') {
     handlers = _.clone(expectations);
-  } else throw new Error('Invalid usage of `expect()` fixture in tests.');
+  } else {throw new Error('Invalid usage of `expect()` fixture in tests.');}
 
   return function(cb) {
 
     // Interpret handlers
     _.each(Object.keys(handlers), function(handlerName) {
       if (handlers[handlerName] === true) {
-        handlers[handlerName] = function ignoreHandlerArguments_itsAlwaysGood() {
+        handlers[handlerName] = function ignoreHandlerArgumentsBecauseItIsAlwaysGood() {
           cb();
         };
       } else {
@@ -35,7 +35,7 @@ module.exports = function expect(expectations) {
 
           if (err instanceof Error) {
             err.message = testMessage + (err.message ? ' :: ' + err.message : '');
-          } else err = new Error(testMessage + (err ? ' :: ' + err : ''));
+          } else {err = new Error(testMessage + (err ? ' :: ' + err : ''));}
 
           return cb(err);
         };

@@ -62,7 +62,7 @@ module.exports = {
       if (err && err.code === 'ENOENT') {
         return cb();
       } else if (err) { return cb(err); }
-      else return cb(new Error('Directory should not exist.'));
+      else {return cb(new Error('Directory should not exist.'));}
     });
   },
 

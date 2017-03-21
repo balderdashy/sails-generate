@@ -2,10 +2,9 @@
  * Module dependencies
  */
 
-var fsx = require('fs-extra');
-var async = require('async');
 var path = require('path');
 var _ = require('lodash');
+var fsx = require('fs-extra');
 
 
 /**
@@ -14,10 +13,10 @@ var _ = require('lodash');
 module.exports = function FileHeap(options) {
   options = options || {};
 
-  var _aid = 0,
-    _suffix = '.test',
-    _outputPath = path.resolve(options.path || './.tmp/notASailsApp'),
-    _files = [];
+  var _aid = 0;
+  var _suffix = '.test';
+  var _outputPath = path.resolve(options.path || './.tmp/notASailsApp');
+  var _files = [];
 
 
   this.errors = {
@@ -140,11 +139,11 @@ module.exports = function FileHeap(options) {
     if (!this.contains(pathToFile)) {
       return cb(this.errors.unknown(pathToFile));
     }
-    fsx.readFile(pathToFile, cb);
+    return fsx.readFile(pathToFile, cb);
   };
   this.readSync = function(pathToFile) {
     if (!this.contains(pathToFile)) {
-      return cb(this.errors.unknown(pathToFile));
+      throw this.errors.unknown(pathToFile);
     }
     return fsx.readFileSync(pathToFile);
   };
