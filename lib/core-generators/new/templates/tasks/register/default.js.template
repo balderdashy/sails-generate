@@ -14,7 +14,7 @@
  */
 module.exports = function (grunt) {
 
-  <%
+<%
   //  ┌─┐┌─┐┬┬  ┌─┐   ┬  ┬┌┐┌┬┌─┌─┐┬─┐  ╔═╗╔╗╔╔═╗╔╗ ╦  ╔═╗╔╦╗
   //  └─┐├─┤││  └─┐───│  ││││├┴┐├┤ ├┬┘  ║╣ ║║║╠═╣╠╩╗║  ║╣  ║║
   //  └─┘┴ ┴┴┴─┘└─┘   ┴─┘┴┘└┘┴ ┴└─┘┴└─  ╚═╝╝╚╝╩ ╩╚═╝╩═╝╚═╝═╩╝ooo
@@ -22,20 +22,20 @@ module.exports = function (grunt) {
   //  │───   ││├┤ ├┤ ├─┤│ ││  │   ───│
   //  └─    ─┴┘└─┘└  ┴ ┴└─┘┴─┘┴     ─┘
   if (linker) { %>
-    grunt.registerTask('default', [
-      'compileAssets',
-      'linkAssets',
-      'watch'
-    ]);
-  <% }
+  grunt.registerTask('default', [
+    'compileAssets',
+    'linkAssets',
+    'watch'
+  ]);
+<% }
   //  ┌─┐┌─┐┬┬  ┌─┐   ┬  ┬┌┐┌┬┌─┌─┐┬─┐  ╔╦╗╦╔═╗╔═╗╔╗ ╦  ╔═╗╔╦╗
   //  └─┐├─┤││  └─┐───│  ││││├┴┐├┤ ├┬┘   ║║║╚═╗╠═╣╠╩╗║  ║╣  ║║
   //  └─┘┴ ┴┴┴─┘└─┘   ┴─┘┴┘└┘┴ ┴└─┘┴└─  ═╩╝╩╚═╝╩ ╩╚═╝╩═╝╚═╝═╩╝ooo
   else { %>
-    grunt.registerTask('default', [
-      'compileAssets',
-      'watch'
-    ]);
+  grunt.registerTask('default', [
+    'compileAssets',
+    'watch'
+  ]);
   <% } %>
 
 };
