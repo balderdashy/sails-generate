@@ -21,12 +21,23 @@
     "mocha": false
   },
 
-  "globals": {
-    "sails": false,
-    "_": false,
-    "async": false,
-    // TODO: inject globalIds of models?
-    // (and services if possible)
+  // Uncomment the following if using "no-undef" at the top level...  (see below)
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // "globals": {
+  //   "sails": false,
+  //   "_": false,
+  //   "async": false,
+  //   // ...and any models being used as globals (e.g. `"User": false`)
+  // },
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  "rules": {
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    // Note: If you've enabled the "no-undef" rule in the top level .eslintrc file, then
+    // the globalIds of models should also be explicitly disabled above under "globals",
+    // and the following override for the "no-undef" rule can be removed.
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    "no-undef": [2],
   }
 
 }

@@ -11,10 +11,19 @@
   // you would visit `http://eslint.org/docs/rules/no-sequences`.
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  "env": {
-    "node": true,
-    "mocha": true
-  },
+  // Uncomment the following if using "no-undef"...  (see below)
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // "env": {
+  //   "node": true
+  // },
+  //
+  // "globals": {
+  //   "sails": true,
+  //   "_": true,
+  //   "async": true,
+  //   // ...and any models being used as globals (e.g. `"User": true`)
+  // },
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   "rules": {
     "callback-return":              [2, ["callback", "cb", "next", "done", "proceed"]],
@@ -30,7 +39,11 @@
     "no-return-assign":             [2, "always"],
     "no-sequences":                 [2],
     "no-trailing-spaces":           [1],
-    "no-undef":                     [2],
+    "no-undef":                     [0],
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    // ^^Note: If this "no-undef" rule is enabled (set to `[2]`), then the globalIds
+    // of models should also be included above under "globals".
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     "no-unexpected-multiline":      [1],
     "no-unused-vars":               [1],
     "one-var":                      [2, "never"],
