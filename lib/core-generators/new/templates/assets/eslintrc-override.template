@@ -32,19 +32,17 @@
     // Allow any other window globals you're relying on here; e.g.
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     // "$": true,
-    // "_": true,
     // "Vue": true,
     // "angular": true,
     // ...etc.
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    // If the "no-undef" rule is enabled in the top-level .eslintrc file, be sure to
-    // uncomment the following so that backend globals are not inadvertently allowed:
+    // Make sure backend globals aren't indadvertently tolerated in our client-side JS:
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    // "sails": false,
-    // "_": false,
-    // "async": false,
-    // // ...and any other backend globals (e.g. `"User": false`)
+    "sails": false,
+    "_": false,
+    "async": false,
+    // ...and any other backend globals (e.g. `"User": false`)
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   },
 
