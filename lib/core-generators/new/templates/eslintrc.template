@@ -12,7 +12,7 @@
   // > vs. backend code designed to run in a Node.js/Sails process.
   //
   // > Note: If you're using mocha, you'll want to add an extra override file to your
-  // > `tests/` folder so that eslint will tolerate mocha-specific globals like `before`
+  // > `test/` folder so that eslint will tolerate mocha-specific globals like `before`
   // > and `describe`.
   //
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
