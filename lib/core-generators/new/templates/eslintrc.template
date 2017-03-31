@@ -25,14 +25,15 @@
     "node": true
   },
 
-  // If you've explicitly disabled any of these globals (`config/globals.js`), then
-  // you can safely remove them from here as well:
   "globals": {
-    "sails": true,
-    "_": true,
-    "async": true,
-    // TODO: inject globalIds of models?
-    // (and services if possible)
+    // If "no-undef" is enabled below and your app uses globals, be sure to list all
+    // relevant globals below (including the globalIds of models, if relevant):
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    // "sails": true,
+    // "_": true,
+    // "async": true,
+    // ...and any other backend globals (e.g. `"User": true`)
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   },
 
   "rules": {
@@ -49,7 +50,11 @@
     "no-return-assign":             [2, "always"],
     "no-sequences":                 [2],
     "no-trailing-spaces":           [1],
-    "no-undef":                     [2],
+    "no-undef":                     [0],
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    // ^^Note: If this "no-undef" rule is enabled (set to `[2]`), then model globals
+    // (e.g. `"User": true`) should also be included above under "globals".
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     "no-unexpected-multiline":      [1],
     "no-unused-vars":               [1],
     "one-var":                      [2, "never"],
