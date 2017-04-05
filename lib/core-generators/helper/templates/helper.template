@@ -2,7 +2,7 @@
  * <%= relPath %>
  *
  * @description :: Server-side helper function.
- * @help        :: See http://sailsjs.com/docs/concepts/helpers
+ * @help        :: See https://sailsjs.com/docs/concepts/helpers
  */
 module.exports = {
 

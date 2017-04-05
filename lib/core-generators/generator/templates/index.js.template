@@ -14,7 +14,7 @@ var _ = require('lodash');
  * `sails generate <%= generatorType %>`
  *
  * @description Generates a <%= generatorType %>.
- * @docs http://sailsjs.com/docs/concepts/extending-sails/generators/custom-generators
+ * @docs https://sailsjs.com/docs/concepts/extending-sails/generators/custom-generators
  */
 
 module.exports = {
@@ -89,8 +89,8 @@ module.exports = {
     // './:filename': { template: 'example.template.js' },
     // ```
     //
-    // • See http://sailsjs.com/docs/concepts/extending-sails/generators for more documentation.
-    // (Or visit http://sailsjs.com/support and talk to a maintainer of a core or community generator.)
+    // • See https://sailsjs.com/docs/concepts/extending-sails/generators for more documentation.
+    // (Or visit https://sailsjs.com/support and talk to a maintainer of a core or community generator.)
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   },

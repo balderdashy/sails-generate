@@ -2,7 +2,7 @@
  * <%= filename %>
  *
  * @description :: Send a custom response.
- * @docs        :: http://sailsjs.com/docs/concepts/custom-responses
+ * @docs        :: https://sailsjs.com/docs/concepts/custom-responses
  *
  * Usage:
  * ```

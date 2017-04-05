@@ -9,7 +9,7 @@ module.exports = {
 
   extendedDescription:
   'This creates a new user record in the database _and_ causes the requesting user agent '+
-  'to become logged in by modifying its [session](http://sailsjs.com/documentation/concepts/sessions).',
+  'to become logged in by modifying its [session](https://sailsjs.com/documentation/concepts/sessions).',
 
 
   inputs: {

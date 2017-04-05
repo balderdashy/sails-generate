@@ -2,7 +2,7 @@
  * <%= relPath %>
  *
  * @description :: Server-side action for handling incoming requests.
- * @help        :: See http://sailsjs.com/docs/concepts/actions
+ * @help        :: See https://sailsjs.com/docs/concepts/actions
  */
 <% } %>module.exports = {
 

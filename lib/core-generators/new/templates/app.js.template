@@ -17,7 +17,7 @@
  * `node app.js --silent --port=80 --prod`
  *
  * For more information see:
- *   http://sailsjs.com/anatomy/app.js
+ *   https://sailsjs.com/anatomy/app.js
  */
 
 

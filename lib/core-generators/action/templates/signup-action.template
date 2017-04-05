@@ -12,7 +12,7 @@ var stdlib = require('sails-stdlib');
  * Sign up for a new user account.
  *
  * > This creates a new user record in the database _and_ causes the requesting user agent
- * > to become logged in by modifying its [session](http://sailsjs.com/documentation/concepts/sessions).
+ * > to become logged in by modifying its [session](https://sailsjs.com/documentation/concepts/sessions).
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * @input  {String} emailAddress
  *         The email address for the new account, e.g. "m@example.com".
@@ -49,7 +49,7 @@ var stdlib = require('sails-stdlib');
  * @exit  {500} res.serverError()  [error]<% if (verbose) {%>
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * @purpose     :: Server-side action for handling incoming requests.
- * @help        :: See http://sailsjs.com/docs/concepts/actions<% } %>
+ * @help        :: See https://sailsjs.com/docs/concepts/actions<% } %>
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 module.exports = function signup(req, res) {

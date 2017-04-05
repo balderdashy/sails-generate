@@ -9,7 +9,7 @@
  * `sails lift` or `node app` in a development environment.
  *
  * For more information see:
- *   http://sailsjs.com/anatomy/tasks/register/default-js
+ *   https://sailsjs.com/anatomy/tasks/register/default-js
  *
  */
 module.exports = function (grunt) {

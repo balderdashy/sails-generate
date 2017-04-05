@@ -10,7 +10,7 @@
  * Check out the `tasks/` directory instead.
  *
  * For more information see:
- *   http://sailsjs.com/anatomy/Gruntfile.js
+ *   https://sailsjs.com/anatomy/Gruntfile.js
  */
 module.exports = function(grunt) {
 
