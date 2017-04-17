@@ -1,10 +1,10 @@
-/**
+<%if (verbose) { %>/**
  * <%= relPath %>
  *
  * @description :: Server-side helper function.
  * @help        :: See https://sailsjs.com/docs/concepts/helpers
  */
-module.exports = {
+<% } %>module.exports = {
 
 
   friendlyName: <%= util.inspect(friendlyName) %>,
