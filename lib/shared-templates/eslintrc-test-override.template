@@ -5,7 +5,7 @@
   //  ┌─  ┌─┐┌─┐┬─┐  ┌─┐┬ ┬┌┬┐┌─┐┌┬┐┌─┐┌┬┐┌─┐┌┬┐  ┌┬┐┌─┐┌─┐┌┬┐┌─┐  ─┐
   //  │   ├┤ │ │├┬┘  ├─┤│ │ │ │ ││││├─┤ │ ├┤  ││   │ ├┤ └─┐ │ └─┐   │
   //  └─  └  └─┘┴└─  ┴ ┴└─┘ ┴ └─┘┴ ┴┴ ┴ ┴ └─┘─┴┘   ┴ └─┘└─┘ ┴ └─┘  ─┘
-  // > An .eslintrc configuration override for use in the `test/` directory.
+  // > An .eslintrc configuration override for use with the tests in this directory.
   //
   // (See .eslintrc in the root directory of this package for more info.)
 
