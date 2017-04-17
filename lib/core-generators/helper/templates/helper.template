@@ -1,4 +1,4 @@
-<%if (verbose) { %>/**
+<% if (verbose) { %>/**
  * <%= relPath %>
  *
  * @description :: Server-side helper function.
