@@ -22,8 +22,11 @@
 
   "env": {
     "browser": true,
-    "node": false,
-    "es6": false
+    "node": false
+  },
+
+  "parserOptions": {
+    "ecmaVersion": 5
   },
 
   "globals": {

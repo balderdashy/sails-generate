@@ -15,6 +15,10 @@
     "node": true
   },
 
+  "parserOptions": {
+    "ecmaVersion": 8
+  },
+
   "rules": {
     "callback-return":              [2, ["callback", "cb", "next", "done", "proceed"]],
     "camelcase":                    [1, {"properties": "always"}],
