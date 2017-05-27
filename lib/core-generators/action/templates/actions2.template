@@ -65,7 +65,9 @@ if (verbose) { %>
 
 
   fn: function (inputs, exits) {
-
+<%if (verbose) { %>
+    var req = this.req;
+<% } %>
     return exits.success();
 
   }
