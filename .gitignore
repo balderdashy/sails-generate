@@ -19,7 +19,6 @@ node_modules
 npm-debug.log
 .waterline
 .node_history
-package-lock.json
 
 ############################
 # editor & OS files

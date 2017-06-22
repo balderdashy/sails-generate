@@ -32,4 +32,3 @@ lib-cov
 nbproject
 .tmp
 dump.rdb
-package-lock.json
