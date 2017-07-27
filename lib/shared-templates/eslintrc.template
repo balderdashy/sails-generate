@@ -2,8 +2,8 @@
   //   ╔═╗╔═╗╦  ╦╔╗╔╔╦╗┬─┐┌─┐
   //   ║╣ ╚═╗║  ║║║║ ║ ├┬┘│
   //  o╚═╝╚═╝╩═╝╩╝╚╝ ╩ ┴└─└─┘
-  // A set of basic conventions designed to complement the .jshintrc file for any
-  // arbitrary JavaScript / Node.js package -- inside or outside a Sails.js app.
+  // A set of basic conventions (similar to .jshintrc) for use within any
+  // arbitrary JavaScript / Node.js package -- inside or outside Sails.js.
   // For the master copy of this file, see the `.eslintrc` template file in
   // the `sails-generate` package (https://www.npmjs.com/package/sails-generate.)
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -17,7 +17,7 @@
   },
 
   "parserOptions": {
-    "ecmaVersion": 5
+    "ecmaVersion": 8
   },
 
   "rules": {
