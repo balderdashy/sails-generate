@@ -4,17 +4,17 @@
  * Use `app.js` to run your app without `sails lift`.
  * To start the server, run: `node app.js`.
  *
- * This is handy in situations where the sails CLI is not relevant or useful.
+ * This is handy in situations where the sails CLI is not relevant or useful,
+ * such as when you deploy to a server, or a PaaS like Heroku.
  *
  * For example:
  *   => `node app.js`
+ *   => `npm start`
  *   => `forever start app.js`
  *   => `node debug app.js`
- *   => `modulus deploy`
- *   => `heroku scale`
  *
- * The same command-line arguments are supported, e.g.:
- * `node app.js --silent --port=80 --prod`
+ * The same command-line arguments and env vars are supported, e.g.:
+ * `NODE_ENV=production node app.js --port=80 --verbose`
  *
  * For more information see:
  *   https://sailsjs.com/anatomy/app.js
