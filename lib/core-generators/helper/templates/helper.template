@@ -68,7 +68,7 @@ if (verbose) { %>
   },
 
 
-  fn: function (inputs, exits) {<%
+  fn: async function (inputs, exits) {<%
 if (inferredSuccessOutputFriendlyName) { %>
 
     // Get <%= inferredSuccessOutputFriendlyName[0].toLowerCase() + inferredSuccessOutputFriendlyName.slice(1) %>.

@@ -64,7 +64,7 @@ if (verbose) { %>
   },
 
 
-  fn: function (inputs, exits) {
+  fn: async function (inputs, exits) {
 <%if (verbose) { %>
     var req = this.req;
 <% } %>
