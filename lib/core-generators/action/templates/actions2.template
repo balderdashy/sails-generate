@@ -14,7 +14,7 @@
 
 
   inputs: {
-    <% if (verbose) { %>
+<% if (verbose) { %>
 
     // Expected request parameters go here.
     //
@@ -24,7 +24,7 @@
     //   required: true
     // },
 
-    <% } %>
+<% } %>
   },
 
 
@@ -68,7 +68,8 @@ if (verbose) { %>
 <%if (verbose) { %>
     var req = this.req;
 <% } %>
-    return exits.success();
+    <% if (inferredViewTemplatePath) { %>// Respond with view.
+    <% } %>return exits.success();
 
   }
 
