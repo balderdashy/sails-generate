@@ -10,7 +10,7 @@
   friendlyName: <%= util.inspect(friendlyName) %>,
 
 
-  description: <%= util.inspect(description) %>,
+  description: <%= util.inspect(description) %>,<% if (!inferredViewTemplatePath) { %>
 
 
   inputs: {
@@ -25,7 +25,7 @@
     // },
 
 <% } %>
-  },
+  },<% } %>
 
 
   exits: {<%
