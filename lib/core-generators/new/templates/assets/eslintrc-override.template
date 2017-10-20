@@ -26,7 +26,7 @@
   },
 
   "parserOptions": {
-    "ecmaVersion": 5
+    "ecmaVersion": 8
   },
 
   "globals": {
