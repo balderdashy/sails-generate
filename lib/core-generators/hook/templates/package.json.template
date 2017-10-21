@@ -11,7 +11,7 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "eslint": "3.5.0"
+    "eslint": "3.19.0"
   },
   "sails": {
     "isHook": true
