@@ -23,9 +23,9 @@ module.exports = function (grunt) {
   //  └─    ─┴┘└─┘└  ┴ ┴└─┘┴─┘┴     ─┘
   if (linker) { %>
   grunt.registerTask('default', [
-    // 'polyfill:dev', // <-- uncomment if you need/want to transpile code to ES2015 in development.
+    // 'polyfill:dev', //« uncomment to ALSO transpile during development (for broader browser compat.)
     'compileAssets',
-    // 'babel',        // <-- uncomment if you need/want to transpile code to ES2015 in development.
+    // 'babel',        //« uncomment to ALSO transpile during development (for broader browser compat.)
     'linkAssets',
     'watch'
   ]);
@@ -35,9 +35,9 @@ module.exports = function (grunt) {
   //  └─┘┴ ┴┴┴─┘└─┘   ┴─┘┴┘└┘┴ ┴└─┘┴└─  ═╩╝╩╚═╝╩ ╩╚═╝╩═╝╚═╝═╩╝ooo
   else { %>
   grunt.registerTask('default', [
-    // 'polyfill:dev', // <-- uncomment if you need/want to transpile code to ES2015 in development.
+    // 'polyfill:dev', //« uncomment to ALSO transpile during development (for broader browser compat.)
     'compileAssets',
-    // 'babel',        // <-- uncomment if you need/want to transpile code to ES2015 in development.
+    // 'babel',        //« uncomment to ALSO transpile during development (for broader browser compat.)
     'watch'
   ]);
   <% } %>
