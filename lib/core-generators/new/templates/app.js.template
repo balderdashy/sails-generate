@@ -34,9 +34,9 @@ var rc;
 try {
   sails = require('sails');
   rc = require('sails/accessible/rc');
-} catch (e) {
+} catch (err) {
   console.error('Encountered an error when attempting to require(\'sails\'):');
-  console.error(e.stack);
+  console.error(err.stack);
   console.error('--');
   console.error('To run an app using `node app.js`, you usually need to have a version of `sails` installed in the same directory as your app.');
   console.error('To do that, run `npm install sails`');
