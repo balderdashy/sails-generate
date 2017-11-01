@@ -14,7 +14,7 @@ module.exports.routes = {
   //  ╦ ╦╔═╗╔╗ ╔═╗╔═╗╔═╗╔═╗╔═╗
   //  ║║║║╣ ╠╩╗╠═╝╠═╣║ ╦║╣ ╚═╗
   //  ╚╩╝╚═╝╚═╝╩  ╩ ╩╚═╝╚═╝╚═╝
-
+<% if(!caviar) {%>
   /***************************************************************************
   *                                                                          *
   * Make the view located at `views/homepage.ejs` your home page.            *
@@ -26,11 +26,27 @@ module.exports.routes = {
 
   '/': {
     view: 'homepage'
-  },
+  },<%}
+else { %>  'GET /':                   { action: 'misc/view-homepage' },// TODO
 
+  'GET /faq':                { view:   'pages/faq' },
+  'GET /legal/terms':        { action: 'legal/view-terms'},
+  'GET /legal/privacy':      { view:   'pages/legal/privacy' },
+  'GET /contact':            { view:   'pages/contact' },
+
+  'GET /signup':             { action: 'entry/view-signup' },
+  'GET /email/confirm':      { action: 'entry/confirm-email' },
+  'GET /email/confirmed':    { view:   'pages/entry/confirmed-email' },
+
+  'GET /login':              { action: 'entry/view-login' },
+  'GET /password/forgot':    { action: 'entry/view-forgot-password' },
+  'GET /password/new':       { action: 'entry/view-new-password' },
+
+  'GET /account':            { action: 'account/view-my-account' },
+  'GET /account/password':   { action: 'account/view-change-password' },
+  'GET /account/profile':    { action: 'account/view-profile' },<% } %>
 <% } %>
-
-  /***************************************************************************
+<% if(!caviar) { %>  /***************************************************************************
   *                                                                          *
   * More custom routes here...                                               *
   * (See https://sailsjs.com/config/routes for examples.)                    *
@@ -41,10 +57,21 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
 
-
+<% } %>
   //  ╔═╗╔═╗╦  ╔═╗╔╗╔╔╦╗╔═╗╔═╗╦╔╗╔╔╦╗╔═╗
   //  ╠═╣╠═╝║  ║╣ ║║║ ║║╠═╝║ ║║║║║ ║ ╚═╗
   //  ╩ ╩╩  ╩  ╚═╝╝╚╝═╩╝╩  ╚═╝╩╝╚╝ ╩ ╚═╝
+<% if(caviar) {%>  // Note that, in this app, these API endpoints may be accessed using the `Cloud.*()` methods
+  // from the CloudSDK library.
+  '/api/v0.0/account/logout':                           { action: 'account/logout' },
+  'PUT   /api/v0.0/account/update-password':            { action: 'account/update-password' },
+  'PUT   /api/v0.0/account/update-profile':             { action: 'account/update-profile' },
+  'PUT   /api/v0.0/account/update-billing-card':        { action: 'account/update-billing-card' },
+  'PUT   /api/v0.0/entry/login':                        { action: 'entry/login' },
+  'POST  /api/v0.0/entry/signup':                       { action: 'entry/signup' },
+  'POST  /api/v0.0/entry/send-password-recovery-email': { action: 'entry/send-password-recovery-email' },
+  'POST  /api/v0.0/entry/update-password-and-login':    { action: 'entry/update-password-and-login' },
+  'POST  /api/v0.0/misc/contact':                       { action: 'misc/contact' },<%}%>
 
 
   //  ╦ ╦╔═╗╔╗ ╦ ╦╔═╗╔═╗╦╔═╔═╗
@@ -52,9 +79,14 @@ module.exports.routes = {
   //  ╚╩╝╚═╝╚═╝╩ ╩╚═╝╚═╝╩ ╩╚═╝
 
 
-  //  ╔╦╗╦╔═╗╔═╗
+<% if(!caviar) { %>  //  ╔╦╗╦╔═╗╔═╗
   //  ║║║║╚═╗║
   //  ╩ ╩╩╚═╝╚═╝
-
+<% }
+else { %>  //  ╔╦╗╦╔═╗╔═╗  ╦═╗╔═╗╔╦╗╦╦═╗╔═╗╔═╗╔╦╗╔═╗
+  //  ║║║║╚═╗║    ╠╦╝║╣  ║║║╠╦╝║╣ ║   ║ ╚═╗
+  //  ╩ ╩╩╚═╝╚═╝  ╩╚═╚═╝═╩╝╩╩╚═╚═╝╚═╝ ╩ ╚═╝
+  '/terms':                   '/legal/terms',
+  '/logout':                  '/api/v0.0/account/logout',<% } %>
 
 };
