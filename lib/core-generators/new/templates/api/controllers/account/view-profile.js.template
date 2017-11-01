@@ -1,0 +1,31 @@
+module.exports = {
+
+
+  friendlyName: 'View profile',
+
+
+  description: 'Display profile page.',
+
+
+  inputs: {
+
+  },
+
+
+  exits: {
+
+    success: {
+      viewTemplatePath: 'pages/account/profile',
+    }
+
+  },
+
+
+  fn: async function (inputs, exits) {
+
+    return exits.success();
+
+  }
+
+
+};

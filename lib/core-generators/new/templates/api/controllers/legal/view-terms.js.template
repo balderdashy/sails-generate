@@ -1,0 +1,33 @@
+module.exports = {
+
+
+  friendlyName: 'View terms',
+
+
+  description: 'Display the terms of service page',
+
+
+  inputs: {
+
+  },
+
+
+  exits: {
+
+    success: {
+      viewTemplatePath: 'pages/legal/terms.ejs'
+    }
+
+  },
+
+
+  fn: async function (inputs, exits) {
+
+    return exits.success({
+      url: sails.config.custom.baseUrl
+    });
+
+  }
+
+
+};

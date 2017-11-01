@@ -1,0 +1,33 @@
+module.exports = {
+
+
+  friendlyName: 'View my account',
+
+
+  description: 'Display my account page.',
+
+
+  inputs: {
+
+  },
+
+
+  exits: {
+
+    success: {
+      viewTemplatePath: 'pages/account/my-account',
+    }
+
+  },
+
+
+  fn: async function (inputs, exits) {
+
+    return exits.success({
+      stripePublishableKey: sails.config.custom.enableBillingFeatures ? sails.config.custom.stripePublishableKey : undefined,
+    });
+
+  }
+
+
+};

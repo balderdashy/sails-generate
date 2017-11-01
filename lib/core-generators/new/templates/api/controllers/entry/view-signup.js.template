@@ -1,0 +1,37 @@
+module.exports = {
+
+
+  friendlyName: 'View signup page',
+
+
+  description: 'Display  page.',
+
+
+  inputs: {
+
+  },
+
+
+  exits: {
+    success: {
+      viewTemplatePath: 'pages/entry/signup',
+    },
+
+    redirect: {
+      responseType: 'redirect'
+    }
+  },
+
+
+  fn: async function (inputs, exits) {
+
+    if (this.req.session.userId) {
+      return exits.redirect('/');
+    }
+
+    return exits.success();
+
+  }
+
+
+};

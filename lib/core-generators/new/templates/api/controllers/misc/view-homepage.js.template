@@ -1,0 +1,42 @@
+module.exports = {
+
+
+  friendlyName: 'View homepage',
+
+
+  description: 'Display the appropriate homepage depending on login status.',
+
+
+  inputs: {
+
+  },
+
+
+  exits: {
+
+    loggedIn: {
+      viewTemplatePath: 'pages/dashboard/welcome.ejs'
+    },
+
+    notLoggedIn: {
+      viewTemplatePath: 'pages/homepage.ejs'
+    }
+
+  },
+
+
+  fn: async function (inputs, exits) {
+
+    // If `req.session.userId` isset, then we know that this request originated
+    // from a logged-in user. So, show the logged-in homepage.
+    if (this.req.session.userId) {
+      return exits.loggedIn();
+    }
+
+    // Otherwise, the user is not logged in, so show the logged-out homepage.
+    return exits.notLoggedIn();
+
+  }
+
+
+};
