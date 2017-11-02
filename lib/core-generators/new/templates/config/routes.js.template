@@ -25,7 +25,7 @@ module.exports.routes = {
   ***************************************************************************/
 
   '/': {
-    view: 'homepage'
+    view: 'pages/homepage'
   },<%}
 else { %>  'GET /':                   { action: 'misc/view-homepage' },// TODO
 
