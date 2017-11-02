@@ -66,9 +66,20 @@ var jsFilesToInject = [
   'dependencies/sails.io.js',
 
   // Bring in `.js` files for any other client-side JavaScript dependencies.
-  // (e.g. Lodash, jQuery, React, bootstrap.js, Ember, Angular, etc.)
+  // (e.g. Lodash, jQuery, React, bootstrap.js, Ember, Angular, etc.)<% if(caviar) { %>
+  'dependencies/lodash.js',
+  'dependencies/jquery.min.js',
+  'dependencies/vue.js',
+  'dependencies/bootstrap/dependencies/**/*.js',<% } %>
   'dependencies/**/*.js',
+<% if(caviar) { %>
+  // First amongst the app-level files, bring in cloud configuration
+  'js/cloud.setup.js',
 
+  // Bring in components & helpers before bringing in the rest (i.e. page scripts)
+  'js/components/**/*.js',
+  'js/helpers/**/*.js',
+<% } %>
   // All of the rest of your custom client-side js files will be injected here,
   // in no particular order.  To customize the ordering, add additional items
   // here, _above_ this one.
