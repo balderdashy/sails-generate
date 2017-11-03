@@ -8,8 +8,13 @@ module.exports = {
 
 
   extendedDescription:
-  'This creates a new user record in the database _and_ causes the requesting user agent '+
-  'to become logged in by modifying its [session](https://sailsjs.com/documentation/concepts/sessions).',
+`This creates a new user record in the database, signs in the requesting user agent
+by modifying its [session](https://sailsjs.com/documentation/concepts/sessions), and
+(if emailing with Mailgun is enabled) sends an account verification email.
+
+If a verification email is sent, the new user's account is put in a "pending" state
+until they confirm they are using a legitimate email address (by clicking the link in
+the account verification message.)`,
 
 
   inputs: {
@@ -17,23 +22,22 @@ module.exports = {
     emailAddress: {
       required: true,
       type: 'string',
-      description: 'The email address for the new account, e.g. "m@example.com".',
+      isEmail: true,
+      description: 'The email address for the new account, e.g. m@example.com.',
       extendedDescription: 'Must be a valid email address.',
     },
 
     password: {
       required: true,
       type: 'string',
-      description: 'The unencrypted password to use for the new account, e.g. "passwordlol".',
-      extendedDescription:
-      'See `api/models/User.js` for details about password validation.\n'+
-      '\n'+
-      '> To summarize: Password must be at least 7 characters, and max 72 characters.  Anything goes.',
+      example: 'passwordlol',
+      description: 'The unencrypted password to use for the new account.'
     },
 
     fullName:  {
       required: true,
       type: 'string',
+      example: 'Frida Kahlo de Rivera',
       description: 'The user\'s full name.',
     }
 
@@ -88,12 +92,12 @@ module.exports = {
       emailProofTokenExpiresAt: sails.config.custom.enableEmailFeatures ? (Date.now() + sails.config.custom.emailProofTokenTTL) : undefined,
       stripeCustomerId: sails.config.custom.enableBillingFeatures ? stripeCustomer.id : undefined,
       emailStatus: sails.config.custom.enableEmailFeatures ? 'pending' : undefined,
-      tosAcceptedByIp: this.req.ip// (https://sailsjs.com/documentation/reference/request-req/req-ip)
+      tosAcceptedByIp: this.req.ip// (https://sailsjs.com/documentation/reference/request-req/req-ip)<% if (verbose) {%>
       // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       // ^Note that, for some use cases, this needs to be tracked to meet Stripe's KYC requirements.
       // For example:
       // https://stripe.com/docs/connect/updating-accounts#referencing-the-agreement
-      // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+      // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -<% } %>
     })
     .intercept('E_UNIQUE', ()=>'emailAlreadyInUse')
     .intercept({name: 'UsageError'}, ()=>'invalid')
@@ -103,7 +107,11 @@ module.exports = {
     // --•
     // IWMIH (if we made it here), the user record was successfully created.
 
-    // Store the user's new id in their session.
+    // Store the user's new id in their session.<% if (verbose) {%>
+    // > We can use this (`req.session.userId`) to authenticate this user's future
+    // > requests-- i.e. to tell that they came from from a "logged in" user, and
+    // > from _this_ user, in particular.  (That'll work until their session expires,
+    // > we log them out, or they clear their cookies.)<% }%>
     this.req.session.userId = newUserRecord.id;
 
     if (sails.config.custom.enableEmailFeatures) {
@@ -119,7 +127,7 @@ module.exports = {
       });
     }
 
-    // Since everything went ok, call send the success response.
+    // Since everything went ok, trigger the success exit to send our 200 response.
     return exits.success();
 
   }
