@@ -96,7 +96,7 @@ module.exports = {
       // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     })
     .intercept('E_UNIQUE', ()=>'emailAlreadyInUse')
-    .intercept({name: 'UsageError'}, (err)=>({invalid: err}))
+    .intercept({name: 'UsageError'}, ()=>'invalid')
     .fetch();
 
 
