@@ -64,7 +64,7 @@ if (verbose) { %>
   },
 
 
-  fn: async function (inputs, exits) {
+  fn: <%= IS_CURRENT_NODE_VERSION_CAPABLE_OF_AWAIT ? 'async function' : 'function' %> (inputs, exits) {
 <%if (verbose) { %>
     var req = this.req;
 <% } %>

@@ -9,9 +9,9 @@
  * https://sailsjs.com/config/bootstrap
  */
 
-module.exports.bootstrap = async function(done) {
+module.exports.bootstrap = <%= IS_CURRENT_NODE_VERSION_CAPABLE_OF_AWAIT ? 'async function' : 'function' %>(done) {
 
-  // By convention, this is a good place to put code that sets up fake data in development.
+  // By convention, this is a good place to set up fake data during development.<% if (IS_CURRENT_NODE_VERSION_CAPABLE_OF_AWAIT) { %>
   //
   // For example:
   // ```
@@ -25,10 +25,10 @@ module.exports.bootstrap = async function(done) {
   //   { emailAddress: 'rachael@example.com', fullName: 'Rachael Shaw', },
   //   // etc.
   // ]);
-  // ```
+  // ```<% } %>
 
-  // It's very important to trigger this callback method when you are finished
-  // with the bootstrap!  (otherwise your server will never lift, since it's waiting on the bootstrap)
+  // Don't forget to trigger `done()` when this bootstrap function's logic is finished.
+  // (otherwise your server will never lift, since it's waiting on the bootstrap)
   return done();
 
 };

@@ -14,7 +14,7 @@
  * @help        :: See https://sailsjs.com/docs/concepts/actions
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -<% } %>
  */
-module.exports = function <%= _.last(actionName.split('.')) %>(req, res) {
+module.exports = <%= IS_CURRENT_NODE_VERSION_CAPABLE_OF_AWAIT ? 'async function' : 'function' %> <%= _.last(actionName.split('.')) %>(req, res) {
 <% if (inferredViewTemplatePath) { %>
   return res.view(<%= util.inspect(inferredViewTemplatePath) %>);
 <% } else { %>
