@@ -22,4 +22,4 @@
 ################################################
 <% if (typeof frontend === 'undefined' || frontend !== false) { %>
 assets/dependencies/**/*.js<% } %>
-<% if (!_.contains(without, 'views') && (typeof frontend === 'undefined' || frontend !== false)) { %>views/**/*.ejs<% } %>
+<% if (!_.contains(without, 'views') && (typeof frontend === 'undefined' || frontend !== false)) { %>views/**/*.ejs // (but see https://github.com/roadhump/SublimeLinter-eslint/issues/87)<% } %>
