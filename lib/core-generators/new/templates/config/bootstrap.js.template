@@ -11,7 +11,7 @@
 
 module.exports.bootstrap = <%= IS_CURRENT_NODE_VERSION_CAPABLE_OF_AWAIT ? 'async function' : 'function' %>(done) {
 
-  // By convention, this is a good place to set up fake data during development.<% if (IS_CURRENT_NODE_VERSION_CAPABLE_OF_AWAIT) { %>
+  // By convention, this is a good place to set up fake data during development.<% if (IS_CURRENT_NODE_VERSION_CAPABLE_OF_AWAIT && !_.contains(without, 'orm')) { %>
   //
   // For example:
   // ```

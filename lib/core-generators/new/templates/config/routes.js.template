@@ -10,7 +10,7 @@
 
 module.exports.routes = {
 
-<% if (typeof frontend === 'undefined' || frontend !== false) { %>
+<% if ((typeof frontend === 'undefined' || frontend !== false) && typeof (without == undefined || !_.contains(without, 'views'))) { %>
   //  ╦ ╦╔═╗╔╗ ╔═╗╔═╗╔═╗╔═╗╔═╗
   //  ║║║║╣ ╠╩╗╠═╝╠═╣║ ╦║╣ ╚═╗
   //  ╚╩╝╚═╝╚═╝╩  ╩ ╩╚═╝╚═╝╚═╝

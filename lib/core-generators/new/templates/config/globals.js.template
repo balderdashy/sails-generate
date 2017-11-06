@@ -39,14 +39,15 @@ module.exports.globals = {
 
   async: require('async'),<% } %>
 
-  /****************************************************************************
+<% if (typeof without !== 'undefined' && _.contains(without,'orm')) { %>  // This app was generated without models.
+  models: false,<% } else { %>  /****************************************************************************
   *                                                                           *
   * Whether to expose each of your app's models as global variables.          *
   * (See the link at the top of this file for more information.)              *
   *                                                                           *
   ****************************************************************************/
 
-  models: true,
+  models: true,<% } %>
 
   /****************************************************************************
   *                                                                           *

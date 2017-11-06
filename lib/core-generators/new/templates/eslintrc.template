@@ -5,12 +5,12 @@
   // A set of basic code conventions (similar to a .jshintrc file) designed to
   // and encourage quality and consistency across your Sails app's code base.
   // These rules are checked against automatically any time you run `npm test`.
-  //
+  // <% if (typeof frontend === 'undefined' || frontend !== false) { %>
   // > An additional eslintrc override file is included in the `assets/` folder
   // > right out of the box.  This is specifically to allow for variations in acceptable
   // > global variables between front-end JavaScript code designed to run in the browser
   // > vs. backend code designed to run in a Node.js/Sails process.
-  //
+  //<% } %>
   // > Note: If you're using mocha, you'll want to add an extra override file to your
   // > `test/` folder so that eslint will tolerate mocha-specific globals like `before`
   // > and `describe`.
@@ -29,15 +29,20 @@
     "ecmaVersion": 8
   },
 
-  "globals": {
+  "globals": {<% if (!_.contains(without,'orm')) { %>
     // If "no-undef" is enabled below and your app uses globals, be sure to list all
-    // relevant globals below (including the globalIds of models, if relevant):
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    // "sails": true,
-    // "_": true,
-    // "async": true,
+    // relevant globals below (including the globalIds of models, if appropriate):
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -<% } %>
+    "sails": true<%
+    if (!_.contains(without,'lodash')) { %>,
+    "_": true<% }
+
+    if (!_.contains(without,'async')) { %>,
+    "async": true<% }
+
+    if (!_.contains(without,'orm')) { %>
     // ...and any other backend globals (e.g. `"User": true`)
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -<% } %>
   },
 
   "rules": {
@@ -55,12 +60,13 @@
     "no-mixed-spaces-and-tabs":     [2, "smart-tabs"],
     "no-return-assign":             [2, "always"],
     "no-sequences":                 [2],
-    "no-trailing-spaces":           [1],
+    "no-trailing-spaces":           [1],<% if (typeof without === 'undefined' || !_.contains(without,'orm')) { %>
     "no-undef":                     [0],
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     // ^^Note: If this "no-undef" rule is enabled (set to `[2]`), then model globals
     // (e.g. `"User": true`) should also be included above under "globals".
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -<% } else { %>
+    "no-undef":                     [2],<% } %>
     "no-unexpected-multiline":      [1],
     "no-unused-vars":               [1],
     "one-var":                      [2, "never"],
