@@ -3,6 +3,7 @@
 
 
 
-# To prevent search engines from seeing the site altogether, uncomment the next two lines:
+# If you want to discourage search engines from indexing this site, uncomment
+# the "User-Agent" and "Disallow" settings on the next two lines:
 # User-Agent: *
 # Disallow: /
