@@ -31,34 +31,51 @@
   },
 
   "globals": {
-    "io": true,
-    "SAILS_LOCALS": true,
 
-    // Allow any other window globals you're relying on here; e.g.
+    // Allow any window globals you're relying on here; e.g.
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    // "$": true,
-    // "Vue": true,
-    // "angular": true,
+    "SAILS_LOCALS": true<%
+    if (!_.contains(without,'sockets')) { %>,
+    "io": true<% }
+    if (caviar) { %>,
+    "Cloud": true,
+    "parasails": true,
+    "$": true,
+    "_": true,
+    "StripeCheckout": true,
+    "Stripe": true,
+    "Vue": true,
+    "VueRouter": true<% } %>,
+    // "moment": true,
+    // "bowser": true
     // ...etc.
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     // Make sure backend globals aren't indadvertently tolerated in our client-side JS:
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    "sails": false,
-    "_": false,
-    "async": false,
-    // ...and any other backend globals (e.g. `"User": false`)
+    "sails": false<%
+    if (!caviar && !_.contains(without,'lodash')) { %>,
+    "_": false<% }
+
+    if (!_.contains(without,'async')) { %>,
+    "async": false<% }
+
+    if (caviar) { %>,
+    "User": false<% }
+
+    if (!_.contains(without,'orm')) { %>
+    // ...and any other backend globals (e.g. `"Organization": false`)<% } %>
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  },
+  }<% if (!caviar) { %>,
 
   "rules": {
     "no-undef": [2]
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     // ^^Note: If you've enabled the "no-undef" rule in the top level .eslintrc file, then
-    // the globalIds of models should also be explicitly disabled above under "globals".
-    // (In this scenario, also note that the following override for the "no-undef" rule
-    // could technically be removed since it's redundant.)
+    // the globalIds of Sails models should also be blacklisted above under "globals".
+    // (In this scenario, also note that this override for the "no-undef" rule could
+    // simply be removed, since it'd be redundant.)
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  }
+  }<% } %>
 
 }
