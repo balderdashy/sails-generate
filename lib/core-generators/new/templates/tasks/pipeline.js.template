@@ -34,7 +34,7 @@
 //
 var cssFilesToInject = [
 
-  // Bring in `.css` files for themes and style guides (e.g. bootstrap)
+  // Bring in `.css` files for themes and style guides (e.g. Bootstrap, Foundation)
   'dependencies/**/*.css',
 
   // All of the rest of your custom `.css` files will be injected here,
@@ -67,11 +67,11 @@ var jsFilesToInject = [
 
   // Bring in `.js` files for any other client-side JavaScript dependencies.
   // (e.g. Lodash, Vue.js, jQuery, Bootstrap, Ember, Angular, etc.)
-  // > Be sure to bring in any files that depend on each other in the right order!<% if(caviar) { %>
+  // > Be sure to list dependencies that depend on each other in the right order!<% if(caviar) { %>
   'dependencies/lodash.js',
   'dependencies/jquery.min.js',
   'dependencies/vue.js',
-  'dependencies/bootstrap/dependencies/popper.js',<% } %>
+  'dependencies/bootstrap-4/popper.js',<% } %>
   'dependencies/**/*.js',
 <% if(caviar) { %>
   // First amongst the app-level files, bring in cloud configuration

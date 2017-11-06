@@ -23,78 +23,88 @@ module.exports = function defineCustomHook(sails) {
      *
      * @param {Function} done
      */
-    initialize: function (done) {
+    initialize: async function (done) {
 
-      sails.log.debug('Initializing default custom hook...');
+      sails.log.debug('Initializing hook... (`api/hooks/custom`)');
 
-      (async ()=>{
+      // Attach the `sails-stdlib` dependency on the app instance (`sails`), for convenience.
+      sails.stdlib = stdlib;
 
-        // Attach `sails.stdlib` for convenience.
-        sails.stdlib = stdlib;
+      // Check Stripe/Mailgun configuration (for billing and emails).
+      var MANDATORY_STRIPE_CONFIG = ['stripeSecret', 'stripePublishableKey'];
+      var MANDATORY_MAILGUN_CONFIG = ['mailgunApiKey', 'mailgunDomain', 'internalEmailAddress'];
+      var isMissingStripeConfig = _.difference(MANDATORY_STRIPE_CONFIG, Object.keys(sails.config.custom)).length > 0;
+      var isMissingMailgunConfig = _.difference(MANDATORY_MAILGUN_CONFIG, Object.keys(sails.config.custom)).length > 0;
 
-        // Check Stripe/Mailgun configuration (for billing and emails).
-        var isMissingStripeConfig = false;
-        var isMissingMailgunConfig = false;
+      if (isMissingStripeConfig || isMissingMailgunConfig) {
 
+        let missingFeatureText = isMissingStripeConfig && isMissingMailgunConfig ? 'billing and email' : isMissingStripeConfig ? 'billing' : 'email';
+        let verboseSuffix = '';
+        if (_.contains(['verbose', 'silly'], sails.config.log.level)) {
+          verboseSuffix =
+`
+> Tip: To exclude sensitive credentials from source control, use:
+> • config/local.js (for local development)
+> • environment variables (for production)
+>
+> If you want to check them in to source control, use:
+> • config/custom.js  (for development)
+> • config/env/staging.js  (for staging)
+> • config/env/production.js  (for production)
+>
+> (See https://sailsjs.com/docs/concepts/configuration for help configuring Sails.)
+`;
+        }
+
+        let problems = [];
         if (sails.config.custom.stripeSecret === undefined) {
-          sails.log.warn('No `sails.config.custom.stripeSecret` was configured.');
-          isMissingStripeConfig = true;
+          problems.push('No `sails.config.custom.stripeSecret` was configured.');
         }
         if (sails.config.custom.stripePublishableKey === undefined) {
-          sails.log.warn('No `sails.config.custom.stripePublishableKey` was configured.');
-          isMissingStripeConfig = true;
+          problems.push('No `sails.config.custom.stripePublishableKey` was configured.');
         }
         if (sails.config.custom.mailgunApiKey === undefined) {
-          sails.log.warn('No `sails.config.custom.mailgunApiKey` was configured.');
-          isMissingMailgunConfig = true;
+          problems.push('No `sails.config.custom.mailgunApiKey` was configured.');
         }
         if (sails.config.custom.mailgunDomain === undefined) {
-          sails.log.warn('No `sails.config.custom.mailgunDomain` was configured.');
-          isMissingMailgunConfig = true;
+          problems.push('No `sails.config.custom.mailgunDomain` was configured.');
         }
         if (sails.config.custom.internalEmailAddress === undefined) {
-          sails.log.warn('No `sails.config.custom.internalEmailAddress` was configured.');
-          isMissingMailgunConfig = true;
+          problems.push('No `sails.config.custom.internalEmailAddress` was configured.');
         }
 
-        if (isMissingStripeConfig || isMissingMailgunConfig) {
-          var missingFeatureText = isMissingStripeConfig && isMissingMailgunConfig ? 'billing and email' : isMissingStripeConfig ? 'billing' : 'email';
+        sails.log.warn(
+`Some optional settings have not been configured yet:
+---------------------------------------------------------------------
+${problems.join('\n')}
 
-          sails.log.warn('(Until this is resolved, this app\'s '+missingFeatureText+' features may be disabled and/or hidden in the UI!)');
-          sails.log.warn();
-          sails.log.warn('> Tip: In development, use `config/locals.js`.  For production, use environment variables.');
-          sails.log.warn('> Or, if you want to check them in to source control, use:');
-          sails.log.warn('> • config/custom.js  (for development)');
-          sails.log.warn('> • config/env/production.js  (for production)');
-          sails.log.warn('>');
-          sails.log.warn('> (See https://sailsjs.com/docs/concepts/configuration for help configuring Sails.)');
-          sails.log.warn('');
-          sails.log.warn(' [?] Or visit https://sailsjs.com/support for tips/advice.');
-          sails.log.warn('--');
-        }
+Until this is resolved, this app's ${missingFeatureText} features
+may be disabled and/or hidden in the UI.
 
-        // Set additional config keys based on whether Stripe and Mailgun config are available.
-        // These will determine whether or not to enable various email and billing features.
-        sails.config.custom.enableBillingFeatures = !isMissingStripeConfig;
-        sails.config.custom.enableEmailFeatures = !isMissingMailgunConfig;
+ [?] If you're unsure, come by https://sailsjs.com/support
+---------------------------------------------------------------------${verboseSuffix}`);
+      }//ﬁ
 
-        // Always set up Stripe credentials on load, no matter what.
-        await Stripe.setGlobalDefaults({
-          apiKey: sails.config.custom.stripeSecret
-        });
+      // Set additional config keys based on whether Stripe and Mailgun config are available.
+      // These will determine whether or not to enable various email and billing features.
+      sails.config.custom.enableBillingFeatures = !isMissingStripeConfig;
+      sails.config.custom.enableEmailFeatures = !isMissingMailgunConfig;
 
-        // Always set up Mailgun credentials on load, no matter what.
-        await sails.stdlib('mailgun').setGlobalDefaults({
-          apiKey: sails.config.custom.mailgunApiKey,
-          domain: sails.config.custom.mailgunDomain,
-        });
+      // Always set up Stripe credentials on load, no matter what.
+      await Stripe.setGlobalDefaults({
+        apiKey: sails.config.custom.stripeSecret
+      });
 
-        // ... Any other app-specific setup code that needs to run on lift,
-        // even in production, goes here ...
+      // Always set up Mailgun credentials on load, no matter what.
+      await sails.stdlib('mailgun').setGlobalDefaults({
+        apiKey: sails.config.custom.mailgunApiKey,
+        domain: sails.config.custom.mailgunDomain,
+      });
 
-      })()
-      .then(()=>{ return done(); })
-      .catch((err)=>{ return done(err); });
+      // ... Any other app-specific setup code that needs to run on lift,
+      // even in production, goes here ...
+
+      return done();
 
     },
 

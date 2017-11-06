@@ -14,6 +14,7 @@
 # files and/or directories should be ignored for
 # the purposes of linting -- e.g. because they
 # are already minified, or external dependencies,
+# contain inline JavaScript within an HTML template,
 # etc.
 #
 # Modify/extend/prune to fit your needs!
@@ -21,3 +22,4 @@
 ################################################
 <% if (typeof frontend === 'undefined' || frontend !== false) { %>
 assets/dependencies/**/*.js<% } %>
+<% if (!_.contains(without, 'views') && (typeof frontend === 'undefined' || frontend !== false)) { %>views/**/*.ejs<% } %>
