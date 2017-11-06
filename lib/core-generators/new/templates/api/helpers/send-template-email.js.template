@@ -7,17 +7,23 @@ module.exports = {
   description: 'Send an email using a template.',
 
 
+  extendedDescription:
+`To ease testing and development, if the provided "to" email address ends in "@example.com", then
+the email message will be written to the terminal instead of actually being sent.  (Thanks @simonratner!)`,
+
+
   inputs: {
 
     template: {
       description: 'The relative path to an EJS template within our `views/emails` folder -- WITHOUT the file extension.',
-      extendedDescription: 'For example `reset-password` or `marketing/welcome`.  But NEVER e.g. `foo/bar.ejs`.',
+      extendedDescription: 'Use strings like `foo` or `foo/bar`, but NEVER `foo/bar.ejs`.  For example, `marketing/welcome` would send an email using the `views/emails/marketing/welcome.ejs` template.',
       example: 'reset-password',
+      type: 'string',
       required: true,
     },
 
     templateData: {
-      description: 'A dictionary of data which will be accessible from the EJS template.',
+      description: 'A dictionary of data which will be accessible in the EJS template.',
       extendedDescription: 'Each key will be a variable accessible in the template.  For instance, if you supply a dictionary with a `friends` key, and `friends` is an array (`[{name:"Chandra"}, {name:"Mary"}]`), then you will be able to access `friends` from the template; i.e. `<ul><% _.each(friends, function (friend){ %><li><%= friend.name %></li> <%}); %></ul>`  Use `<%- %>` to inject the contents of a variable as-is, `<%= %>` to HTML-escape them first, or `<% %>` to execute some JavaScript code.',
       type: {},
       defaultsTo: {}
@@ -50,7 +56,7 @@ module.exports = {
 
   exits: {
     success: {
-      outputFriendlyName: 'Report',
+      outputFriendlyName: 'Email Delivery Report',
       outputDescription: 'A dictionary of information about what went down.',
       outputType: {
         isDestinationEmailAddressConsideredFake: 'boolean'
