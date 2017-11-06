@@ -6,7 +6,7 @@
 // > A few EJS-safe HTML linting rules for your Sails app.
 //
 // This file (`.htmlhintrc`) exists to help you catch common mistakes
-// in markup templates (views, emails) throughout your Sails app.
+// in markup templates (e.g. views, emails) throughout your Sails app.
 //
 // For the sake of convention, the recommended settings are included
 // here out of the box.  But, of course, feel free to change these
