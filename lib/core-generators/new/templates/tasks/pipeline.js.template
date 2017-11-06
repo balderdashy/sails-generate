@@ -66,11 +66,12 @@ var jsFilesToInject = [
   'dependencies/sails.io.js',
 
   // Bring in `.js` files for any other client-side JavaScript dependencies.
-  // (e.g. Lodash, jQuery, React, bootstrap.js, Ember, Angular, etc.)<% if(caviar) { %>
+  // (e.g. Lodash, Vue.js, jQuery, Bootstrap, Ember, Angular, etc.)
+  // > Be sure to bring in any files that depend on each other in the right order!<% if(caviar) { %>
   'dependencies/lodash.js',
   'dependencies/jquery.min.js',
   'dependencies/vue.js',
-  'dependencies/bootstrap/dependencies/**/*.js',<% } %>
+  'dependencies/bootstrap/dependencies/popper.js',<% } %>
   'dependencies/**/*.js',
 <% if(caviar) { %>
   // First amongst the app-level files, bring in cloud configuration
@@ -108,7 +109,8 @@ var jsFilesToInject = [
 // > them into functions for you.  If you want to use handlebars, pug, dust, etc.,
 // > with the asset linker, no problem-- you'll just want to make sure the precompiled
 // > templates get spit out to the same file.  For information on customizing and
-// > installing your own Grunt tasks, be sure to check out:
+// > installing your own Grunt tasks or using a different build pipeline, be sure
+// > to check out:
 // >   https://sailsjs.com/docs/concepts/assets/task-automation
 //
 var templateFilesToInject = [
