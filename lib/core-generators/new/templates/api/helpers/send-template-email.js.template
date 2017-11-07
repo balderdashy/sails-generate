@@ -97,8 +97,7 @@ the email message will be written to the terminal instead of actually being sent
         subject: inputs.subject,
         fromEmail: sails.config.custom.fromEmailAddress,
         fromName: sails.config.custom.fromName,
-        testMode: false,
-        data: dynamicDataForTemplate
+        testMode: false
       };
 
 
