@@ -1,10 +1,10 @@
 module.exports = {
 
 
-  friendlyName: 'View profile',
+  friendlyName: 'View "Edit Profile"',
 
 
-  description: 'Display profile page.',
+  description: 'Display "Edit Profile" page.',
 
 
   inputs: {
@@ -15,7 +15,7 @@ module.exports = {
   exits: {
 
     success: {
-      viewTemplatePath: 'pages/account/profile',
+      viewTemplatePath: 'pages/account/edit-profile',
     }
 
   },

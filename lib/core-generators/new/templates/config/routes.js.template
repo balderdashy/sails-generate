@@ -30,7 +30,7 @@ module.exports.routes = {
 else { %>  'GET /':                   { action: 'misc/view-homepage' },// TODO
 
   'GET /faq':                { view:   'pages/faq' },
-  'GET /legal/terms':        { action: 'legal/view-terms'},
+  'GET /legal/terms':        { view:   'pages/legal/terms' },
   'GET /legal/privacy':      { view:   'pages/legal/privacy' },
   'GET /contact':            { view:   'pages/contact' },
 
@@ -42,9 +42,9 @@ else { %>  'GET /':                   { action: 'misc/view-homepage' },// TODO
   'GET /password/forgot':    { action: 'entry/view-forgot-password' },
   'GET /password/new':       { action: 'entry/view-new-password' },
 
-  'GET /account':            { action: 'account/view-my-account' },
+  'GET /account':            { action: 'account/view-account-overview' },
   'GET /account/password':   { action: 'account/view-change-password' },
-  'GET /account/profile':    { action: 'account/view-profile' },<% } %>
+  'GET /account/profile':    { action: 'account/view-edit-profile' },<% } %>
 <% } %>
 <% if(!caviar) { %>  /***************************************************************************
   *                                                                          *
