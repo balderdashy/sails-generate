@@ -32,7 +32,7 @@ module.exports = function res<%= _.capitalize(id) %>(data) {
 
   if (_.isError(data)) {
     // If the provided data is an Error instance, then log it as verbose.
-    sails.log.verbose('Custom response `res.foobar()` called with an Error:', data);
+    sails.log.verbose('Custom response `res.<%= id %>()` called with an Error:', data);
 
     // If the error doesn't have a custom .toJSON(), use its `stack` instead--
     // otherwise res.json() would turn it into an empty dictionary.
