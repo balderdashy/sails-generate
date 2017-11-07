@@ -1,7 +1,7 @@
 module.exports = {
 
 
-  friendlyName: 'View forgot password page',
+  friendlyName: 'View login page',
 
 
   description: 'Display  page.',
@@ -14,7 +14,7 @@ module.exports = {
 
   exits: {
     success: {
-      viewTemplatePath: 'pages/entry/forgot-password',
+      viewTemplatePath: 'pages/entrance/login',
     },
 
     redirect: {
@@ -25,7 +25,7 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
-    // If the user is already logged in, redirect -- the password can be changed in the dashboard.
+    // If the user is already logged in, redirect -- it would be silly to log in again.
     if (this.req.session.userId) {
       return exits.redirect('/');
     }

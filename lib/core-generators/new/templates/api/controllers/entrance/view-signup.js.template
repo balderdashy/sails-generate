@@ -14,7 +14,7 @@ module.exports = {
 
   exits: {
     success: {
-      viewTemplatePath: 'pages/entry/signup',
+      viewTemplatePath: 'pages/entrance/signup',
     },
 
     redirect: {

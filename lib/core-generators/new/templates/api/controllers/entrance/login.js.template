@@ -86,7 +86,7 @@ requests over WebSockets instead of HTTP).`,
     //  ╔═╗╦ ╦╔═╗╔═╗╦╔═  ┌─┐┌─┐┌─┐┌─┐┬ ┬┌─┐┬─┐┌┬┐
     //  ║  ╠═╣║╣ ║  ╠╩╗  ├─┘├─┤└─┐└─┐││││ │├┬┘ ││
     //  ╚═╝╩ ╩╚═╝╚═╝╩ ╩  ┴  ┴ ┴└─┘└─┘└┴┘└─┘┴└──┴┘
-    await stdlib('passwords').checkPassword({
+    await sails.stdlib('passwords').checkPassword({
       passwordAttempt: inputs.password,
       hashedPassword: userRecord.password
     })

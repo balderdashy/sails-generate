@@ -19,10 +19,10 @@ module.exports.policies = {
 
   // '*': true,<%
 } else {
-%>  '*': 'isLoggedIn',
+%>  '*': 'is-logged-in',
 
-  // Bypass the `isLoggedIn` policy for:
-  'entry/*': true,
+  // Bypass the `is-logged-in` policy for:
+  'entrance/*': true,
   'legal/*': true,
   'account/logout': true,
   'misc/view-homepage': true,

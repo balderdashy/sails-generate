@@ -1,10 +1,10 @@
 module.exports = {
 
 
-  friendlyName: 'Contact',
+  friendlyName: 'Deliver contact form message',
 
 
-  description: 'Send a message from the contact form.',
+  description: 'Deliver a contact form message to the appropriate internal channel(s).',
 
 
   inputs: {
