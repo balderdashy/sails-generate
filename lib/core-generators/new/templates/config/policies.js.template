@@ -23,10 +23,9 @@ module.exports.policies = {
 
   // Bypass the `is-logged-in` policy for:
   'entrance/*': true,
-  'legal/*': true,
   'account/logout': true,
-  'misc/view-homepage': true,
-  'misc/contact': true,<%
+  'view-homepage': true,
+  'deliver-contact-form-message': true,<%
 } %>
 
 };
