@@ -41,23 +41,38 @@ module.exports = {
     * 2. Install it as a dependency of your Sails app.                         *
     *    (For example:  npm install sails-mysql --save)                        *
     *                                                                          *
-    * 3. Then pass it in, along with a connection URL.                         *
+    * 3. Then set it here (`adapter`), along with a connection URL (`url`)     *
+    *    and any other, adapter-specific customizations.                       *
     *    (See https://sailsjs.com/config/datastores for help.)                 *
     *                                                                          *
     ***************************************************************************/
     default: {
       // adapter: 'sails-mysql',
       // url: 'mysql://user:password@host:port/database',
+      //--------------------------------------------------------------------------
+      //  /\   To avoid checking it in to version control, you might opt to set
+      //  ||   sensitive credentials like `url` using an environment variable.
+      //
+      //  For example:
+      //  ```
+      //  sails_datastores__default__url=mysql://admin:myc00lpAssw2D@db.example.com:3306/my_prod_db
+      //  ```
+      //--------------------------------------------------------------------------
+
+      /****************************************************************************
+      *                                                                           *
+      * More adapter-specific options                                             *
+      *                                                                           *
+      * > For example, for some hosted PostgreSQL providers (like Heroku), the    *
+      * > extra `ssl: true` option is mandatory and must be provided here.        *
+      *                                                                           *
+      * More info:                                                                *
+      * https://sailsjs.com/config/datastores                                     *
+      *                                                                           *
+      ****************************************************************************/
+      // ssl: true,
+
     },
-    //--------------------------------------------------------------------------
-    //  /\   To avoid checking it in to version control, you might opt to set
-    //  ||   sensitive credentials like `url` using an environment variable.
-    //
-    //  For example:
-    //  ```
-    //  sails_datastores__default__url=mysql://admin:myc00lpAssw2D@db.example.com:3306/my_prod_db
-    //  ```
-    //--------------------------------------------------------------------------
 
   },
 
@@ -135,6 +150,7 @@ module.exports = {
     cors: {
       // allowOrigins: [
       //   'https://example.com',
+      //   'https://staging.example.com',
       // ]
     },
 
@@ -232,12 +248,13 @@ module.exports = {
     * Uncomment the `onlyAllowOrigins` whitelist below to configure which      *
     * "origins" are allowed to open socket connections to your Sails app.      *
     *                                                                          *
-    * > Replace "https://example.com" with the URL of your production server.  *
+    * > Replace "https://example.com" etc. with the URL(s) of your app.        *
     * > Be sure to use the right protocol!  ("http://" vs. "https://")         *
     *                                                                          *
     ***************************************************************************/
     // onlyAllowOrigins: [
     //   'https://example.com',
+    //   'https://staging.example.com',
     // ],
 
 
@@ -349,12 +366,17 @@ module.exports = {
 
   /**************************************************************************
   *                                                                         *
-  * Overrides for any custom configuration specifically for your app.       *
-  * (for example, production API keys)                                      *
+  * Production overrides for any custom settings specific to your app.      *
+  * (for example, production credentials for 3rd party APIs like Stripe)    *
+  *                                                                         *
+  * > See config/custom.js for more info on how to configure these options. *
   *                                                                         *
   ***************************************************************************/
   custom: {
+    baseUrl: 'https://example.com',
+    internalEmailAddress: 'support@example.com',
 
+    // mailgunDomain: 'mg.example.com',
     // mailgunApiKey: 'key-prod_fake_bd32301385130a0bafe030c',
     // stripeSecret: 'sk_prod__fake_Nfgh82401348jaDa3lkZ0d9Hm',
     //--------------------------------------------------------------------------
@@ -363,6 +385,7 @@ module.exports = {
     //
     // For example:
     // ```
+    // sails_custom__mailgunDomain=mg.example.com
     // sails_custom__mailgunApiKey=key-prod_fake_bd32301385130a0bafe030c
     // sails_custom__stripeSecret=sk_prod__fake_Nfgh82401348jaDa3lkZ0d9Hm
     // ```

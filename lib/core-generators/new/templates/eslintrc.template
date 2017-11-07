@@ -44,7 +44,7 @@
     "User": true<% }
 
     if (!_.contains(without,'orm')) { %>
-    // ...and any other backend globals (e.g. `"User": true`)
+    // ...and any other backend globals (e.g. `"Organization": true`)
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -<% } %>
   },
 
