@@ -79,7 +79,7 @@ module.exports = function defineCustomHook(sails) {
 ${problems.join('\n')}
 
 Until this is resolved, this app's ${missingFeatureText} features
-may be disabled and/or hidden in the UI.
+will be disabled and/or hidden in the UI.
 
  [?] If you're unsure, come by https://sailsjs.com/support
 ---------------------------------------------------------------------${verboseSuffix}`);
@@ -179,12 +179,13 @@ may be disabled and/or hidden in the UI.
             if (loggedInUser.lastSeenAt < now - MS_TO_BUFFER) {
               User.update({id: loggedInUser.id})
               .set({ lastSeenAt: now })
-              .then(()=>{
+              .exec((err)=>{
+                if (err) {
+                  sails.log.error('Background task failed: Could not update user (`'+loggedInUser.id+'`) with a new `lastSeenAt` timestamp.  Error details: '+err.stack);
+                  return;
+                }//•
                 sails.log.verbose('Updated the `lastSeenAt` timestamp for user `'+loggedInUser.id+'`.');
                 // Nothing else to do here.
-              })
-              .catch((err)=>{
-                sails.log.error('Background task failed: Could not update user (`'+loggedInUser.id+'`) with a new `lastSeenAt` timestamp.  Error details: '+err.stack);
               });//_∏_  (Meanwhile...)
             }//ﬁ
 

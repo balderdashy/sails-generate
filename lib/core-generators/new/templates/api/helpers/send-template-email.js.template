@@ -139,7 +139,7 @@ the email message will be written to the terminal instead of actually being sent
         isDestinationEmailAddressConsideredFake: isDestinationEmailAddressConsideredFake
       });
 
-    });
+    });//_∏_
 
   }
 

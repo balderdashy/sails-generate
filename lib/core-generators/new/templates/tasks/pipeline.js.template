@@ -77,9 +77,9 @@ var jsFilesToInject = [
   // First amongst the app-level files, bring in cloud configuration
   'js/cloud.setup.js',
 
-  // Bring in components & helpers before bringing in the rest (i.e. page scripts)
+  // Bring in components & utilities before bringing in the rest (i.e. page scripts)
   'js/components/**/*.js',
-  'js/helpers/**/*.js',
+  'js/utilities/**/*.js',
 <% } %>
   // All of the rest of your custom client-side js files will be injected here,
   // in no particular order.  To customize the ordering, add additional items
