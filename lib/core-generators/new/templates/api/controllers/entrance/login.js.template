@@ -50,16 +50,17 @@ requests over WebSockets instead of HTTP).`,
       user id available as req.session.userId in the corresponding action.`
     },
 
-    notFound: {
+    badCombo: {
       description: `The provided email and password combination does not
       match any user in the database.`,
-      responseType: 'notFound'
-      // ^This uses the `notFound` response located in `api/responses/notFound.js`.
-      // To customize the generic "notFound" response across this entire app, change that file
-      // (see http://sailsjs.com/anatomy/api/responses/not-found-js).
+      responseType: 'unauthorized'
+      // ^This uses the custom `unauthorized` response located in `api/responses/unauthorized.js`.
+      // To customize the generic "unauthorized" response across this entire app, change that file
+      // (see http://sailsjs.com/anatomy/api/responses/unauthorized-js).
       //
-      // To customize the response for _only this_ action, replace `responseType` with `statusCode: 404`
-      // and change the implementation below accordingly (see http://sailsjs.com/docs/concepts/controllers).
+      // To customize the response for _only this_ action, replace `responseType` with
+      // something else.  For example, you might set `statusCode: 498` and change the
+      // implementation below accordingly (see http://sailsjs.com/docs/concepts/controllers).
     }
 
   },
@@ -77,9 +78,9 @@ requests over WebSockets instead of HTTP).`,
       emailAddress: inputs.emailAddress.toLowerCase(),
     });
 
-    // If there was no user, exit thru "notFound".
+    // If there was no user, exit thru "badCombo".
     if(!userRecord) {
-      return exits.notFound();
+      return exits.badCombo();
     }
 
 
@@ -91,8 +92,8 @@ requests over WebSockets instead of HTTP).`,
       hashedPassword: userRecord.password
     })
     // If the password doesn't match, then also
-    // exit thru "notFound" -- just to prevent sniffing.
-    .intercept('incorrect', ()=>'notFound');
+    // exit thru "badCombo" -- just to prevent sniffing.
+    .intercept('incorrect', ()=>'badCombo');
 
 
     // If "Remember Me" was enabled, then keep the session alive for

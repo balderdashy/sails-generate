@@ -22,9 +22,8 @@ module.exports = {
     },
 
     invalidOrExpiredToken: {
-      statusCode: 401,
-      viewTemplatePath: '401-invalid-or-expired-token',
-      description: 'The provided token is expired, invalid, or has already been used.',
+      responseType: 'expired',
+      description: 'The provided token is expired, invalid, or already used up.',
     },
 
     alreadyInUse: {
