@@ -1,19 +1,32 @@
 /**
  * <%= filename %>
  *
- * @description :: Send a custom response.
- * @docs        :: https://sailsjs.com/docs/concepts/custom-responses
+ * A custom response.
  *
- * Usage:
+ * Example usage:
  * ```
- * return res.<%= id %>()
- * return res.<%= id %>(data)
+ *     return res.<%= id %>();
+ *     // -or-
+ *     return res.<%= id %>(optionalData);
  * ```
  *
- * @param  {JSON?} data
+ * Or with actions2:
+ * ```
+ *     exits: {
+ *       somethingHappened: {
+ *         responseType: '<%= id %>'
+ *       }
+ *     }
+ * ```
+ *
+ * ```
+ *     throw 'somethingHappened';
+ *     // -or-
+ *     throw { somethingHappened: optionalData }
+ * ```
  */
 
-module.exports = function res<%= _.capitalize(id) %>(data) {
+module.exports = function <%= id %>(optionalData) {
 
   // Get access to `req` and `res`
   var req = this.req;
@@ -22,34 +35,33 @@ module.exports = function res<%= _.capitalize(id) %>(data) {
   // Define the status code to send in the response.
   var statusCodeToSet = 400;
 
-  // Log a message, if desired.
-  sails.log('Ran custom response: res.<%= id %>()');
-
   // If no data was provided, use res.sendStatus().
-  if (_.isUndefined(data)) {
+  if (optionalData === undefined) {
+    sails.log.info('Ran custom response: res.<%= id %>()');
     return res.sendStatus(statusCodeToSet);
   }
-
-  if (_.isError(data)) {
-    // If the provided data is an Error instance, then log it as verbose.
-    sails.log.verbose('Custom response `res.<%= id %>()` called with an Error:', data);
+  // Else if the provided data is an Error instance, if it has
+  // a toJSON() function, then always run it and use it as the
+  // response body to send.  Otherwise, send down its `.stack`,
+  // except in production use res.sendStatus().
+  else if (_.isError(optionalData)) {
+    sails.log.info('Custom response `res.<%= id %>()` called with an Error:', optionalData);
 
     // If the error doesn't have a custom .toJSON(), use its `stack` instead--
     // otherwise res.json() would turn it into an empty dictionary.
     // (If this is production, don't send a response body at all.)
-    if (!_.isFunction(data.toJSON)) {
+    if (!_.isFunction(optionalData.toJSON)) {
       if (process.env.NODE_ENV === 'production') {
         return res.sendStatus(statusCodeToSet);
       }
       else {
-        res.status(statusCodeToSet);
-        return res.send(data.stack);
+        return res.status(statusCodeToSet).send(optionalData.stack);
       }
     }
   }
-
   // Set status code and send response data.
-  res.status(statusCodeToSet);
-  return res.json(data);
+  else {
+    return res.status(statusCodeToSet).send(optionalData);
+  }
 
 };
