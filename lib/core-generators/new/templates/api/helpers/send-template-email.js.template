@@ -102,19 +102,14 @@ Instead, just log it to the console.`,
 
     // Compile HTML template.
     var emailTemplatePath = path.join('emails/', inputs.template);
-    var dynamicDataForTemplate = _.extend({
-
+    var htmlEmailContents = await sails.renderView(emailTemplatePath, _.extend({
       // Disable layouts
       layout: false,
-
       // Provide access to `url` lib (for building links and image srcs, etc.)
       url: url,
-
-      // Provide access to `util` lib (for dumping data in internal emails)
+      // Provide access to `util` lib (for dumping debug data in internal emails)
       util: util
-
-    }, inputs.templateData);
-    var htmlEmailContents = await sails.renderView(path.join('emails/', inputs.template), dynamicDataForTemplate);
+    }, inputs.templateData));
 
     // Sometimes only log info to the console about the email that WOULD have been sent.
     // Specifically, if the "To" email address is anything "@example.com".
