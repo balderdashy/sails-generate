@@ -135,7 +135,7 @@ Subject: ${inputs.subject}
 
 Body:
 ${htmlEmailContents}
--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-`
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-`);
     } else {
       // Otherwise actually send the email.
       await sails.stdlib('mailgun').sendHtmlEmail({
