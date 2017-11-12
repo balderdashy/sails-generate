@@ -2,23 +2,23 @@ module.exports = {
 
 
   friendlyName: 'View homepage',
+  // TODO: Switch to a different route for logged-in homepage to make this a clearer, simpler default starting point.
 
 
-  description: 'Display the appropriate homepage depending on login status.',
-
-
-  inputs: {
-
-  },
+  description: 'Display the appropriate homepage, depending on login status.',
 
 
   exits: {
 
     loggedIn: {
-      viewTemplatePath: 'pages/dashboard/welcome.ejs'
+      statusCode: 200,
+      description: 'Requesting user is logged in, so show the internal welcome page.',
+      viewTemplatePath: 'pages/dashboard/welcome.ejs',
     },
 
     notLoggedIn: {
+      statusCode: 200,
+      description: 'Requesting user is a guest, so show the public landing page.',
       viewTemplatePath: 'pages/homepage.ejs'
     }
 
@@ -27,13 +27,10 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
-    // If `req.session.userId` isset, then we know that this request originated
-    // from a logged-in user. So, show the logged-in homepage.
-    if (this.req.session.userId) {
+    if (this.req.me) {
       return exits.loggedIn();
     }
 
-    // Otherwise, the user is not logged in, so show the logged-out homepage.
     return exits.notLoggedIn();
 
   }

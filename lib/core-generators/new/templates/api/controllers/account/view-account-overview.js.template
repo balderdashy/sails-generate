@@ -4,12 +4,7 @@ module.exports = {
   friendlyName: 'View account overview',
 
 
-  description: 'Display the "My account" page.',
-
-
-  inputs: {
-
-  },
+  description: 'Display "Account Overview" page.',
 
 
   exits: {
@@ -23,8 +18,13 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
+    // If billing features are enabled, include our configured Stripe.js
+    // public key in the view locals.  Otherwise, leave it as undefined.
     return exits.success({
-      stripePublishableKey: sails.config.custom.enableBillingFeatures ? sails.config.custom.stripePublishableKey : undefined,
+      stripePublishableKey: sails.config.custom.enableBillingFeatures?
+        sails.config.custom.stripePublishableKey
+        :
+        undefined,
     });
 
   }

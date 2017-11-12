@@ -1,32 +1,29 @@
 module.exports = {
 
 
-  friendlyName: 'View login page',
+  friendlyName: 'View login',
 
 
-  description: 'Display  page.',
-
-
-  inputs: {
-
-  },
+  description: 'Display "Login" page.',
 
 
   exits: {
+
     success: {
       viewTemplatePath: 'pages/entrance/login',
     },
 
     redirect: {
+      description: 'The requesting user is already logged in.',
       responseType: 'redirect'
     }
+
   },
 
 
   fn: async function (inputs, exits) {
 
-    // If the user is already logged in, redirect -- it would be silly to log in again.
-    if (this.req.session.userId) {
+    if (this.req.me) {
       return exits.redirect('/');
     }
 
