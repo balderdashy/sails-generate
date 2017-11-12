@@ -8,9 +8,9 @@ module.exports = {
 
 
   extendedDescription:
-`To ease testing and development, if the provided "to" email address ends in "@example.com", then
-the email message will be written to the terminal instead of actually being sent.  (Thanks
-[@simonratner](https://github.com/simonratner)!)`,
+`To ease testing and development, if the provided "to" email address ends in "@example.com",
+then the email message will be written to the terminal instead of actually being sent.
+(Thanks [@simonratner](https://github.com/simonratner)!)`,
 
 
   inputs: {
@@ -46,9 +46,8 @@ some JavaScript code such as an \`if\` statement or \`for\` loop.`,
     to: {
       description: 'The email address of the primary recipient.',
       extendedDescription:
-`If this is any email "@example.com", or if the hostname uses the ".example", ".test",
-or ".silent" TLDs, then don't actually deliver the message.  Instead, log it to the
-console.`,
+`If this is any address ending in "@example.com", then don't actually deliver the message.
+Instead, just log it to the console.`,
       example: 'foo@bar.com',
       required: true
     },
@@ -78,7 +77,7 @@ console.`,
       outputFriendlyName: 'Email delivery report',
       outputDescription: 'A dictionary of information about what went down.',
       outputType: {
-        isDestinationEmailAddressConsideredFake: 'boolean'
+        loggedInsteadOfSending: 'boolean'
       }
     }
 
@@ -101,13 +100,6 @@ console.`,
       );
     }
 
-    // Skip .test and .example TLDs, as well as anything "@example.com".
-    // (For example, a special-cased version of "user@example.com" is
-    // used by Trend Micro Mars scanner to "check apks for malware".)
-    //
-    // (This is used below.)
-    var isDestinationEmailAddressConsideredFake = inputs.to.match(/\.(example|test|silent)$|@example\.com$/i);
-
     // Compile HTML template.
     var emailTemplatePath = path.join('emails/', inputs.template);
     var dynamicDataForTemplate = _.extend({
@@ -124,7 +116,28 @@ console.`,
     }, inputs.templateData);
     var htmlEmailContents = await sails.renderView(path.join('emails/', inputs.template), dynamicDataForTemplate);
 
-    if (sails.config.environment !== 'test' && !isDestinationEmailAddressConsideredFake) {
+    // Sometimes only log info to the console about the email that WOULD have been sent.
+    // Specifically, if the "To" email address is anything "@example.com".
+    //
+    // > This is used below when determining whether to actually send the email,
+    // > for convenience during development, but also for safety.  (For example,
+    // > a special-cased version of "user@example.com" is used by Trend Micro Mars
+    // > scanner to "check apks for malware".)
+    var isToAddressConsideredFake = inputs.to.match(/@example\.com$/i);
+    if (sails.config.environment === 'test' || isToAddressConsideredFake) {
+      sails.log(
+`Skipped sending email, either because the current \`sails.config.environment\`
+is set to "test", or because the "To" email address looked fake.
+But anyway, here is what WOULD have been sent:
+-=-=-=-=-=-=-=-=-=-=-=-=-= Email log =-=-=-=-=-=-=-=-=-=-=-=-=-
+To: ${inputs.to}
+Subject: ${inputs.subject}
+
+Body:
+${htmlEmailContents}
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-`
+    } else {
+      // Otherwise actually send the email.
       await sails.stdlib('mailgun').sendHtmlEmail({
         htmlMessage: htmlEmailContents,
         toEmail: inputs.to,
@@ -133,30 +146,11 @@ console.`,
         fromName: sails.config.custom.fromName,
         testMode: false
       });
-    }
-    else {
-      // Unless the "to" doesn't end in `.silent`, log info about the email that
-      // WOULD have been sent to the console.
-      if (!inputs.to.match(/\.silent$/)) {
-        sails.log();
-        sails.log('Skipped sending email, either because the current sails environment');
-        sails.log('is set to "test", or because the destination email address ended in');
-        sails.log('`.test`, `.example`, or was an email at `example.com`.');
-        sails.log('But here is what WOULD have been sent:');
-        sails.log('-=-=-=-=-=-=-=-=-=-=-=-=-= Email log =-=-=-=-=-=-=-=-=-=-=-=-=-');
-        sails.log();
-        sails.log('To:', inputs.to);
-        sails.log('Subject:', inputs.subject);
-        sails.log();
-        sails.log(htmlEmailContents);
-        sails.log();
-        sails.log('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-');
-      }
     }//ﬁ
 
-    // All done!  (Send back report.)
+    // All done!
     return exits.success({
-      isDestinationEmailAddressConsideredFake: isDestinationEmailAddressConsideredFake
+      loggedInsteadOfSending: isToAddressConsideredFake
     });
 
   }
