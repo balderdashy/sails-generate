@@ -46,19 +46,15 @@ module.exports = {
     // Import dependencies
     var Stripe = require('machinepack-stripe');
 
-    // Get our logged-in user.
-    var loggedInUser = await User.findOne({ id: this.req.session.userId });
-    if (!loggedInUser) { throw new Error('DB record for logged in user should always exist!  But user with id `'+this.req.session.userId+'` is missing from the database...'); }
-
     // Update the Stripe customer for this user.
     await Stripe.updateCustomer({
       source: inputs.stripeToken,
-      customer: loggedInUser.stripeCustomerId,
+      customer: this.req.me.stripeCustomerId,
       apiKey: sails.config.custom.stripeSecret,
     });
 
     // Update the card info we have stored for this user.
-    await User.update({ id: loggedInUser.id }, {
+    await User.update({ id: this.req.me.id }, {
       billingCardBrand: inputs.billingCardBrand,
       billingCardLast4: inputs.billingCardLast4,
       billingCardExpMonth: ''+inputs.billingCardExpMonth,

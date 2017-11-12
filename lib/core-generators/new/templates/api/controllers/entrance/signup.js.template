@@ -125,6 +125,8 @@ the account verification message.)`,
         },
         to: inputs.emailAddress.toLowerCase(),
       });
+    } else {
+      sails.log.warn('Skipping new account email verification... (since email features are disabled)');
     }
 
     // Since everything went ok, trigger the success exit to send our 200 response.
