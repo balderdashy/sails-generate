@@ -11,13 +11,8 @@ module.exports = {
   'This action deletes the `userId` key from the session of the requesting user agent.  '+
   'Actual garbage collection of session data depends on this app\'s session store, and '+
   'potentially also on the '+
-  '[TTL configuration](http://sailsjs.com/docs/reference/configuration/sails-config-session) '+
+  '[TTL configuration](https://sailsjs.com/docs/reference/configuration/sails-config-session) '+
   'you provided for it.',
-
-
-  inputs: {
-
-  },
 
 
   exits: {
@@ -31,6 +26,8 @@ module.exports = {
     },
 
     redirect: {
+      description: 'The requesting user agent looks to be a web browser.',
+      extendedDescription: 'After logging out from a web browser, the user is redirected away.',
       responseType: 'redirect'
     }
 
@@ -39,19 +36,17 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
-    //  ╦ ╦╦╔═╗╔═╗  ┌─┐┌─┐┌─┐┌─┐┬┌─┐┌┐┌
-    //  ║║║║╠═╝║╣   └─┐├┤ └─┐└─┐││ ││││
-    //  ╚╩╝╩╩  ╚═╝  └─┘└─┘└─┘└─┘┴└─┘┘└┘
+    // Clear the `userId` property from this session.
     delete this.req.session.userId;
 
-    //  ╔═╗╔═╗╔╗╔╔╦╗  ┬─┐┌─┐┌─┐┌─┐┌─┐┌┐┌┌─┐┌─┐
-    //  ╚═╗║╣ ║║║ ║║  ├┬┘├┤ └─┐├─┘│ ││││└─┐├┤
-    //  ╚═╝╚═╝╝╚╝═╩╝  ┴└─└─┘└─┘┴  └─┘┘└┘└─┘└─┘
-    //  This persists the now-empty session back to the underlying store.
+    // Then finish up, sending an appropriate response.
+    // > Under the covers, this persists the now-logged-out session back
+    // > to the underlying session store.
     if (!this.req.wantsJSON) {
       return exits.redirect('/login');
+    } else {
+      return exits.success();
     }
-    return exits.success();
 
   }
 
