@@ -91,12 +91,12 @@ will be disabled and/or hidden in the UI.
       sails.config.custom.enableEmailFeatures = !isMissingMailgunConfig;
 
       // Always set up Stripe credentials on load, no matter what.
-      await Stripe.setGlobalDefaults({
+      Stripe.configure({
         apiKey: sails.config.custom.stripeSecret
       });
 
       // Always set up Mailgun credentials on load, no matter what.
-      await sails.stdlib('mailgun').setGlobalDefaults({
+      sails.stdlib('mailgun').configure({
         apiKey: sails.config.custom.mailgunApiKey,
         domain: sails.config.custom.mailgunDomain,
       });
