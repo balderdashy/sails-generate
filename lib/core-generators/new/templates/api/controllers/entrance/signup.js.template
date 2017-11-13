@@ -117,13 +117,13 @@ the account verification message.)`,
     if (sails.config.custom.enableEmailFeatures) {
       // Send "confirm account" email
       await sails.helpers.sendTemplateEmail({
+        to: inputs.emailAddress.toLowerCase(),
         subject: 'Please confirm your account',
         template: 'email-verify-account',
         templateData: {
-          name: inputs.fullName,
-          emailProofToken: emailProofToken
-        },
-        to: inputs.emailAddress.toLowerCase(),
+          fullName: inputs.fullName,
+          token: emailProofToken
+        }
       });
     } else {
       sails.log.warn('Skipping new account email verification... (since email features are disabled)');

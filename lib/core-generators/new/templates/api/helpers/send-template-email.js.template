@@ -66,6 +66,15 @@ Instead, just log it to the console.`,
       description: 'The subject of the email.',
       example: 'Hello there.',
       defaultsTo: ''
+    },
+
+    layout: {
+      description:
+      'Set to `false` to disable layouts altogether, or provide the path (relative '+
+      'from `views/layouts/`) to an override email layout.',
+      defaultsTo: 'layout-email',
+      type: 'ref',
+      custom: (layout)=>layout===false || _.isString(layout)
     }
 
   },
@@ -100,11 +109,33 @@ Instead, just log it to the console.`,
       );
     }
 
-    // Compile HTML template.
+    if (_.startsWith(inputs.template, 'views/') || _.startsWith(inputs.template, 'emails/')) {
+      throw new Error(
+        'The "template" that was passed in to `sendTemplateEmail()` was prefixed with\n'+
+        '`emails/` or `views/` -- but that part is supposed to be omitted.  Instead, please\n'+
+        'just specify the path to the desired email template relative from `views/emails/`.\n'+
+        'For example:\n'+
+        '  template: \'email-reset-password\'\n'+
+        'Or:\n'+
+        '  template: \'admin/email-contact-form\'\n'+
+        ' [?] If you\'re unsure or need advice, see https://sailsjs.com/support'
+      );
+    }//•
+
+    // Determine appropriate email layout and template to use.
     var emailTemplatePath = path.join('emails/', inputs.template);
+    var layout;
+    if (inputs.layout) {
+      layout = path.relative(path.dirname(emailTemplatePath), path.resolve('layouts/', inputs.layout));
+    } else {
+      layout = false;
+    }
+
+    // Compile HTML template.
     var htmlEmailContents = await sails.renderView(emailTemplatePath, _.extend({
-      // Disable layouts
-      layout: false,
+      // Set special layout for emails.
+      // > Note: We also could set `layout: false` to disable layouts altogether.
+      layout: layout,
       // Provide access to `url` lib (for building links and image srcs, etc.)
       url: url,
       // Provide access to `util` lib (for dumping debug data in internal emails)
@@ -126,7 +157,7 @@ Instead, just log it to the console.`,
     // > for convenience during development, but also for safety.  (For example,
     // > a special-cased version of "user@example.com" is used by Trend Micro Mars
     // > scanner to "check apks for malware".)
-    var isToAddressConsideredFake = inputs.to.match(/@example\.com$/i);
+    var isToAddressConsideredFake = !!inputs.to.match(/@example\.com$/i);
     if (sails.config.environment === 'test' || isToAddressConsideredFake) {
       sails.log(
 `Skipped sending email, either because the current \`sails.config.environment\`

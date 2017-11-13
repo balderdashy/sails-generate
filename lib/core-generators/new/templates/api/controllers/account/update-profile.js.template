@@ -18,6 +18,7 @@ module.exports = {
       required: true,
       type: 'string'
     },
+
   },
 
 
@@ -109,13 +110,13 @@ module.exports = {
     // send the "confirm account" email.
     if (changeEmailAddress && sails.config.custom.enableEmailFeatures) {
       await sails.helpers.sendTemplateEmail({
+        to: inputs.emailAddress.toLowerCase(),
         subject: 'Your account has been updated',
         template: 'email-verify-new-email',
         templateData: {
-          name: inputs.fullName,
-          emailProofToken: changes.emailProofToken
-        },
-        to: inputs.emailAddress.toLowerCase()
+          fullName: inputs.fullName,
+          token: changes.emailProofToken
+        }
       });
     }
 
