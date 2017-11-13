@@ -109,7 +109,15 @@ Instead, just log it to the console.`,
       url: url,
       // Provide access to `util` lib (for dumping debug data in internal emails)
       util: util
-    }, inputs.templateData));
+    }, inputs.templateData))
+    .intercept((err)=>{
+      err.message =
+      'Could not compile view template.\n'+
+      '(Usually, this means the provided data is invalid, or missing a piece.)\n'+
+      'Details:\n'+
+      err.message;
+      return err;
+    });
 
     // Sometimes only log info to the console about the email that WOULD have been sent.
     // Specifically, if the "To" email address is anything "@example.com".
