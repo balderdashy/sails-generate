@@ -53,6 +53,10 @@ module.exports.custom = {
   **************************************************************************/
   // mailgunDomain: 'sandboxaa1234fake678.mailgun.org',
   // mailgunApiKey: 'key-fakeb183848139913858e8abd9a3',
+  //--------------------------------------------------------------------------
+  // /\  Configure these to enable support for automated emails.
+  // ||  (Important for password recovery, verification, contact form, etc.)
+  //--------------------------------------------------------------------------
 
   // The sender that all outgoing emails will appear to come from.
   fromEmailAddress: 'noreply@example.com',
@@ -70,12 +74,19 @@ module.exports.custom = {
   **************************************************************************/
   // stripePublishableKey: 'pk_test_Zzd814nldl91104qor5911gjald',
   // stripeSecret: 'sk_test_Zzd814nldl91104qor5911gjald',
+  //--------------------------------------------------------------------------
+  // /\  Configure these to enable support for billing features.
+  // ||  (Or if you don't need billing, feel free to remove them.)
+  //--------------------------------------------------------------------------
 
 <% } %>  /***************************************************************************
   *                                                                          *
-  * Any other custom configuration used by your app.                         *
+  * Any other defaults for custom configuration used by your app.            *
   *                                                                          *
   ***************************************************************************/
+  // mailgunDomain: 'transactional-mail.example.com',
+  // mailgunApiKey: 'key-testkeyb183848139913858e8abd9a3',
+  // stripeSecret: 'sk_test_Zzd814nldl91104qor5911gjald',
   // …
 
 };

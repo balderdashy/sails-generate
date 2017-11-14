@@ -89,15 +89,16 @@ module.exports = {
     //  ╚═╗║╣ ║║║ ║║  │  │ ││││ │ ├─┤│   │   ├┤ │││├─┤││
     //  ╚═╝╚═╝╝╚╝═╩╝  └─┘└─┘┘└┘ ┴ ┴ ┴└─┘ ┴   └─┘┴ ┴┴ ┴┴┴─┘
     await sails.helpers.sendTemplateEmail({
+      to: sails.config.custom.internalEmailAddress,
       subject: 'New Contact Form Message',
       template: 'admin/email-contact-form',
+      layout: false,
       templateData: {
         contactName: inputs.humanName,
         contactEmail: inputs.emailAddress,
         topic: inputs.topic,
         message: inputs.message
-      },
-      to: sails.config.custom.internalEmailAddress,
+      }
     });
 
     return exits.success();

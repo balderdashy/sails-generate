@@ -1,6 +1,6 @@
 {
   "name": "sails-generate",
-  "version": "1.11.5",
+  "version": "1.12.1",
   "description": "Runner script for sails generators",
   "main": "lib/index.js",
   "directories": {
@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "checksum": "0.1.1",
-    "eslint": "3.5.0",
+    "eslint": "3.19.0",
     "mocha": "3.0.2"
   },
   "scripts": {

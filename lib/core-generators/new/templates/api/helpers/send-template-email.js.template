@@ -8,29 +8,46 @@ module.exports = {
 
 
   extendedDescription:
-`To ease testing and development, if the provided "to" email address ends in "@example.com", then
-the email message will be written to the terminal instead of actually being sent.  (Thanks @simonratner!)`,
+`To ease testing and development, if the provided "to" email address ends in "@example.com",
+then the email message will be written to the terminal instead of actually being sent.
+(Thanks [@simonratner](https://github.com/simonratner)!)`,
 
 
   inputs: {
 
     template: {
-      description: 'The relative path to an EJS template within our `views/emails` folder -- WITHOUT the file extension.',
-      extendedDescription: 'Use strings like `foo` or `foo/bar`, but NEVER `foo/bar.ejs`.  For example, `marketing/welcome` would send an email using the `views/emails/marketing/welcome.ejs` template.',
+      description: 'The relative path to an EJS template within our `views/emails/` folder -- WITHOUT the file extension.',
+      extendedDescription:
+`Use strings like "foo" or "foo/bar", but NEVER "foo/bar.ejs".  For example, "marketing/welcome" would send an email
+using the "views/emails/marketing/welcome.ejs" template.`,
       example: 'reset-password',
       type: 'string',
-      required: true,
+      required: true
     },
 
     templateData: {
       description: 'A dictionary of data which will be accessible in the EJS template.',
-      extendedDescription: 'Each key will be a variable accessible in the template.  For instance, if you supply a dictionary with a `friends` key, and `friends` is an array (`[{name:"Chandra"}, {name:"Mary"}]`), then you will be able to access `friends` from the template; i.e. `<ul><% _.each(friends, function (friend){ %><li><%= friend.name %></li> <%}); %></ul>`  Use `<%- %>` to inject the contents of a variable as-is, `<%= %>` to HTML-escape them first, or `<% %>` to execute some JavaScript code.',
+      extendedDescription:
+`Each key will be a local variable accessible in the template.  For instance, if you supply
+a dictionary with a \`friends\` key, and \`friends\` is an array like \`[{name:"Chandra"}, {name:"Mary"}]\`),
+then you will be able to access \`friends\` from the template:
+\`\`\`
+<ul><% for (friend of friends){ %>
+  <li><%= friend.name %></li><% }); %></ul>
+\`\`\`
+
+This is EJS, so use \`<%= %>\` to inject the HTML-escaped content of a variable,
+\`<%= %>\` to skip HTML-escaping and inject the data as-is, or \`<% %>\` to execute
+some JavaScript code such as an \`if\` statement or \`for\` loop.`,
       type: {},
       defaultsTo: {}
     },
 
     to: {
-      description: 'Array of email addresses to send to.',
+      description: 'The email address of the primary recipient.',
+      extendedDescription:
+`If this is any address ending in "@example.com", then don't actually deliver the message.
+Instead, just log it to the console.`,
       example: 'foo@bar.com',
       required: true
     },
@@ -49,96 +66,126 @@ the email message will be written to the terminal instead of actually being sent
       description: 'The subject of the email.',
       example: 'Hello there.',
       defaultsTo: ''
+    },
+
+    layout: {
+      description:
+      'Set to `false` to disable layouts altogether, or provide the path (relative '+
+      'from `views/layouts/`) to an override email layout.',
+      defaultsTo: 'layout-email',
+      type: 'ref',
+      custom: (layout)=>layout===false || _.isString(layout)
     }
 
   },
 
 
   exits: {
+
     success: {
-      outputFriendlyName: 'Email Delivery Report',
+      outputFriendlyName: 'Email delivery report',
       outputDescription: 'A dictionary of information about what went down.',
       outputType: {
-        isDestinationEmailAddressConsideredFake: 'boolean'
+        loggedInsteadOfSending: 'boolean'
       }
     }
+
   },
 
 
   fn: async function(inputs, exits) {
 
     var path = require('path');
-
-    var emailTemplatesPath = path.join('emails/', inputs.template);
+    var url = require('url');
+    var util = require('util');
 
     if (!_.startsWith(path.basename(inputs.template), 'email-')) {
-      sails.log.warn('Hmm, that\'s weird... The "template" that was passed in to `sendTemplateEmail()` does not begin with "email-" -- but all email templates should be namespaced in this way.  (Remember, it makes it easier to find by name; e.g. using CMD+P in Sublime Text!)\nContinuing anyway (but relunctantly)...');
-    }//ﬁ
+      sails.log.warn(
+        'The "template" that was passed in to `sendTemplateEmail()` does not begin with '+
+        '"email-" -- but by convention, all email template files in `views/emails/` should '+
+        'be namespaced in this way.  (This makes it easier to look up email templates by '+
+        'filename; e.g. when using CMD/CTRL+P in Sublime Text.)\n'+
+        'Continuing regardless...'
+      );
+    }
 
-    var dynamicDataForTemplate = _.extend(inputs.templateData, {
+    if (_.startsWith(inputs.template, 'views/') || _.startsWith(inputs.template, 'emails/')) {
+      throw new Error(
+        'The "template" that was passed in to `sendTemplateEmail()` was prefixed with\n'+
+        '`emails/` or `views/` -- but that part is supposed to be omitted.  Instead, please\n'+
+        'just specify the path to the desired email template relative from `views/emails/`.\n'+
+        'For example:\n'+
+        '  template: \'email-reset-password\'\n'+
+        'Or:\n'+
+        '  template: \'admin/email-contact-form\'\n'+
+        ' [?] If you\'re unsure or need advice, see https://sailsjs.com/support'
+      );
+    }//•
 
-      // Disable layouts
-      layout: false,
+    // Determine appropriate email layout and template to use.
+    var emailTemplatePath = path.join('emails/', inputs.template);
+    var layout;
+    if (inputs.layout) {
+      layout = path.relative(path.dirname(emailTemplatePath), path.resolve('layouts/', inputs.layout));
+    } else {
+      layout = false;
+    }
 
+    // Compile HTML template.
+    var htmlEmailContents = await sails.renderView(emailTemplatePath, _.extend({
+      // Set special layout for emails.
+      // > Note: We also could set `layout: false` to disable layouts altogether.
+      layout: layout,
       // Provide access to `url` lib (for building links and image srcs, etc.)
-      url: require('url'),
-
-      // Provide access to `util` lib (for dumping data in internal emails)
-      util: require('util')
-
+      url: url,
+      // Provide access to `util` lib (for dumping debug data in internal emails)
+      util: util
+    }, inputs.templateData))
+    .intercept((err)=>{
+      err.message =
+      'Could not compile view template.\n'+
+      '(Usually, this means the provided data is invalid, or missing a piece.)\n'+
+      'Details:\n'+
+      err.message;
+      return err;
     });
 
-    sails.renderView(emailTemplatesPath, dynamicDataForTemplate, async function(err, htmlEmailContents) {
-      if (err) { return exits.error(err); }
+    // Sometimes only log info to the console about the email that WOULD have been sent.
+    // Specifically, if the "To" email address is anything "@example.com".
+    //
+    // > This is used below when determining whether to actually send the email,
+    // > for convenience during development, but also for safety.  (For example,
+    // > a special-cased version of "user@example.com" is used by Trend Micro Mars
+    // > scanner to "check apks for malware".)
+    var isToAddressConsideredFake = !!inputs.to.match(/@example\.com$/i);
+    if (sails.config.environment === 'test' || isToAddressConsideredFake) {
+      sails.log(
+`Skipped sending email, either because the current \`sails.config.environment\`
+is set to "test", or because the "To" email address looked fake.
+But anyway, here is what WOULD have been sent:
+-=-=-=-=-=-=-=-=-=-=-=-=-= Email log =-=-=-=-=-=-=-=-=-=-=-=-=-
+To: ${inputs.to}
+Subject: ${inputs.subject}
 
-      var payload = {
+Body:
+${htmlEmailContents}
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-`);
+    } else {
+      // Otherwise actually send the email.
+      await sails.stdlib('mailgun').sendHtmlEmail({
         htmlMessage: htmlEmailContents,
         toEmail: inputs.to,
         subject: inputs.subject,
         fromEmail: sails.config.custom.fromEmailAddress,
         fromName: sails.config.custom.fromName,
         testMode: false
-      };
-
-
-      // Skip .test and .example TLDs, as well as anything "@example.com".
-      // (For example, a special-cased version of "user@example.com" is
-      // used by Trend Micro Mars scanner to "check apks for malware".)
-      var RX_FAKE_EMAIL = /\.(example|test|silent)$|@example\.com$/i;
-      var isDestinationEmailAddressConsideredFake = inputs.to.match(RX_FAKE_EMAIL);
-
-      if (sails.config.environment !== 'test' && !isDestinationEmailAddressConsideredFake) {
-        try {
-          await sails.stdlib('mailgun').sendHtmlEmail(payload);
-        } catch (err) { return exits.error(err); }
-      }
-      else {
-        // If the email doesn't end in `.silent`, log info about the email that
-        // WOULD have been sent to the console.
-        if (!inputs.to.match(/\.silent$/)) {
-          sails.log();
-          sails.log('Skipped sending email, either because the current sails environment');
-          sails.log('is set to "test", or because the destination email address ended in');
-          sails.log('`.test`, `.example`, or was an email at `example.com`.');
-          sails.log('But here is what WOULD have been sent:');
-          sails.log('-=-=-=-=-=-=-=-=-=-=-=-=-= Email log =-=-=-=-=-=-=-=-=-=-=-=-=-');
-          sails.log();
-          sails.log('To:', inputs.to);
-          sails.log('Subject:', inputs.subject);
-          sails.log();
-          sails.log(htmlEmailContents);
-          sails.log();
-          sails.log('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-');
-        }
-      }//ﬁ
-
-      // All done!
-      // (Send back report, in case it matters)
-      return exits.success({
-        isDestinationEmailAddressConsideredFake: isDestinationEmailAddressConsideredFake
       });
+    }//ﬁ
 
-    });//_∏_
+    // All done!
+    return exits.success({
+      loggedInsteadOfSending: isToAddressConsideredFake
+    });
 
   }
 

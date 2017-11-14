@@ -8,29 +8,24 @@ module.exports = {
 
 
   extendedDescription:
-  'This action deletes the `userId` key from the session of the requesting user agent.  '+
-  'Actual garbage collection of session data depends on this app\'s session store, and '+
-  'potentially also on the '+
-  '[TTL configuration](http://sailsjs.com/docs/reference/configuration/sails-config-session) '+
-  'you provided for it.',
+`This action deletes the \`req.session.userId\` key from the session of the requesting user agent.
+Actual garbage collection of session data depends on this app's session store, and
+potentially also on the [TTL configuration](https://sailsjs.com/docs/reference/configuration/sails-config-session)
+you provided for it.
 
-
-  inputs: {
-
-  },
+Note that this action does not check to see whether or not the requesting user was
+actually logged in.  (If they weren't, then this action is just a no-op.)`,
 
 
   exits: {
 
     success: {
-      description: 'The requesting user agent has been successfully logged out.',
-      extendedDescription:
-      'Note that this action calls the success exit _regardless_ of whether or '+
-      'not the user was actually logged in.  If they weren\'t, then this action '+
-      'simply does nothing.'
+      description: 'The requesting user agent has been successfully logged out.'
     },
 
     redirect: {
+      description: 'The requesting user agent looks to be a web browser.',
+      extendedDescription: 'After logging out from a web browser, the user is redirected away.',
       responseType: 'redirect'
     }
 
@@ -39,19 +34,17 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
-    //  ╦ ╦╦╔═╗╔═╗  ┌─┐┌─┐┌─┐┌─┐┬┌─┐┌┐┌
-    //  ║║║║╠═╝║╣   └─┐├┤ └─┐└─┐││ ││││
-    //  ╚╩╝╩╩  ╚═╝  └─┘└─┘└─┘└─┘┴└─┘┘└┘
+    // Clear the `userId` property from this session.
     delete this.req.session.userId;
 
-    //  ╔═╗╔═╗╔╗╔╔╦╗  ┬─┐┌─┐┌─┐┌─┐┌─┐┌┐┌┌─┐┌─┐
-    //  ╚═╗║╣ ║║║ ║║  ├┬┘├┤ └─┐├─┘│ ││││└─┐├┤
-    //  ╚═╝╚═╝╝╚╝═╩╝  ┴└─└─┘└─┘┴  └─┘┘└┘└─┘└─┘
-    //  This persists the now-empty session back to the underlying store.
+    // Then finish up, sending an appropriate response.
+    // > Under the covers, this persists the now-logged-out session back
+    // > to the underlying session store.
     if (!this.req.wantsJSON) {
       return exits.redirect('/login');
+    } else {
+      return exits.success();
     }
-    return exits.success();
 
   }
 

@@ -1,15 +1,10 @@
 module.exports = {
 
 
-  friendlyName: 'View "Edit Profile"',
+  friendlyName: 'View edit profile',
 
 
-  description: 'Display "Edit Profile" page.',
-
-
-  inputs: {
-
-  },
+  description: 'Display "Edit profile" page.',
 
 
   exits: {

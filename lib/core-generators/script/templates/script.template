@@ -52,6 +52,8 @@ if (inferredSuccessOutputFriendlyName) { %>
 
   <% } else { %>
 
+    sails.log('Running custom shell script... (`<%= scriptName %>`)');
+
     // All done.
     return exits.success();
 
