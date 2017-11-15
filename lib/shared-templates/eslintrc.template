@@ -46,7 +46,8 @@
     "no-use-before-define":         [2, { "functions": false }],
     "one-var":                      [2, "never"],
     "quotes":                       [1, "single", { "avoidEscape": false, "allowTemplateLiterals": true }],
-    "semi":                         [2, "always"]
+    "semi":                         [2, "always"],
+    "semi-spacing":                 [1, {"before": false, "after": true}]
   }
 
 }
