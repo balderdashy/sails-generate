@@ -76,7 +76,8 @@
     "no-unexpected-multiline":      [1],
     "no-unused-vars":               [1],
     "no-use-before-define":         [2, { "functions": false }],
-    "one-var":                      [2, "never"],
+    "one-var":                      [2, "never"],<% if (IS_CURRENT_NODE_VERSION_CAPABLE_OF_AWAIT) { %>
+    "prefer-arrow-callback":        [1, { "allowNamedFunctions": true }],<% } %>
     "quotes":                       [1, "single", { "avoidEscape": false, "allowTemplateLiterals": true }],
     "semi":                         [2, "always"]
   }
