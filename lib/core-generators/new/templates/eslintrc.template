@@ -60,6 +60,7 @@
     "linebreak-style":              [2, "unix"],
     "no-dupe-keys":                 [2],
     "no-duplicate-case":            [2],
+    "no-extra-semi":                [1],
     "no-mixed-spaces-and-tabs":     [2, "smart-tabs"],
     "no-return-assign":             [2, "always"],
     "no-sequences":                 [2],
