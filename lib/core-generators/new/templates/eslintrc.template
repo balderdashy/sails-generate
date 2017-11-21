@@ -33,7 +33,6 @@
     // If "no-undef" is enabled below and your app uses globals, be sure to list all
     // relevant globals below (including the globalIds of models, if appropriate):
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -<% } %>
-    "Promise": true,
     "sails": true<%
     if (!_.contains(without,'lodash')) { %>,
     "_": true<% }
