@@ -11,36 +11,36 @@ module.exports = {
 
     stripeToken: {
       description: 'The single-use Stripe Checkout token identifier representing the user\'s payment source (i.e. credit card.)',
+      extendedDescription: 'Omit if removing card info.',
       example: 'tok_199k3qEXw14QdSnRwmsK99MH',
       type: 'string',
-      required: true,
       moreInfoUrl: 'https://stripe.com/docs/stripe.js#card-createToken',
       whereToGet: { description: 'Stripe.js token is provided to the front-end code by Stripe after completing the checkout flow.' }
     },
 
     billingCardLast4: {
-      required: true,
       type: 'string',
       example: '4242',
+      description: 'Omit if removing card info.',
       whereToGet: { description: 'Credit card info is provided by Stripe after completing the checkout flow.' }
     },
 
     billingCardBrand: {
-      required: true,
       type: 'string',
       example: 'visa',
+      description: 'Omit if removing card info.',
       whereToGet: { description: 'Credit card info is provided by Stripe after completing the checkout flow.' }
     },
 
     billingCardExpMonth: {
-      required: true,
       type: 'string',
+      description: 'Omit if removing card info.',
       whereToGet: { description: 'Credit card info is provided by Stripe after completing the checkout flow.' }
     },
 
     billingCardExpYear: {
-      required: true,
       type: 'string',
+      description: 'Omit if removing card info.',
       whereToGet: { description: 'Credit card info is provided by Stripe after completing the checkout flow.' }
     },
 
@@ -50,23 +50,48 @@ module.exports = {
   fn: async function (inputs, exits) {
     // Import dependencies
     var Stripe = require('machinepack-stripe');
+    var newStripeCustomer;
 
-    // Update the Stripe customer for this user.
-    await Stripe.updateCustomer({
-      source: inputs.stripeToken,
-      customer: this.req.me.stripeCustomerId,
-      apiKey: sails.config.custom.stripeSecret,
-    });
+    // If no stripe token was provided, we must be removing billing info.
+    if(!inputs.stripeToken) {
+      var stripeCustomer = await Stripe.retrieveCustomerDetails({
+        customer: this.req.me.stripeCustomerId
+      });
+      // Delete the payment source from the customer.
+      await Stripe.deleteSource({
+        source: stripeCustomer['default_source'],
+        customer: this.req.me.stripeCustomerId,
+      });
+    }
+    // Otherwise, if there is a stripe customer ID for this user, we are updating billing info.
+    else if(this.req.me.stripeCustomerId) {
+      // Update the Stripe customer for this user.
+      await Stripe.updateCustomer({
+        source: inputs.stripeToken,
+        customer: this.req.me.stripeCustomerId
+      });
+    }
+    // Otherwise, if there is no Stripe customer ID for this user,
+    // this record may have been created at a time Stripe config was not included.
+    // So, we'll just create a customer and include the billing info provided.
+    else {
+      newStripeCustomer = await Stripe.createCustomer({
+        source: inputs.stripeToken,
+        description: this.req.me.fullName,
+        email: this.req.me.emailAddress
+      });
+    }
 
     // Update the card info we have stored for this user.
     // > Remember, never store complete card numbers-- only the last 4 digits + expiration!
     // > Storing (or even receiving) complete, unencrypted card numbers would require PCI
     // > compliance in the U.S.
     await User.update({ id: this.req.me.id }, {
-      billingCardBrand: inputs.billingCardBrand,
-      billingCardLast4: inputs.billingCardLast4,
-      billingCardExpMonth: ''+inputs.billingCardExpMonth,
-      billingCardExpYear: ''+inputs.billingCardExpYear,
+      stripeCustomerId: newStripeCustomer ? newStripeCustomer.id : undefined,
+      billingCardBrand: inputs.billingCardBrand ? inputs.billingCardBrand : '',
+      billingCardLast4: inputs.billingCardLast4 ? inputs.billingCardLast4 : '',
+      billingCardExpMonth: inputs.billingCardExpMonth ? inputs.billingCardExpMonth : 0,
+      billingCardExpYear: inputs.billingCardExpYear ? inputs.billingCardExpYear : 0,
     });
 
     return exits.success();
