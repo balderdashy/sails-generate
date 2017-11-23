@@ -21,6 +21,11 @@
     // ^^This can be changed to 8 if this package does not support <= Node v6.
   },
 
+  "globals": {
+    "Promise": true
+    // ^^Available since Node v4
+  },
+
   "rules": {
     "callback-return":              [2, ["callback", "cb", "next", "done", "proceed"]],
     "camelcase":                    [1, {"properties": "always"}],
