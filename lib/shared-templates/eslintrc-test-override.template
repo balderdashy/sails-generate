@@ -18,8 +18,8 @@
   },
 
   "globals": {
-    "assert": true,
-    "util": true
+    // "assert": true,
+    // "util": true
     // …plus any other convenience globals exposed in test suites
   }
 
