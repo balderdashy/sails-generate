@@ -14,11 +14,12 @@
   // > Note: If you're using mocha, you'll want to add an extra override file to your
   // > `test/` folder so that eslint will tolerate mocha-specific globals like `before`
   // > and `describe`.
-  //
+  // Designed for ESLint v4.
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // For more information about any of the rules below, check out the relevant
   // reference page on eslint.org.  For example, to get details on "no-sequences",
-  // you would visit `http://eslint.org/docs/rules/no-sequences`.
+  // you would visit `http://eslint.org/docs/rules/no-sequences`.  If you're unsure
+  // or could use some advice, come by https://sailsjs.com/support.
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   "env": {
@@ -49,38 +50,48 @@
   },
 
   "rules": {
-    "callback-return":              [2, ["callback", "cb", "next", "done", "proceed"]],
-    "camelcase":                    [1, {"properties": "always"}],
-    "comma-style":                  [2, "last"],
-    "curly":                        [2],
-    "eqeqeq":                       [2, "always"],
-    "eol-last":                     [1],
-    "handle-callback-err":          [2],
-    "indent":                       [1, 2, {"SwitchCase": 1}],
-    "linebreak-style":              [2, "unix"],
-    "no-dupe-keys":                 [2],
-    "no-duplicate-case":            [2],
-    "no-extra-semi":                [1],
-    "no-labels":                    [2],
+    "callback-return":              ["error", ["done", "proceed", "next", "onwards", "callback", "cb"]],
+    "camelcase":                    ["warn", {"properties":"always"}],
+    "comma-style":                  ["warn", "last"],
+    "curly":                        ["error"],
+    "eqeqeq":                       ["error", "always"],
+    "eol-last":                     ["warn"],
+    "handle-callback-err":          ["error"],
+    "indent":                       ["warn", 2, {
+      "SwitchCase": 1,
+      "MemberExpression": "off",
+      "FunctionDeclaration": {"body":1, "parameters":"off"},
+      "FunctionExpression": {"body":1, "parameters":"off"},
+      "CallExpression": {"arguments":"off"},
+      "ArrayExpression": 1,
+      "ObjectExpression": 1,
+      "ignoredNodes": ["ConditionalExpression"]
+    }],
+    "linebreak-style":              ["error", "unix"],
+    "no-dupe-keys":                 ["error"],
+    "no-duplicate-case":            ["error"],
+    "no-extra-semi":                ["warn"],
+    "no-labels":                    ["error"],
     "no-mixed-spaces-and-tabs":     [2, "smart-tabs"],
-    "no-redeclare":                 [1],
-    "no-return-assign":             [2, "always"],
-    "no-sequences":                 [2],
-    "no-trailing-spaces":           [1],<% if (!caviar && !_.contains(without,'orm')) { %>
-    "no-undef":                     [0],
+    "no-redeclare":                 ["warn"],
+    "no-return-assign":             ["error", "always"],
+    "no-sequences":                 ["error"],
+    "no-trailing-spaces":           ["warn"],<% if (!caviar && !_.contains(without,'orm')) { %>
+    "no-undef":                     ["off"],
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    // ^^Note: If this "no-undef" rule is enabled (set to `[2]`), then all model globals
+    // ^^Note: If this "no-undef" rule is enabled (set to `["error"]`), then all model globals
     // (e.g. `"Organization": true`) should be included above under "globals".
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -<% } else { %>
-    "no-undef":                     [2],<% } %>
-    "no-unexpected-multiline":      [1],
-    "no-unused-vars":               [1],
-    "no-use-before-define":         [2, { "functions": false }],
-    "one-var":                      [2, "never"],<% if (IS_CURRENT_NODE_VERSION_CAPABLE_OF_AWAIT) { %>
-    "prefer-arrow-callback":        [1, { "allowNamedFunctions": true }],<% } %>
-    "quotes":                       [1, "single", { "avoidEscape": false, "allowTemplateLiterals": true }],
-    "semi":                         [2, "always"],
-    "semi-spacing":                 [1, {"before": false, "after": true}]
+    "no-undef":                     ["error"],<% } %>
+    "no-unexpected-multiline":      ["warn"],
+    "no-unused-vars":               ["warn"],
+    "no-use-before-define":         ["error", {"functions":false}],
+    "one-var":                      ["warn", "never"],<% if (IS_CURRENT_NODE_VERSION_CAPABLE_OF_AWAIT) { %>
+    "prefer-arrow-callback":        ["warn", {"allowNamedFunctions":true}],<% } %>
+    "quotes":                       ["warn", "single", {"avoidEscape":false, "allowTemplateLiterals":true}],
+    "semi":                         ["error", "always"],
+    "semi-spacing":                 ["warn", {"before":false, "after":true}],
+    "semi-style":                   ["warn", "last"]
   }
 
 }

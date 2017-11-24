@@ -69,7 +69,7 @@
   }<% if (!caviar) { %>,
 
   "rules": {
-    "no-undef": [2]
+    "no-undef": ["error"]
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     // ^^Note: If you've enabled the "no-undef" rule in the top level .eslintrc file, then
     // the globalIds of Sails models should also be blacklisted above under "globals".
