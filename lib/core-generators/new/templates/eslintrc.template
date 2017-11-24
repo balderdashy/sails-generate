@@ -49,9 +49,9 @@
   },
 
   "rules": {
-    "callback-return":              [2, ["callback", "cb", "next", "done", "proceed"]],
+    "callback-return":              [2, ["done", "proceed", "next", "onwards", "callback", "cb"]],
     "camelcase":                    [1, {"properties": "always"}],
-    "comma-style":                  [2, "last"],
+    "comma-style":                  [1, "last"],
     "curly":                        [2],
     "eqeqeq":                       [2, "always"],
     "eol-last":                     [1],
@@ -76,7 +76,7 @@
     "no-unexpected-multiline":      [1],
     "no-unused-vars":               [1],
     "no-use-before-define":         [2, { "functions": false }],
-    "one-var":                      [2, "never"],<% if (IS_CURRENT_NODE_VERSION_CAPABLE_OF_AWAIT) { %>
+    "one-var":                      [1, "never"],<% if (IS_CURRENT_NODE_VERSION_CAPABLE_OF_AWAIT) { %>
     "prefer-arrow-callback":        [1, { "allowNamedFunctions": true }],<% } %>
     "quotes":                       [1, "single", { "avoidEscape": false, "allowTemplateLiterals": true }],
     "semi":                         [2, "always"],
