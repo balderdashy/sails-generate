@@ -80,7 +80,8 @@
     "prefer-arrow-callback":        ["warn", { "allowNamedFunctions": true }],<% } %>
     "quotes":                       ["warn", "single", { "avoidEscape": false, "allowTemplateLiterals": true }],
     "semi":                         ["error", "always"],
-    "semi-spacing":                 ["warn", {"before": false, "after": true}]
+    "semi-spacing":                 ["warn", {"before": false, "after": true}],
+    "semi-style":                   ["warn", "last"]
   }
 
 }
