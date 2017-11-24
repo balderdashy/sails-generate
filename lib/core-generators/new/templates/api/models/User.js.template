@@ -34,7 +34,7 @@ module.exports = {
       required: true,
       description: 'Full representation of the user\'s name',
       maxLength: 120
-     // e.g. 'Microwave Jenny',
+      // e.g. 'Microwave Jenny',
     },
 
     isSuperAdmin: {
