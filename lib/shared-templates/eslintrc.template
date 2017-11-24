@@ -6,10 +6,12 @@
   // arbitrary JavaScript / Node.js package -- inside or outside Sails.js.
   // For the master copy of this file, see the `.eslintrc` template file in
   // the `sails-generate` package (https://www.npmjs.com/package/sails-generate.)
+  // Designed for ESLint v4.
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // For more information about any of the rules below, check out the relevant
   // reference page on eslint.org.  For example, to get details on "no-sequences",
-  // you would visit `http://eslint.org/docs/rules/no-sequences`.
+  // you would visit `http://eslint.org/docs/rules/no-sequences`.  If you're unsure
+  // or could use some advice, come by https://sailsjs.com/support.
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   "env": {
@@ -34,7 +36,15 @@
     "eqeqeq":                       ["error", "always"],
     "eol-last":                     ["warn"],
     "handle-callback-err":          ["error"],
-    "indent":                       ["warn", 2, {"SwitchCase": 1}],
+    "indent":                       ["warn", 2, {
+      "SwitchCase": 1,
+      "MemberExpression": "off",
+      "FunctionDeclaration": {"body":1, "parameters": "off"},
+      "FunctionExpression": {"body":1, "parameters": "off"},
+      "CallExpression": {"arguments":"off"},
+      "ArrayExpression": 1,
+      "ObjectExpression": 1
+    }],
     "linebreak-style":              ["error", "unix"],
     "no-dupe-keys":                 ["error"],
     "no-duplicate-case":            ["error"],
@@ -48,11 +58,11 @@
     "no-undef":                     ["error"],
     "no-unexpected-multiline":      ["warn"],
     "no-unused-vars":               ["warn"],
-    "no-use-before-define":         ["error", { "functions": false }],
+    "no-use-before-define":         ["error", {"functions":false}],
     "one-var":                      ["warn", "never"],
-    "quotes":                       ["warn", "single", { "avoidEscape": false, "allowTemplateLiterals": true }],
+    "quotes":                       ["warn", "single", {"avoidEscape":false, "allowTemplateLiterals":true}],
     "semi":                         ["error", "always"],
-    "semi-spacing":                 ["warn", {"before": false, "after": true}],
+    "semi-spacing":                 ["warn", {"before":false, "after":true}],
     "semi-style":                   ["warn", "last"]
   }
 

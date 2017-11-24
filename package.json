@@ -19,13 +19,13 @@
   },
   "devDependencies": {
     "checksum": "0.1.1",
-    "eslint": "3.19.0",
+    "eslint": "4.11.0",
     "mocha": "3.0.2"
   },
   "scripts": {
-    "test": "nodever=`node -e \"console.log('\\`node -v\\`'[1]);\"` && if [ $nodever != \"0\" ]; then npm run lint; fi && npm run custom-tests",
+    "test": "npm run lint && npm run custom-tests",
     "custom-tests": "node ./node_modules/mocha/bin/mocha -b",
-    "lint": "node ./node_modules/eslint/bin/eslint . --max-warnings=0 --ignore-pattern 'test/' --ignore-pattern 'templates/'"
+    "lint": "node ./node_modules/eslint/bin/eslint . --max-warnings=0 --report-unused-disable-directives --ignore-pattern 'test/' --ignore-pattern 'templates/' && echo '✔  This code looks good.'"
   },
   "keywords": [
     "sails",
