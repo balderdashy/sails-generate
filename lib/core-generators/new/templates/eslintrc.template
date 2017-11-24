@@ -63,7 +63,8 @@
       "FunctionExpression": {"body":1, "parameters":"off"},
       "CallExpression": {"arguments":"off"},
       "ArrayExpression": 1,
-      "ObjectExpression": 1
+      "ObjectExpression": 1,
+      "ignoredNodes": ["ConditionalExpression"]
     }],
     "linebreak-style":              ["error", "unix"],
     "no-dupe-keys":                 ["error"],
