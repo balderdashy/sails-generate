@@ -52,16 +52,6 @@ Instead, just log it to the console.`,
       required: true
     },
 
-    cc: {
-      description: 'Array of email addresses to CC.',
-      example: ['foo@bar.com']
-    },
-
-    bcc: {
-      description: 'Array of email addresses to BCC.',
-      example: ['foo@bar.com']
-    },
-
     subject: {
       description: 'The subject of the email.',
       example: 'Hello there.',
