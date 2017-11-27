@@ -84,7 +84,7 @@
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -<% } else { %>
     "no-undef":                     ["error"],<% } %>
     "no-unexpected-multiline":      ["warn"],
-    "no-unused-vars":               ["warn"],
+    "no-unused-vars":               ["warn", {"caughtErrors":"all", "caughtErrorsIgnorePattern": "^unused($|[A-Z].*$)"}],
     "no-use-before-define":         ["error", {"functions":false}],
     "one-var":                      ["warn", "never"],<% if (IS_CURRENT_NODE_VERSION_CAPABLE_OF_AWAIT) { %>
     "prefer-arrow-callback":        ["warn", {"allowNamedFunctions":true}],<% } %>
