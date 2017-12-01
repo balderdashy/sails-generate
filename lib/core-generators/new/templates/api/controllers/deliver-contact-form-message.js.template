@@ -91,7 +91,7 @@ module.exports = {
     await sails.helpers.sendTemplateEmail({
       to: sails.config.custom.internalEmailAddress,
       subject: 'New Contact Form Message',
-      template: 'admin/email-contact-form',
+      template: 'internal/email-contact-form',
       layout: false,
       templateData: {
         contactName: inputs.humanName,
