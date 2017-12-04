@@ -10,7 +10,7 @@ parasails.registerPage('<%= stem %>', {
   //  ║  ║╠╣ ║╣ ║  ╚╦╝║  ║  ║╣
   //  ╩═╝╩╚  ╚═╝╚═╝ ╩ ╚═╝╩═╝╚═╝
   beforeMount: function() {
-    // Attach data exposed by the server.
+    // Attach any initial data from the server.
     _.extend(this, SAILS_LOCALS);
   },
 
