@@ -10,17 +10,16 @@ module.exports = {
 
   exits: {
 
-    loggedIn: {
-      statusCode: 200,
-      description: 'Requesting user is logged in, so show the internal welcome page.',
-      viewTemplatePath: 'pages/dashboard/welcome.ejs',
-    },
-
     success: {
       statusCode: 200,
       description: 'Requesting user is a guest, so show the public landing page.',
       viewTemplatePath: 'pages/homepage.ejs'
-    }
+    },
+
+    redirect: {
+      responseType: 'redirect',
+      description: 'Requesting user is logged in, so redirect to the internal welcome page.'
+    },
 
   },
 
@@ -28,7 +27,7 @@ module.exports = {
   fn: async function (inputs, exits) {
 
     if (this.req.me) {
-      return exits.loggedIn();
+      return exits.redirect('/welcome');
     }
 
     return exits.success();
