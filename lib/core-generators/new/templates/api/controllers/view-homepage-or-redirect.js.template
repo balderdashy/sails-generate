@@ -1,11 +1,10 @@
 module.exports = {
 
 
-  friendlyName: 'View homepage or redirect.',
-  // TODO: Switch to a different route for logged-in homepage to make this a clearer, simpler default starting point.
+  friendlyName: 'View homepage or redirect',
 
 
-  description: 'Display the appropriate homepage, depending on login status.',
+  description: 'Display or redirect to the appropriate homepage, depending on login status.',
 
 
   exits: {
