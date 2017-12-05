@@ -25,7 +25,7 @@ module.exports = function defineCustomHook(sails) {
      */
     initialize: async function (done) {
 
-      sails.log.debug('Initializing hook... (`api/hooks/custom`)');
+      sails.log.info('Initializing hook... (`api/hooks/custom`)');
 
       // Attach the `sails-stdlib` dependency on the app instance (`sails`), for convenience.
       sails.stdlib = stdlib;

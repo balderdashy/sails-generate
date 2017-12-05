@@ -16,7 +16,7 @@ module.exports = function <%= _.camelCase('define '+id+' hook') %>(sails) {
      */
     initialize: function (done) {
 
-      sails.log.debug('Initializing custom hook (`<%= id %>`)');
+      sails.log.info('Initializing custom hook (`<%= id %>`)');
 
       // Be sure and call `done()` when finished!
       // (Pass in Error as the first argument if something goes wrong to cause Sails
