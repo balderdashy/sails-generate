@@ -1,7 +1,7 @@
 module.exports = {
 
 
-  friendlyName: 'View homepage',
+  friendlyName: 'View homepage or redirect.',
   // TODO: Switch to a different route for logged-in homepage to make this a clearer, simpler default starting point.
 
 
@@ -16,7 +16,7 @@ module.exports = {
       viewTemplatePath: 'pages/dashboard/welcome.ejs',
     },
 
-    notLoggedIn: {
+    success: {
       statusCode: 200,
       description: 'Requesting user is a guest, so show the public landing page.',
       viewTemplatePath: 'pages/homepage.ejs'
@@ -31,7 +31,7 @@ module.exports = {
       return exits.loggedIn();
     }
 
-    return exits.notLoggedIn();
+    return exits.success();
 
   }
 

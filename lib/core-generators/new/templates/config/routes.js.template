@@ -27,7 +27,7 @@ module.exports.routes = {
   '/': {
     view: 'pages/homepage'
   },<%}
-else { %>  'GET /':                   { action: 'view-homepage' },
+else { %>  'GET /':                   { action: 'view-homepage-or-redirect' },
 
   'GET /faq':                { view:   'pages/faq' },
   'GET /legal/terms':        { view:   'pages/legal/terms' },
