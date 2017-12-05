@@ -79,14 +79,14 @@ the account verification message.)`,
 
     // Come up with a pseudorandom, probabilistically-unique token for use
     // in our initial account verification email.
-    var emailProofToken = await sails.stdlib('strings').random({ style: 'url-friendly' });
+    var emailProofToken = await sails.stdlib('strings').random('url-friendly');
 
 
     // Build up data for the new user record and save it to the database.
     // (Also use `fetch` to retrieve the new ID so that we can use it below.)
     var newUserRecord = await User.create({
       emailAddress: inputs.emailAddress.toLowerCase(),
-      password: await sails.stdlib('passwords').hashPassword({ password: inputs.password }),
+      password: await sails.stdlib('passwords').hashPassword(inputs.password),
       fullName: inputs.fullName,
       emailProofToken: sails.config.custom.enableEmailFeatures ? emailProofToken : undefined,
       emailProofTokenExpiresAt: sails.config.custom.enableEmailFeatures ? (Date.now() + sails.config.custom.emailProofTokenTTL) : undefined,
@@ -99,8 +99,8 @@ the account verification message.)`,
       // https://stripe.com/docs/connect/updating-accounts#referencing-the-agreement
       // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -<% } %>
     })
-    .intercept('E_UNIQUE', ()=>'emailAlreadyInUse')
-    .intercept({name: 'UsageError'}, ()=>'invalid')
+    .intercept('E_UNIQUE', 'emailAlreadyInUse')
+    .intercept({name: 'UsageError'}, 'invalid')
     .fetch();
 
 

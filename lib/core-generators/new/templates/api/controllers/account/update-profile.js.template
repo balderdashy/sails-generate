@@ -73,7 +73,7 @@ module.exports = {
 
     // If the email is being changed AND email settings are configured, re-confirmation is required.
     if (changeEmailAddress && sails.config.custom.enableEmailFeatures) {
-      changes.emailProofToken = await sails.stdlib('strings').random({ style: 'url-friendly' });
+      changes.emailProofToken = await sails.stdlib('strings').random('url-friendly');
       changes.emailProofTokenExpiresAt = Date.now() + sails.config.custom.emailProofTokenTTL;
       changes.emailStatus = this.req.me.emailStatus === 'pending' ? 'pending' : 'changed';
       changes.emailChangeCandidate = inputs.emailAddress;
@@ -94,7 +94,7 @@ module.exports = {
       }
       // Otherwise, the previous email address was not confirmed.
       else {
-        changes.emailProofToken = await sails.stdlib('strings').random({ style: 'url-friendly' });
+        changes.emailProofToken = await sails.stdlib('strings').random('url-friendly');
         changes.emailProofTokenExpiresAt = Date.now() + sails.config.custom.emailProofTokenTTL;
         changes.emailStatus = 'pending';
       }

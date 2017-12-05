@@ -162,12 +162,10 @@ ${htmlEmailContents}
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-`);
     } else {
       // Otherwise actually send the email.
-      await sails.stdlib('mailgun').sendHtmlEmail({
+      await sails.stdlib('mailgun').sendHtmlEmail.with({
         htmlMessage: htmlEmailContents,
         toEmail: inputs.to,
         subject: inputs.subject,
-        fromEmail: sails.config.custom.fromEmailAddress,
-        fromName: sails.config.custom.fromName,
         testMode: false
       });
     }//ﬁ

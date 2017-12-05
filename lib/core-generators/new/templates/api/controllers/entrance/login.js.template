@@ -71,33 +71,21 @@ and exposed as \`req.me\`.)`
 
   fn: async function (inputs, exits) {
 
-
-    //  ╔═╗╦╔╗╔╔╦╗  ┬ ┬┌─┐┌─┐┬─┐
-    //  ╠╣ ║║║║ ║║  │ │└─┐├┤ ├┬┘
-    //  ╚  ╩╝╚╝═╩╝  └─┘└─┘└─┘┴└─
     // Look up by the email address.
-    // (note that we lowercase it, so the lookup is somewhat case-insensitive)
+    // (note that we lowercase it to ensure the lookup is always case-insensitive,
+    // regardless of which database we're using)
     var userRecord = await User.findOne({
       emailAddress: inputs.emailAddress.toLowerCase(),
     });
 
-    // If there was no user, exit thru "badCombo".
+    // If there was no matching user, respond thru the "badCombo" exit.
     if(!userRecord) {
-      return exits.badCombo();
+      throw 'badCombo';
     }
 
-
-    //  ╔═╗╦ ╦╔═╗╔═╗╦╔═  ┌─┐┌─┐┌─┐┌─┐┬ ┬┌─┐┬─┐┌┬┐
-    //  ║  ╠═╣║╣ ║  ╠╩╗  ├─┘├─┤└─┐└─┐││││ │├┬┘ ││
-    //  ╚═╝╩ ╩╚═╝╚═╝╩ ╩  ┴  ┴ ┴└─┘└─┘└┴┘└─┘┴└──┴┘
-    await sails.stdlib('passwords').checkPassword({
-      passwordAttempt: inputs.password,
-      hashedPassword: userRecord.password
-    })
-    // If the password doesn't match, then also
-    // exit thru "badCombo" -- just to prevent sniffing.
-    .intercept('incorrect', ()=>'badCombo');
-
+    // If the password doesn't match, then also exit thru "badCombo".
+    await sails.stdlib('passwords').checkPassword(inputs.password, userRecord.password)
+    .intercept('incorrect', 'badCombo');
 
     // If "Remember Me" was enabled, then keep the session alive for
     // a longer amount of time.  (This causes an updated "Set Cookie"
@@ -107,9 +95,9 @@ and exposed as \`req.me\`.)`
     if (inputs.rememberMe) {
       if (this.req.isSocket) {
         sails.log.warn(
-`Received \`rememberMe: true\` from a virtual request, but it was ignored
-because a browser's session cookie cannot be reset over sockets.
-Please use a traditional HTTP request instead.`
+          'Received `rememberMe: true` from a virtual request, but it was ignored\n'+
+          'because a browser\'s session cookie cannot be reset over sockets.\n'+
+          'Please use a traditional HTTP request instead.'
         );
       } else {
         this.req.session.cookie.maxAge = sails.config.custom.rememberMeCookieMaxAge;
