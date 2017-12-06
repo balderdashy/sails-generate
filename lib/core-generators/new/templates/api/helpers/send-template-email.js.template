@@ -183,9 +183,9 @@ Instead, just log it to the console.`,
       // Set special layout for emails.
       // > Note: We also could set `layout: false` to disable layouts altogether.
       layout: layout,
-      // Provide access to `url` lib (for building links and image srcs, etc.)
+      // Provide access to core `url` package (for building links and image srcs, etc.)
       url: url,
-      // Provide access to `util` lib (for dumping debug data in internal emails)
+      // Provide access to core `util` package (for dumping debug data in internal emails)
       util: util
     }, inputs.templateData))
     .intercept((err)=>{
@@ -204,7 +204,7 @@ Instead, just log it to the console.`,
     // > for convenience during development, but also for safety.  (For example,
     // > a special-cased version of "user@example.com" is used by Trend Micro Mars
     // > scanner to "check apks for malware".)
-    var isToAddressConsideredFake = !!inputs.to.match(/@example\.com$/i);
+    var isToAddressConsideredFake = Boolean(inputs.to.match(/@example\.com$/i));
     if (sails.config.environment === 'test' || isToAddressConsideredFake) {
       sails.log(
 `Skipped sending email, either because the current \`sails.config.environment\`
