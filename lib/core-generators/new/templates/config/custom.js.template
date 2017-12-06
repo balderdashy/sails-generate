@@ -66,8 +66,8 @@ module.exports.custom = {
   internalEmailAddress: 'support+development@example.com',
 
   // Whether to verify proof of email address ownership any time a new user
-  // signs up or an existing user attempts to change their email address.
-  enableUserEmailAddressVerification: true,
+  // signs up, or when an existing user attempts to change their email address.
+  enableEmailAddressVerification: true,
 
   /**************************************************************************
   *                                                                         *
