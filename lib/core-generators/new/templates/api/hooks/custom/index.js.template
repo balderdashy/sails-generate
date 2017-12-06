@@ -2,7 +2,6 @@
  * Module dependencies
  */
 
-var Stripe = require('machinepack-stripe');
 var stdlib = require('sails-stdlib');
 
 
@@ -91,7 +90,7 @@ will be disabled and/or hidden in the UI.
       sails.config.custom.enableEmailFeatures = !isMissingMailgunConfig;
 
       // Always set up Stripe credentials on load, no matter what.
-      Stripe.configure({
+      sails.stdlib('stripe').configure({
         apiKey: sails.config.custom.stripeSecret
       });
 
