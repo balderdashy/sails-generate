@@ -76,7 +76,7 @@ then redirect to either a special landing page (for newly-signed up users), or t
       });
       this.req.session.userId = user.id;
 
-      if (req.wantsJson) {
+      if (this.req.wantsJSON) {
         return exits.success();
       } else {
         throw { redirect: '/email/confirmed' };
@@ -130,7 +130,7 @@ then redirect to either a special landing page (for newly-signed up users), or t
         emailChangeCandidate: '',
       });
       this.req.session.userId = user.id;
-      if (req.wantsJson) {
+      if (this.req.wantsJSON) {
         return exits.success();
       } else {
         throw { redirect: '/account' };
