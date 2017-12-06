@@ -47,11 +47,17 @@ module.exports = {
 
     passwordResetTokenExpiresAt: {
       type: 'number',
+      // TODO: descriptions and stuff
     },
 
     stripeCustomerId: {
       type: 'string',
       protect: true
+    },
+
+    hasBillingCard: {
+      description: 'Whether this user is linked with a Stripe customer entry that has a default payment source (i.e. credit card).',
+      type: 'boolean'
     },
 
     billingCardBrand: {

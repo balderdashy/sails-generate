@@ -1,17 +1,22 @@
 module.exports = {
 
 
-  friendlyName: 'Confirm email',
+  friendlyName: 'Confirm email',// TODO prbly rename to confirm-email-and-redirect
 
 
-  description: 'Confirm a new user\'s email address, or an existing user\'s request for an email address change.',
+  description:
+`Confirm a new user's email address, or an existing user's request for an email address change,
+then redirect to either a special landing page (for newly-signed up users), or the account page
+(for existing users who just changed their email address).`,
 
 
   inputs: {
+
     token: {
       description: 'The confirmation token from the email.',
       example: '4-32fad81jdaf$329'
     }
+
   },
 
 
@@ -28,8 +33,9 @@ module.exports = {
 
     alreadyInUse: {
       statusCode: 409,
-      description: 'The provided email address is already in use.',
       viewTemplatePath: '500',
+      description: 'The provided email address is already in use.',
+      extendedDescription: 'This is an edge case that is not often anticipated by websites and APIs.  Since it is pretty rare, the 500 server error page is used as a simple catch-all.  If this becomes important in the future, this could easily be expanded into a custom error page or resolution flow.  But for context: this behavior of showing the 500 server error page mimics how popular apps like Slack behave under the same circumstances.',
     }
 
   },
@@ -37,39 +43,40 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
-    // Import the Stripe machinepack.
-    var Stripe = require('machinepack-stripe');
-
     // If no token was provided, this is automatically invalid.
     if (!inputs.token) {
-      return exits.invalidOrExpiredToken();
+      throw 'invalidOrExpiredToken';
     }//•
 
     // Get the user with the matching email token.
     var user = await User.findOne({ emailProofToken: inputs.token });
 
     // If no such user exists, or their token is expired, bail.
-    if (!user || parseInt(user.emailProofTokenExpiresAt) <= Date.now()) { return exits.invalidOrExpiredToken(); }
+    if (!user || user.emailProofTokenExpiresAt <= Date.now()) {
+      throw 'invalidOrExpiredToken';
+    }
 
-    // Last line of defense -- make sure no one else has this email (this should never happen).
+    // Last line of defense -- make sure no one else managed to grab this email
+    // in the mean time (this should never happen).
     if (await User.findOne({ emailAddress: user.emailChangeCandidate })) {
-      return exits.alreadyInUse();
+      // TODO: check on this-- isn't this incorrect?
+      throw 'alreadyInUse';
     }
 
-    // If the user's email status is `confirmed`, they shouldn't have a token.
+    // If the user's email status is `confirmed`, they shouldn't have had a
+    // valid token.  (This should never happen.)
     if (user.emailStatus === 'confirmed') {
-      throw new Error('Consistency violation: user #' + user.id + ' has email status `confirmed`, but has an email proof token!');
+      throw new Error('Consistency violation: user #' + user.id + ' has email status `confirmed`, but somehow has an email proof token!');
     }
-
-    var changingEmail = (user.emailStatus === 'changed');
 
     // Update the user.
-    await User.update({ id: user.id }, {
+    await User.update({ id: user.id })
+    .set({
       emailStatus: 'confirmed',
       emailChangeCandidate: '',
       emailProofToken: '',
       emailProofTokenExpiresAt: 0,
-      emailAddress: changingEmail ? user.emailChangeCandidate : undefined
+      emailAddress: (user.emailStatus === 'changed') ? user.emailChangeCandidate : undefined
     });
 
     // Log the user in.
@@ -82,31 +89,32 @@ module.exports = {
       if (!user.emailChangeCandidate){
         throw new Error('Consistency violation: Could not update Stripe customer because `user.emailChangeCandidate` ("'+user.emailChangeCandidate+'") is missing.');
       }
-      // If Stripe credentials are configured, either update this user's Stripe customer account,
-      // or, if there is no Stripe customer for this user, create one.
-      // (This could happen if Stripe credentials were not configured at the time this user was created.)
-      if(sails.config.custom.enableBillingFeatures  && user.stripeCustomerId) {
-        await Stripe.updateCustomer({
-          apiKey: sails.config.custom.stripeSecret,
-          customer: user.stripeCustomerId,
-          email: user.emailChangeCandidate
+
+      // If billing features are enabled, also update the billing email for this
+      // user's linked customer entry in the Stripe API to make sure they receive
+      // email receipts.
+      // > Note: If there was not already a Stripe customer entry for this user,
+      // > then one will be set up implicitly, so we'll need to persist it to our
+      // > database.  (This could happen if Stripe credentials were not configured
+      // > at the time this user was originally created.)
+      if(sails.config.custom.enableBillingFeatures) {
+        let didNotAlreadyHaveCustomerId = (! user.stripeCustomerId);
+        let stripeCustomerId = await sails.stdlib('stripe').saveBillingInfo({
+          stripeCustomerId: user.stripeCustomerId,
+          emailAddress: user.emailChangeCandidate
         });
-      }
-      else if (sails.config.custom.enableBillingFeatures) {
-        var stripeCustomer = await Stripe.createCustomer({
-          description: inputs.fullName,
-          email: inputs.emailAddress
-        });
-        await User.update({ id: user.id }, {
-          stripeCustomerId: stripeCustomer.id,
-        });
+        if (didNotAlreadyHaveCustomerId){
+          await User.update({ id: user.id }).set({
+            stripeCustomerId
+          });
+        }
       }
 
       // Redirect the user to the "my account" page so they can see
       // their updated email address.
       return exits.success('/account');
 
-    }//ﬁ
+    }
 
     // Otherwise this is a new user confirming their email for the first time, so
     // just redirect to the "email confirmed" success page.

@@ -30,6 +30,7 @@ the account verification message.)`,
     password: {
       required: true,
       type: 'string',
+      maxLength: 200,
       example: 'passwordlol',
       description: 'The unencrypted password to use for the new account.'
     },
@@ -63,24 +64,9 @@ the account verification message.)`,
 
   fn: async function (inputs, exits) {
 
-    // Import dependencies
-    var Stripe = require('machinepack-stripe');
-
-    // Create a "Customer" for this user in the Stripe API.
-    // (assuming billing feaures are enabled)
-    var stripeCustomer;
-    if (sails.config.custom.enableBillingFeatures) {
-      stripeCustomer = await Stripe.createCustomer({
-        description: inputs.fullName,
-        email: inputs.emailAddress
-      });
-    }//ﬁ
-
-
     // Come up with a pseudorandom, probabilistically-unique token for use
     // in our initial account verification email.
     var emailProofToken = await sails.stdlib('strings').random('url-friendly');
-
 
     // Build up data for the new user record and save it to the database.
     // (Also use `fetch` to retrieve the new ID so that we can use it below.)
@@ -90,7 +76,6 @@ the account verification message.)`,
       fullName: inputs.fullName,
       emailProofToken: sails.config.custom.enableEmailFeatures ? emailProofToken : undefined,
       emailProofTokenExpiresAt: sails.config.custom.enableEmailFeatures ? (Date.now() + sails.config.custom.emailProofTokenTTL) : undefined,
-      stripeCustomerId: sails.config.custom.enableBillingFeatures ? stripeCustomer.id : undefined,
       emailStatus: sails.config.custom.enableEmailFeatures ? 'pending' : undefined,
       tosAcceptedByIp: this.req.ip// (https://sailsjs.com/documentation/reference/request-req/req-ip)<% if (verbose) {%>
       // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -103,9 +88,16 @@ the account verification message.)`,
     .intercept({name: 'UsageError'}, 'invalid')
     .fetch();
 
-
-    // --•
-    // IWMIH (if we made it here), the user record was successfully created.
+    // If billing feaures are enabled, save a new customer entry in the Stripe API.
+    // Then persist the Stripe customer id in the database.
+    if (sails.config.custom.enableBillingFeatures) {
+      let stripeCustomerId = await sails.stdlib('stripe').saveBillingInfo({
+        emailAddress: inputs.emailAddress
+      });
+      await User.update(newUserRecord.id).set({
+        stripeCustomerId
+      });
+    }
 
     // Store the user's new id in their session.<% if (verbose) {%>
     // > We can use this (`req.session.userId`) to authenticate this user's future
@@ -129,7 +121,7 @@ the account verification message.)`,
       sails.log.warn('Skipping new account email verification... (since email features are disabled)');
     }
 
-    // Since everything went ok, trigger the success exit to send our 200 response.
+    // Since everything went ok, send our 200 response.
     return exits.success();
 
   }

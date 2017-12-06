@@ -10,12 +10,13 @@ module.exports = {
   inputs: {
 
     stripeToken: {
-      description: 'The single-use Stripe Checkout token identifier representing the user\'s payment source (i.e. credit card.)',
-      extendedDescription: 'Omit if removing card info.',
-      example: 'tok_199k3qEXw14QdSnRwmsK99MH',
       type: 'string',
-      moreInfoUrl: 'https://stripe.com/docs/stripe.js#card-createToken',
-      whereToGet: { description: 'Stripe.js token is provided to the front-end code by Stripe after completing the checkout flow.' }
+      example: 'tok_199k3qEXw14QdSnRwmsK99MH',
+      description: 'The single-use Stripe Checkout token identifier representing the user\'s payment source (i.e. credit card.)',
+      extendedDescription: 'Omit this (or use "") to remove this user\'s payment source.',
+      whereToGet: {
+        description: 'This Stripe.js token is provided to the front-end (client-side) code after completing a Stripe Checkout or Stripe Elements flow.'
+      }
     },
 
     billingCardLast4: {
@@ -34,12 +35,14 @@ module.exports = {
 
     billingCardExpMonth: {
       type: 'string',
+      example: '08',
       description: 'Omit if removing card info.',
       whereToGet: { description: 'Credit card info is provided by Stripe after completing the checkout flow.' }
     },
 
     billingCardExpYear: {
       type: 'string',
+      example: '2023',
       description: 'Omit if removing card info.',
       whereToGet: { description: 'Credit card info is provided by Stripe after completing the checkout flow.' }
     },
@@ -48,50 +51,26 @@ module.exports = {
 
 
   fn: async function (inputs, exits) {
-    // Import dependencies
-    var Stripe = require('machinepack-stripe');
-    var newStripeCustomer;
 
-    // If no stripe token was provided, we must be removing billing info.
-    if(!inputs.stripeToken) {
-      var stripeCustomer = await Stripe.retrieveCustomerDetails({
-        customer: this.req.me.stripeCustomerId
-      });
-      // Delete the payment source from the customer.
-      await Stripe.deleteSource({
-        source: stripeCustomer['default_source'],
-        customer: this.req.me.stripeCustomerId,
-      });
-    }
-    // Otherwise, if there is a stripe customer ID for this user, we are updating billing info.
-    else if(this.req.me.stripeCustomerId) {
-      // Update the Stripe customer for this user.
-      await Stripe.updateCustomer({
-        source: inputs.stripeToken,
-        customer: this.req.me.stripeCustomerId
-      });
-    }
-    // Otherwise, if there is no Stripe customer ID for this user,
-    // this record may have been created at a time Stripe config was not included.
-    // So, we'll just create a customer and include the billing info provided.
-    else {
-      newStripeCustomer = await Stripe.createCustomer({
-        source: inputs.stripeToken,
-        description: this.req.me.fullName,
-        email: this.req.me.emailAddress
-      });
-    }
+    // Add, update, or remove the default payment source for the logged-in user's
+    // customer entry in Stripe.
+    var stripeCustomerId = await sails.stdlib('stripe').saveBillingInfo({
+      stripeCustomerId: this.req.me.stripeCustomerId,
+      token: inputs.stripeToken || '',
+    });
 
-    // Update the card info we have stored for this user.
+    // Update the card info we have stored for this user in our database.
     // > Remember, never store complete card numbers-- only the last 4 digits + expiration!
     // > Storing (or even receiving) complete, unencrypted card numbers would require PCI
     // > compliance in the U.S.
-    await User.update({ id: this.req.me.id }, {
-      stripeCustomerId: newStripeCustomer ? newStripeCustomer.id : undefined,
-      billingCardBrand: inputs.billingCardBrand ? inputs.billingCardBrand : '',
-      billingCardLast4: inputs.billingCardLast4 ? inputs.billingCardLast4 : '',
-      billingCardExpMonth: inputs.billingCardExpMonth ? inputs.billingCardExpMonth : 0,
-      billingCardExpYear: inputs.billingCardExpYear ? inputs.billingCardExpYear : 0,
+    await User.update({ id: this.req.me.id })
+    .set({
+      hasBillingCard: inputs.stripeToken ? true : false,
+      stripeCustomerId,
+      billingCardBrand: inputs.billingCardBrand || '',
+      billingCardLast4: inputs.billingCardLast4 || '',
+      billingCardExpMonth: inputs.billingCardExpMonth || 0,// todo: check back on this.  why numbers?
+      billingCardExpYear: inputs.billingCardExpYear || 0// todo: check back on this.  why numbers?
     });
 
     return exits.success();
