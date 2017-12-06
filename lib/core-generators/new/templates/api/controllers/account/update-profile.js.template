@@ -64,7 +64,7 @@ module.exports = {
     if (changeEmailAddress) {
       let conflictingUser = await User.findOne({ or: [{ emailAddress: inputs.emailAddress.toLowerCase() }, {emailChangeCandidate: inputs.emailAddress.toLowerCase() }] });
       if (conflictingUser) {
-        return exits.emailAlreadyInUse();
+        throw 'emailAlreadyInUse';
       }
     }
 
