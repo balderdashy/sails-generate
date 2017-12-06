@@ -82,12 +82,7 @@ module.exports = {
       '------------------';
       return exits.error(new Error(errMsg));
     }
-    // --•
 
-
-    //  ╔═╗╔═╗╔╗╔╔╦╗  ┌─┐┌─┐┌┐┌┌┬┐┌─┐┌─┐┌┬┐  ┌─┐┌┬┐┌─┐┬┬
-    //  ╚═╗║╣ ║║║ ║║  │  │ ││││ │ ├─┤│   │   ├┤ │││├─┤││
-    //  ╚═╝╚═╝╝╚╝═╩╝  └─┘└─┘┘└┘ ┴ ┴ ┴└─┘ ┴   └─┘┴ ┴┴ ┴┴┴─┘
     await sails.helpers.sendTemplateEmail({
       to: sails.config.custom.internalEmailAddress,
       subject: 'New Contact Form Message',

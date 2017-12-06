@@ -1,7 +1,7 @@
 module.exports = {
 
 
-  friendlyName: 'Confirm email',// TODO prbly rename to confirm-email-and-redirect
+  friendlyName: 'Confirm email',
 
 
   description:
@@ -23,6 +23,11 @@ then redirect to either a special landing page (for newly-signed up users), or t
   exits: {
 
     success: {
+      description: 'Email address confirmed and requesting user logged in.'
+    },
+
+    redirect: {
+      description: 'Email address confirmed and requesting user logged in.  Since this looks like a browser, redirecting...',
       responseType: 'redirect'
     },
 
@@ -70,7 +75,12 @@ then redirect to either a special landing page (for newly-signed up users), or t
         emailProofTokenExpiresAt: 0
       });
       this.req.session.userId = user.id;
-      return exits.success('/email/confirmed');
+
+      if (req.wantsJson) {
+        return exits.success();
+      } else {
+        throw { redirect: '/email/confirmed' };
+      }
 
     } else if (user.emailStatus === 'changed') {
       //  ┌─┐┌─┐┌┐┌┌─┐┬┬─┐┌┬┐┬┌┐┌┌─┐  ╔═╗╦ ╦╔═╗╔╗╔╔═╗╔═╗╔╦╗  ┌─┐┌┬┐┌─┐┬┬
@@ -120,10 +130,14 @@ then redirect to either a special landing page (for newly-signed up users), or t
         emailChangeCandidate: '',
       });
       this.req.session.userId = user.id;
-      return exits.success('/account');
+      if (req.wantsJson) {
+        return exits.success();
+      } else {
+        throw { redirect: '/account' };
+      }
 
     } else {
-      throw new Error(`Consistency violation: Sanity check failed.  User ${user.id} has an email proof token, but somehow also has an emailStatus of "${user.emailStatus}"!  (This should never happen.)`);
+      throw new Error(`Consistency violation: User ${user.id} has an email proof token, but somehow also has an emailStatus of "${user.emailStatus}"!  (This should never happen.)`);
     }
 
   }
