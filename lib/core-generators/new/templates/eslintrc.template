@@ -3,7 +3,7 @@
   //   ║╣ ╚═╗║  ║║║║ ║ ├┬┘│
   //  o╚═╝╚═╝╩═╝╩╝╚╝ ╩ ┴└─└─┘
   // A set of basic code conventions (similar to a .jshintrc file) designed to
-  // and encourage quality and consistency across your Sails app's code base.
+  // encourage quality and consistency across your Sails app's code base.
   // These rules are checked against automatically any time you run `npm test`.
   // <% if (typeof frontend === 'undefined' || frontend !== false) { %>
   // > An additional eslintrc override file is included in the `assets/` folder
