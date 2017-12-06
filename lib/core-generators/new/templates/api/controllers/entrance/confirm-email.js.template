@@ -31,11 +31,11 @@ then redirect to either a special landing page (for newly-signed up users), or t
       description: 'The provided token is expired, invalid, or already used up.',
     },
 
-    alreadyInUse: {
+    emailAddressNoLongerAvailable: {
       statusCode: 409,
       viewTemplatePath: '500',
-      description: 'The provided email address is already in use.',
-      extendedDescription: 'This is an edge case that is not often anticipated by websites and APIs.  Since it is pretty rare, the 500 server error page is used as a simple catch-all.  If this becomes important in the future, this could easily be expanded into a custom error page or resolution flow.  But for context: this behavior of showing the 500 server error page mimics how popular apps like Slack behave under the same circumstances.',
+      description: 'The email address is no longer available.',
+      extendedDescription: 'This is an edge case that is not always anticipated by websites and APIs.  Since it is pretty rare, the 500 server error page is used as a simple catch-all.  If this becomes important in the future, this could easily be expanded into a custom error page or resolution flow.  But for context: this behavior of showing the 500 server error page mimics how popular apps like Slack behave under the same circumstances.',
     }
 
   },
@@ -46,7 +46,7 @@ then redirect to either a special landing page (for newly-signed up users), or t
     // If no token was provided, this is automatically invalid.
     if (!inputs.token) {
       throw 'invalidOrExpiredToken';
-    }//•
+    }
 
     // Get the user with the matching email token.
     var user = await User.findOne({ emailProofToken: inputs.token });
@@ -56,38 +56,37 @@ then redirect to either a special landing page (for newly-signed up users), or t
       throw 'invalidOrExpiredToken';
     }
 
-    // Last line of defense -- make sure no one else managed to grab this email
-    // in the mean time (this should never happen).
-    if (await User.findOne({ emailAddress: user.emailChangeCandidate })) {
-      // TODO: check on this-- isn't this incorrect?
-      throw 'alreadyInUse';
-    }
+    if (user.emailStatus === 'pending') {
+      //  ┌─┐┌─┐┌┐┌┌─┐┬┬─┐┌┬┐┬┌┐┌┌─┐  ╔═╗╦╦═╗╔═╗╔╦╗ ╔╦╗╦╔╦╗╔═╗  ╦ ╦╔═╗╔═╗╦═╗  ┌─┐┌┬┐┌─┐┬┬
+      //  │  │ ││││├┤ │├┬┘││││││││ ┬  ╠╣ ║╠╦╝╚═╗ ║───║ ║║║║║╣   ║ ║╚═╗║╣ ╠╦╝  ├┤ │││├─┤││
+      //  └─┘└─┘┘└┘└  ┴┴└─┴ ┴┴┘└┘└─┘  ╚  ╩╩╚═╚═╝ ╩   ╩ ╩╩ ╩╚═╝  ╚═╝╚═╝╚═╝╩╚═  └─┘┴ ┴┴ ┴┴┴─┘
+      // If this is a new user confirming their email for the first time,
+      // then just update the state of their user record in the database,
+      // store their user id in the session (just in case they aren't logged
+      // in already), and then redirect them to the "email confirmed" page.
+      await User.update({ id: user.id }).set({
+        emailStatus: 'confirmed',
+        emailProofToken: '',
+        emailProofTokenExpiresAt: 0
+      });
+      this.req.session.userId = user.id;
+      return exits.success('/email/confirmed');
 
-    // If the user's email status is `confirmed`, they shouldn't have had a
-    // valid token.  (This should never happen.)
-    if (user.emailStatus === 'confirmed') {
-      throw new Error('Consistency violation: user #' + user.id + ' has email status `confirmed`, but somehow has an email proof token!');
-    }
-
-    // Update the user.
-    await User.update({ id: user.id })
-    .set({
-      emailStatus: 'confirmed',
-      emailChangeCandidate: '',
-      emailProofToken: '',
-      emailProofTokenExpiresAt: 0,
-      emailAddress: (user.emailStatus === 'changed') ? user.emailChangeCandidate : undefined
-    });
-
-    // Log the user in.
-    // Store the user's id in their session, in case they aren't already logged in.
-    this.req.session.userId = user.id;
-
-    // If this was a change to an existing user's email...
-    if (user.emailStatus === 'changed') {
-
+    } else if (user.emailStatus === 'changed') {
+      //  ┌─┐┌─┐┌┐┌┌─┐┬┬─┐┌┬┐┬┌┐┌┌─┐  ╔═╗╦ ╦╔═╗╔╗╔╔═╗╔═╗╔╦╗  ┌─┐┌┬┐┌─┐┬┬
+      //  │  │ ││││├┤ │├┬┘││││││││ ┬  ║  ╠═╣╠═╣║║║║ ╦║╣  ║║  ├┤ │││├─┤││
+      //  └─┘└─┘┘└┘└  ┴┴└─┴ ┴┴┘└┘└─┘  ╚═╝╩ ╩╩ ╩╝╚╝╚═╝╚═╝═╩╝  └─┘┴ ┴┴ ┴┴┴─┘
       if (!user.emailChangeCandidate){
-        throw new Error('Consistency violation: Could not update Stripe customer because `user.emailChangeCandidate` ("'+user.emailChangeCandidate+'") is missing.');
+        throw new Error(`Consistency violation: Could not update Stripe customer because this user record's emailChangeCandidate ("${user.emailChangeCandidate}") is missing.  (This should never happen.)`);
+      }
+
+      // Last line of defense: since email change candidates are not protected
+      // by a uniqueness constraint in the database, it's important that we make
+      // sure no one else managed to grab this email in the mean time since we
+      // last checked its availability. (This is a relatively rare edge case--
+      // see exit description.)
+      if (await User.count({ emailAddress: user.emailChangeCandidate }) > 0) {
+        throw 'emailAddressNoLongerAvailable';
       }
 
       // If billing features are enabled, also update the billing email for this
@@ -110,15 +109,22 @@ then redirect to either a special landing page (for newly-signed up users), or t
         }
       }
 
-      // Redirect the user to the "my account" page so they can see
-      // their updated email address.
+      // Finally update the user in the database, store their id in the session
+      // (just in case they aren't logged in already), then redirect them to
+      // their "my account" page so they can see their updated email address.
+      await User.update({ id: user.id }).set({
+        emailStatus: 'confirmed',
+        emailProofToken: '',
+        emailProofTokenExpiresAt: 0,
+        emailAddress: user.emailChangeCandidate,
+        emailChangeCandidate: '',
+      });
+      this.req.session.userId = user.id;
       return exits.success('/account');
 
+    } else {
+      throw new Error(`Consistency violation: Sanity check failed.  User ${user.id} has an email proof token, but somehow also has an emailStatus of "${user.emailStatus}"!  (This should never happen.)`);
     }
-
-    // Otherwise this is a new user confirming their email for the first time, so
-    // just redirect to the "email confirmed" success page.
-    return exits.success('/email/confirmed');
 
   }
 
