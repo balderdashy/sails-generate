@@ -1,11 +1,4 @@
-<% if (caviar) { %>/**
- * Module dependencies
- */
-
-var path = require('path');
-var fs = require('fs');
-
-<%}%>/**
+/**
  * Bootstrap
  * (sails.config.bootstrap)
  *
@@ -17,30 +10,25 @@ var fs = require('fs');
  */
 
 module.exports.bootstrap = <%= IS_CURRENT_NODE_VERSION_CAPABLE_OF_AWAIT ? 'async function' : 'function' %>(done) {
-<% if(caviar) { %>
+<% if (caviar) { %>
+  // Import dependencies
+  var path = require('path');
+
   // This bootstrap version indicates what version of fake data we're dealing with here.
-  var BOOTSTRAP_VERSION_IN_CODE_BASE = 0;
+  var HARD_CODED_DATA_VERSION = 0;
 
   // This path indicates where to store/look for the JSON file that tracks the "last run bootstrap info"
   // locally on this development computer (if we happen to be on a development computer).
   var bootstrapLastRunInfoPath = path.resolve(sails.config.appPath, '.tmp/bootstrap-version.json');
 
-  // A flag to always be able to skip the bootstrap, no matter what
-  if (sails.config.skipBootstrap) {
-    return done();
-  }//•
-
   // Whether or not to continue doing the stuff in this file (i.e. wiping and regenerating data)
   // depends on some factors:
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  // The checks below can be completely bypassed by setting `--drop` or `--environment=test`.
-  if (sails.config.models.migrate === 'drop' || sails.config.environment === 'test') {
-    sails.log('Running bootstrap script because it was forced...  (either `--drop` or `--environment=test` was used)');
-  }
-  // But otherwise, they run.
-  else {
-
+  // If the hard-coded data version has been incremented, or we're being forced
+  // (i.e. `--drop` or `--environment=test` was set), then run the meat of this
+  // bootstrap script to wipe all existing data and rebuild hard-coded data.
+  if (sails.config.models.migrate !== 'drop' && sails.config.environment !== 'test') {
     // If this is _actually_ a production environment (real or simulated), prevent accidentally removing all data!
     if (process.env.NODE_ENV==='production') {
       sails.log.warn('Since we are running with NODE_ENV=production (& with the "'+sails.config.environment+'" Sails environment, to be precise), skipping the rest of the bootstrap to avoid data loss...');
@@ -48,26 +36,31 @@ module.exports.bootstrap = <%= IS_CURRENT_NODE_VERSION_CAPABLE_OF_AWAIT ? 'async
     }//•
 
     // Compare bootstrap version from code base to the version that was last run
-    var lastRunBootstrapInfo;
-    try {
-      lastRunBootstrapInfo = JSON.parse(fs.readFileSync(bootstrapLastRunInfoPath, 'utf8'));
-    } catch (e) {
-      if (e.code === 'ENOENT') { /* ENOENT is ok, just means the file doesn't exist yet.  Keep going */}
-      else { return done(e); }
-    }//ﬁ
+    var lastRunBootstrapInfo = await sails.stdlib('fs').readJson(bootstrapLastRunInfoPath)
+    .tolerate('doesNotExist');// (it's ok if the file doesn't exist yet-- just keep going.)
 
-    if (lastRunBootstrapInfo && lastRunBootstrapInfo.lastRunVersion === BOOTSTRAP_VERSION_IN_CODE_BASE) {
-      sails.log('Skipping v'+BOOTSTRAP_VERSION_IN_CODE_BASE+' bootstrap script...  (because it\'s already been run)');
+    if (lastRunBootstrapInfo && lastRunBootstrapInfo.lastRunVersion === HARD_CODED_DATA_VERSION) {
+      sails.log('Skipping v'+HARD_CODED_DATA_VERSION+' bootstrap script...  (because it\'s already been run)');
       sails.log('(last run on this computer: @ '+(new Date(lastRunBootstrapInfo.lastRunAt))+')');
       return done();
-    }//-•
+    }//•
 
-    sails.log('Running v'+BOOTSTRAP_VERSION_IN_CODE_BASE+' bootstrap script...  ('+(lastRunBootstrapInfo ? 'before this, the last time the bootstrap ran on this computer was for v'+lastRunBootstrapInfo.lastRunVersion+' @ '+(new Date(lastRunBootstrapInfo.lastRunAt)) : 'looks like this is the first time the bootstrap has run on this computer')+')');
+    sails.log('Running v'+HARD_CODED_DATA_VERSION+' bootstrap script...  ('+(lastRunBootstrapInfo ? 'before this, the last time the bootstrap ran on this computer was for v'+lastRunBootstrapInfo.lastRunVersion+' @ '+(new Date(lastRunBootstrapInfo.lastRunAt)) : 'looks like this is the first time the bootstrap has run on this computer')+')');
+  }
+  else {
+    sails.log('Running bootstrap script because it was forced...  (either `--drop` or `--environment=test` was used)');
+  }
 
-  }//ﬁ
+  // Since the hard-coded data version has been incremented, and we're running in a safe environment,
+  // delete all records from all models.
+  for (let identity in sails.models) {
+    await sails.models[identity].destroy({});
+  }//∞
 <% } %>
   // By convention, this is a good place to set up fake data during development.<% if (IS_CURRENT_NODE_VERSION_CAPABLE_OF_AWAIT && !_.contains(without, 'orm')) { %>
-  //
+<% if (caviar) { %>  await User.createEach([
+    { emailAddress: 'admin@example.com', fullName: 'Ryan Dahl', isSuperAdmin: true, password: await sails.stdlib('passwords').hashPassword('abc123') },
+  ]);<% } else { %>  //
   // For example:
   // ```
   // // Set up fake development data (or if we already have some, avast)
@@ -80,22 +73,15 @@ module.exports.bootstrap = <%= IS_CURRENT_NODE_VERSION_CAPABLE_OF_AWAIT ? 'async
   //   { emailAddress: 'rachael@example.com', fullName: 'Rachael Shaw', },
   //   // etc.
   // ]);
-  // ```<% } %><% if(caviar) { %>
+  // ```<% } %><% } %><% if(caviar) { %>
 
   // Save new bootstrap version
-  try {
-    fs.writeFileSync(bootstrapLastRunInfoPath, JSON.stringify({
-      lastRunVersion: BOOTSTRAP_VERSION_IN_CODE_BASE,
-      lastRunAt: Date.now(),
-    }));
-  } catch (err) {
-    if (err.code === 'ENOENT') {
-      sails.log.warn('For some reason, could not write bootstrap version .json file.  This could be a result of a problem with your configured paths, or a limitation around cwd on your hosting provider.  As a workaround, try updating app.js to explicitly use __dirname.  Current sails.config.appPath: `'+sails.config.appPath+'`.  Full error details: '+err.stack+'\n\n....Since this is just ENOENT, proceeding anyway!');
-    }
-    else {
-      return done(new Error('An unexpected error occurred writing the bootstrap version .json file.  This could be a result of a problem with your configured paths, or a limitation around cwd on your hosting provider.  As a workaround, try updating app.js to explicitly use __dirname.  Current sails.config.appPath: `'+sails.config.appPath+'`.  Full error details: '+err.stack));
-    }
-  }//ﬁ<% } %>
+  await sails.stdlib('fs').writeJson(bootstrapLastRunInfoPath, {
+    lastRunVersion: HARD_CODED_DATA_VERSION,
+    lastRunAt: Date.now(),
+  }).tolerate((err)=>{
+    sails.log.warn('For some reason, could not write bootstrap version .json file.  This could be a result of a problem with your configured paths, or a limitation around cwd on your hosting provider.  As a workaround, try updating app.js to explicitly use __dirname.  Current sails.config.appPath: `'+sails.config.appPath+'`.  Full error details: '+err.stack+'\n\n(Proceeding anyway this time...)');
+  });<% } %>
 
   // Don't forget to trigger `done()` when this bootstrap function's logic is finished.
   // (otherwise your server will never lift, since it's waiting on the bootstrap)
