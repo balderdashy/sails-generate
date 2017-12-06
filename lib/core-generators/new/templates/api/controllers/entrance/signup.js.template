@@ -77,11 +77,13 @@ the account verification message.)`,
       emailProofToken: sails.config.custom.enableEmailFeatures ? emailProofToken : undefined,
       emailProofTokenExpiresAt: sails.config.custom.enableEmailFeatures ? (Date.now() + sails.config.custom.emailProofTokenTTL) : undefined,
       emailStatus: sails.config.custom.enableEmailFeatures ? 'pending' : undefined,
-      tosAcceptedByIp: this.req.ip// (https://sailsjs.com/documentation/reference/request-req/req-ip)<% if (verbose) {%>
+      tosAcceptedByIp: this.req.ip<% if (verbose) {%>
       // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       // ^Note that, for some use cases, this needs to be tracked to meet Stripe's KYC requirements.
       // For example:
       // https://stripe.com/docs/connect/updating-accounts#referencing-the-agreement
+      //
+      // (see also https://sailsjs.com/documentation/reference/request-req/req-ip)
       // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -<% } %>
     })
     .intercept('E_UNIQUE', 'emailAlreadyInUse')

@@ -34,23 +34,25 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
+    // TODO: Condense the code below
+
     // Determine whether the email address changed, or whether a pending change is being cancelled.
     var changeEmailAddress;
     var cancelPendingEmailChange;
     // If the logged-in user doesn't have an `emailChangeCandidate`, and the email passed in
     // does not match their current email address, then the email will be updated.
-    if(!this.req.me.emailChangeCandidate && inputs.emailAddress.toLowerCase() !== this.req.me.emailAddress) {
+    if (!this.req.me.emailChangeCandidate && inputs.emailAddress.toLowerCase() !== this.req.me.emailAddress) {
       changeEmailAddress = true;
     }
     // Otherwise, if the logged-in user has an `emailChangeCandidate` already, and the email address
     // provided matches the user's current email address, then we are cancelling a pending change
     // and NOT changing the email address.
-    else if(this.req.me.emailChangeCandidate && inputs.emailAddress.toLowerCase() === this.req.me.emailAddress) {
+    else if (this.req.me.emailChangeCandidate && inputs.emailAddress.toLowerCase() === this.req.me.emailAddress) {
       cancelPendingEmailChange = true;
     }
     // Otherwise, if the logged-in user has an `emailChangeCandidate` already, and the email address
     // provided does not match the current `emailChangeCandidate`, then the email will be updated.
-    else if(this.req.me.emailChangeCandidate && inputs.emailAddress.toLowerCase() !== this.req.me.emailChangeCandidate) {
+    else if (this.req.me.emailChangeCandidate && inputs.emailAddress.toLowerCase() !== this.req.me.emailChangeCandidate) {
       changeEmailAddress = true;
     }
     // Otherwise, the email will not be updated.
@@ -109,6 +111,7 @@ module.exports = {
     // If an email address change was requested, and re-confirmation is required,
     // send the "confirm account" email.
     if (changeEmailAddress && sails.config.custom.enableEmailFeatures) {
+      // TODO: tweak this check ^^
       await sails.helpers.sendTemplateEmail({
         to: inputs.emailAddress.toLowerCase(),
         subject: 'Your account has been updated',

@@ -63,7 +63,6 @@ Instead, just log it to the console.`,
       'Set to `false` to disable layouts altogether, or provide the path (relative '+
       'from `views/layouts/`) to an override email layout.',
       defaultsTo: 'layout-email',
-      type: 'ref',
       custom: (layout)=>layout===false || _.isString(layout)
     }
 
@@ -88,6 +87,64 @@ Instead, just log it to the console.`,
     var path = require('path');
     var url = require('url');
     var util = require('util');
+
+    // TODO: fix this up
+    // // Check that all required Mailgun credentials are set up.
+    // if (!sails.config.custom.enableEmailFeatures) {
+
+    //   var errMsg = 'Cannot deliver password recovery email because:\n';
+    //   if (!sails.config.custom.mailgunApiKey) {
+    //     errMsg += ' • a Mailgun API key is missing from this app\'s configuration (`sails.config.custom.mailgunApiKey`)\n';
+    //   }
+    //   if (!sails.config.custom.mailgunDomain) {
+    //     errMsg += ' • a Mailgun domain is missing from this app\'s configuration (`sails.config.custom.mailgunDomain`)\n';
+    //   }
+
+    //   errMsg += '\n'+
+    //   'To enable password recovery emails, you\'ll need to add the missing config variables to your custom config in either '+
+    //   '`config/custom.js` or `config.local.js`.'+
+    //   '\n'+
+    //   '(If you don\'t have a Mailgun domain or API key, you can sign up at https://mailgun.com to receive a sandbox domain and test API key.)';
+
+    //   throw new Error(errMsg);
+    // }
+
+    // // Build a summary string for the incoming message.
+    // var messageSummary =
+    // 'From: ' + inputs.humanName + ' <' + inputs.emailAddress + '>\n\n' +
+    // 'Topic: ' + inputs.topic + '\n\n' +
+    // 'Message: \n\n' + inputs.message;
+
+
+    // // Check that an internal recipient email address is configured,
+    // // and that all required Mailgun credentials are set up.
+    // if (!sails.config.custom.enableEmailFeatures) {
+
+    //   var errMsg = 'Cannot deliver incoming message from contact form because:\n';
+    //   if (!sails.config.custom.internalEmailAddress) {
+    //     errMsg += ' • there is no internal email address configured for this app (`sails.config.custom.internalEmailAddress`)\n';
+    //   }
+    //   if (!sails.config.custom.mailgunApiKey) {
+    //     errMsg += ' • a Mailgun API key is missing from this app\'s configuration (`sails.config.custom.mailgunApiKey`)\n';
+    //   }
+    //   if (!sails.config.custom.mailgunDomain) {
+    //     errMsg += ' • a Mailgun domain is missing from this app\'s configuration (`sails.config.custom.mailgunDomain`)\n';
+    //   }
+
+    //   errMsg += '\n'+
+    //   'To enable contact form emails, you\'ll need to add the missing config variables to your custom config in either '+
+    //   '`config/custom.js` or `config.local.js`.'+
+    //   '\n'+
+    //   '(If you don\'t have a Mailgun domain or API key, you can sign up at https://mailgun.com to receive a sandbox domain and test API key.)';
+
+    //   errMsg += '\n\n'+
+    //   'Here is a summary of the incoming correspondence, just so we at least have it in our logs:\n'+
+    //   '------------------\n'+
+    //   messageSummary+'\n'+
+    //   '------------------';
+    //   return exits.error(new Error(errMsg));
+    // }
+
 
     if (!_.startsWith(path.basename(inputs.template), 'email-')) {
       sails.log.warn(
