@@ -38,5 +38,34 @@ html, body {
   position: absolute;
   left: 0px;
   bottom: 0px;
+  .xs-only {
+    display: none;
+  }
+}
+
+@media (max-width: 800px) {
+  #page-footer {
+    height: 75px;
+    .copy, .nav {
+      width: 100%;
+      display: block;
+      text-align: center;
+      .nav-item {
+        display: inline-block;
+        a {
+          display: inline-block;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 450px) {
+  #page-footer {
+    height: 85px;
+    .xs-only {
+      display: block;
+    }
+  }
 }
 
