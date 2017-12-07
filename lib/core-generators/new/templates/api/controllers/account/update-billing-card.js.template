@@ -64,20 +64,13 @@ module.exports = {
     // > Storing (or even receiving) complete, unencrypted card numbers would require PCI
     // > compliance in the U.S.
     await User.update({ id: this.req.me.id })
-    .set(Object.assign({
+    .set({
       stripeCustomerId
-    }, inputs.stripeToken? {
-      hasBillingCard: true,
-      billingCardBrand: inputs.billingCardBrand,
-      billingCardLast4: inputs.billingCardLast4,
-      billingCardExpMonth: inputs.billingCardExpMonth,
-      billingCardExpYear: inputs.billingCardExpYear
-    } : {
-      hasBillingCard: false,
-      billingCardBrand: '',
-      billingCardLast4: '',
-      billingCardExpMonth: '',
-      billingCardExpYear: ''
+      hasBillingCard: inputs.stripeToken ? true : false,
+      billingCardBrand: inputs.stripeToken ? inputs.billingCardBrand : '',
+      billingCardLast4: inputs.stripeToken ? inputs.billingCardLast4 : '',
+      billingCardExpMonth: inputs.stripeToken ? inputs.billingCardExpMonth : '',
+      billingCardExpYear: inputs.stripeToken ? inputs.billingCardExpYear : ''
     });
 
     return exits.success();
