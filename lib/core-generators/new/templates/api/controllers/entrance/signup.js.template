@@ -83,7 +83,7 @@ the account verification message.)`,
     // If billing feaures are enabled, save a new customer entry in the Stripe API.
     // Then persist the Stripe customer id in the database.
     if (sails.config.custom.enableBillingFeatures) {
-      let stripeCustomerId = await sails.stdlib('stripe').saveBillingInfo({
+      let stripeCustomerId = await sails.stdlib('stripe').saveBillingInfo.with({
         emailAddress: inputs.emailAddress
       });
       await User.update(newUserRecord.id).set({
