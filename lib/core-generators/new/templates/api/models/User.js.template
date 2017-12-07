@@ -81,6 +81,7 @@ module.exports = {
     },
 
     emailProofToken: {
+      description: 'A pseudorandom, probabilistically-unique token for use in our account verification emails.',
       type: 'string'
     },
 

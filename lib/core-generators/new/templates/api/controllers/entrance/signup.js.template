@@ -64,27 +64,18 @@ the account verification message.)`,
 
   fn: async function (inputs, exits) {
 
-    // Come up with a pseudorandom, probabilistically-unique token for use
-    // in our initial account verification email.
-    var emailProofToken = await sails.stdlib('strings').random('url-friendly');
-
     // Build up data for the new user record and save it to the database.
     // (Also use `fetch` to retrieve the new ID so that we can use it below.)
     var newUserRecord = await User.create({
       emailAddress: inputs.emailAddress.toLowerCase(),
       password: await sails.stdlib('passwords').hashPassword(inputs.password),
       fullName: inputs.fullName,
-      emailProofToken: sails.config.custom.enableEmailFeatures ? emailProofToken : undefined,
-      emailProofTokenExpiresAt: sails.config.custom.enableEmailFeatures ? (Date.now() + sails.config.custom.emailProofTokenTTL) : undefined,
-      emailStatus: sails.config.custom.enableEmailFeatures ? 'pending' : undefined,
-      tosAcceptedByIp: this.req.ip<% if (verbose) {%>
-      // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-      // ^Note that, for some use cases, this needs to be tracked to meet Stripe's KYC requirements.
-      // For example:
-      // https://stripe.com/docs/connect/updating-accounts#referencing-the-agreement
-      //
-      // (see also https://sailsjs.com/documentation/reference/request-req/req-ip)
-      // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -<% } %>
+      tosAcceptedByIp: this.req.ip
+      ...(sails.config.custom.verifyEmailAddresses? {
+        emailProofToken: await sails.stdlib('strings').random('url-friendly'),
+        emailProofTokenExpiresAt: Date.now() + sails.config.custom.emailProofTokenTTL,
+        emailStatus: 'pending'
+      }:{})
     })
     .intercept('E_UNIQUE', 'emailAlreadyInUse')
     .intercept({name: 'UsageError'}, 'invalid')
@@ -108,7 +99,7 @@ the account verification message.)`,
     // > we log them out, or they clear their cookies.)<% }%>
     this.req.session.userId = newUserRecord.id;
 
-    if (sails.config.custom.enableEmailFeatures) {
+    if (sails.config.custom.verifyEmailAddresses) {
       // Send "confirm account" email
       await sails.helpers.sendTemplateEmail({
         to: inputs.emailAddress.toLowerCase(),
@@ -116,11 +107,11 @@ the account verification message.)`,
         template: 'email-verify-account',
         templateData: {
           fullName: inputs.fullName,
-          token: emailProofToken
+          token: newUserRecord.emailProofToken
         }
       });
     } else {
-      sails.log.warn('Skipping new account email verification... (since email features are disabled)');
+      sails.log.info('Skipping new account email verification... (since `verifyEmailAddresses` is disabled)');
     }
 
     // Since everything went ok, send our 200 response.
