@@ -47,42 +47,15 @@ module.exports = {
 
   fn: async function(inputs, exits) {
 
-    // TODO: fix this up
-    // // Build a summary string for the incoming message.
-    // var messageSummary =
-    // 'From: ' + inputs.humanName + ' <' + inputs.emailAddress + '>\n\n' +
-    // 'Topic: ' + inputs.topic + '\n\n' +
-    // 'Message: \n\n' + inputs.message;
-
-
-    // // Check that an internal recipient email address is configured,
-    // // and that all required Mailgun credentials are set up.
-    // if (!sails.config.custom.enableEmailFeatures) {
-
-    //   var errMsg = 'Cannot deliver incoming message from contact form because:\n';
-    //   if (!sails.config.custom.internalEmailAddress) {
-    //     errMsg += ' • there is no internal email address configured for this app (`sails.config.custom.internalEmailAddress`)\n';
-    //   }
-    //   if (!sails.config.custom.mailgunSecret) {
-    //     errMsg += ' • Mailgun secret is missing from this app\'s configuration (`sails.config.custom.mailgunSecret`)\n';
-    //   }
-    //   if (!sails.config.custom.mailgunDomain) {
-    //     errMsg += ' • Mailgun domain is missing from this app\'s configuration (`sails.config.custom.mailgunDomain`)\n';
-    //   }
-
-    //   errMsg += '\n'+
-    //   'To enable contact form emails, you\'ll need to add the missing config variables to your custom config in either '+
-    //   '`config/custom.js` or `config.local.js`.'+
-    //   '\n'+
-    //   '(If you don\'t have a Mailgun domain or secret, you can sign up at https://mailgun.com to receive a sandbox domain and test API key.)';
-
-    //   errMsg += '\n\n'+
-    //   'Here is a summary of the incoming correspondence, just so we at least have it in our logs:\n'+
-    //   '------------------\n'+
-    //   messageSummary+'\n'+
-    //   '------------------';
-    //   return exits.error(new Error(errMsg));
-    // }
+    if (!sails.config.custom.internalEmailAddress) {
+      throw new Error(
+`Cannot deliver incoming message from contact form because there is no internal
+email address (\`sails.config.custom.internalEmailAddress\`) configured for this
+app.  To enable contact form emails, you'll need to add this missing setting to
+your custom config -- usually in \`config/custom.js\`, \`config/staging.js\`,
+\`config/production.js\`, or via system environment variables.`
+      );
+    }
 
     await sails.helpers.sendTemplateEmail({
       to: sails.config.custom.internalEmailAddress,
