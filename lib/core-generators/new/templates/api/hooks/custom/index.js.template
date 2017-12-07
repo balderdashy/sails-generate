@@ -84,10 +84,9 @@ will be disabled and/or hidden in the UI.
 ---------------------------------------------------------------------${verboseSuffix}`);
       }//ﬁ
 
-      // Set additional config keys based on whether Stripe and Mailgun config are available.
-      // These will determine whether or not to enable various email and billing features.
+      // Set an additional config keys based on whether Stripe config is available.
+      // This will determine whether or not to enable various billing features.
       sails.config.custom.enableBillingFeatures = !isMissingStripeConfig;
-      sails.config.custom.enableEmailFeatures = !isMissingMailgunConfig;
 
       // Always set up Stripe credentials on load, no matter what.
       sails.stdlib('stripe').configure({
@@ -227,20 +226,17 @@ will be disabled and/or hidden in the UI.
 
               res.locals.me = sanitizedUser;
 
-              // Include information on the locals as to whether billing and email
-              // features are enabled for this app.
+              // Include information on the locals as to whether billing features
+              // are enabled for this app, and whether email verification is required.
               res.locals.isBillingEnabled = sails.config.custom.enableBillingFeatures;
-              res.locals.isEmailEnabled = sails.config.custom.enableEmailFeatures;
+              res.locals.isEmailVerificationRequired = sails.config.custom.verifyEmailAddresses;
 
             }//ﬁ
 
             // Prevent the browser from caching logged-in users' pages.
-            //
-            // > (including w/ the Chrome back button)
-            // > See https://mixmax.com/blog/chrome-back-button-cache-no-store
-            // >
-            // > Note that we don't go this far (and hopefully won't ever have to):
-            // > https://madhatted.com/2013/6/16/you-do-not-understand-browser-history)
+            // (including w/ the Chrome back button)
+            // > • https://mixmax.com/blog/chrome-back-button-cache-no-store
+            // > • https://madhatted.com/2013/6/16/you-do-not-understand-browser-history
             res.setHeader('Cache-Control', 'no-cache, no-store');
 
             return next();
