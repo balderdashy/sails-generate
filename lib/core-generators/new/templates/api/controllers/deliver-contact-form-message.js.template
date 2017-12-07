@@ -10,28 +10,31 @@ module.exports = {
   inputs: {
 
     emailAddress: {
-      description: 'A return email address where we can respond, e.g. "hermione@hogwarts.edu".',
+      required: true,
       type: 'string',
-      required: true
+      description: 'A return email address where we can respond.',
+      example: 'hermione@hogwarts.edu'
     },
 
     topic: {
-      description: 'The topic chosen from the contact form dropdown, e.g. "I want to buy stuff".',
+      required: true,
       type: 'string',
-      required: true
+      description: 'The topic from the contact form.',
+      example: 'I want to buy stuff.'
     },
 
     humanName: {
-      description: 'The full name of the human sending this message, e.g. "Hermione Granger".',
+      required: true,
       type: 'string',
-      required: true
+      description: 'The full name of the human sending this message.',
+      example: 'Hermione Granger'
     },
 
     message: {
-      description: 'The custom message, in plain text.',
+      required: true,
       type: 'string',
-      required: true
-    },
+      description: 'The custom message, in plain text.'
+    }
 
   },
 
