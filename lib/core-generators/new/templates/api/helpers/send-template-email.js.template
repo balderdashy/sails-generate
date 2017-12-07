@@ -174,7 +174,7 @@ ${htmlEmailContents}
     problems.push(' • Mailgun secret is missing from this app\'s configuration (`sails.config.custom.mailgunSecret`)');
   }
   if (!sails.config.custom.mailgunDomain) {
-    problems.push(' • a Mailgun domain is missing from this app\'s configuration (`sails.config.custom.mailgunDomain`)');
+    problems.push(' • Mailgun domain is missing from this app\'s configuration (`sails.config.custom.mailgunDomain`)');
   }
   return problems.join('\n');
 })()+`
@@ -189,7 +189,9 @@ sign up for free at https://mailgun.com to receive sandbox credentials.)
 > delivery by using any email address that ends in "@example.com".  This will
 > write automated emails to your logs rather than actually sending them.
 > (To simulate clicking on a link from an email, just copy and paste the link
-> from the terminal output into your browser.)`
+> from the terminal output into your browser.)
+
+ [?] If you're unsure, visit https://sailsjs.com/support`
         );
       }
 
