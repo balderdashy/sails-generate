@@ -65,7 +65,7 @@ module.exports = {
     // > compliance in the U.S.
     await User.update({ id: this.req.me.id })
     .set({
-      stripeCustomerId
+      stripeCustomerId,
       hasBillingCard: inputs.stripeToken ? true : false,
       billingCardBrand: inputs.stripeToken ? inputs.billingCardBrand : '',
       billingCardLast4: inputs.stripeToken ? inputs.billingCardLast4 : '',
