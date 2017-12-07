@@ -88,63 +88,6 @@ Instead, just log it to the console.`,
     var url = require('url');
     var util = require('util');
 
-    // TODO: fix this up
-    // // Check that all required Mailgun credentials are set up.
-    // if (!sails.config.custom.enableEmailFeatures) {
-
-    //   var errMsg = 'Cannot deliver password recovery email because:\n';
-    //   if (!sails.config.custom.mailgunApiKey) {
-    //     errMsg += ' • a Mailgun API key is missing from this app\'s configuration (`sails.config.custom.mailgunApiKey`)\n';
-    //   }
-    //   if (!sails.config.custom.mailgunDomain) {
-    //     errMsg += ' • a Mailgun domain is missing from this app\'s configuration (`sails.config.custom.mailgunDomain`)\n';
-    //   }
-
-    //   errMsg += '\n'+
-    //   'To enable password recovery emails, you\'ll need to add the missing config variables to your custom config in either '+
-    //   '`config/custom.js` or `config.local.js`.'+
-    //   '\n'+
-    //   '(If you don\'t have a Mailgun domain or API key, you can sign up at https://mailgun.com to receive a sandbox domain and test API key.)';
-
-    //   throw new Error(errMsg);
-    // }
-
-    // // Build a summary string for the incoming message.
-    // var messageSummary =
-    // 'From: ' + inputs.humanName + ' <' + inputs.emailAddress + '>\n\n' +
-    // 'Topic: ' + inputs.topic + '\n\n' +
-    // 'Message: \n\n' + inputs.message;
-
-
-    // // Check that an internal recipient email address is configured,
-    // // and that all required Mailgun credentials are set up.
-    // if (!sails.config.custom.enableEmailFeatures) {
-
-    //   var errMsg = 'Cannot deliver incoming message from contact form because:\n';
-    //   if (!sails.config.custom.internalEmailAddress) {
-    //     errMsg += ' • there is no internal email address configured for this app (`sails.config.custom.internalEmailAddress`)\n';
-    //   }
-    //   if (!sails.config.custom.mailgunApiKey) {
-    //     errMsg += ' • a Mailgun API key is missing from this app\'s configuration (`sails.config.custom.mailgunApiKey`)\n';
-    //   }
-    //   if (!sails.config.custom.mailgunDomain) {
-    //     errMsg += ' • a Mailgun domain is missing from this app\'s configuration (`sails.config.custom.mailgunDomain`)\n';
-    //   }
-
-    //   errMsg += '\n'+
-    //   'To enable contact form emails, you\'ll need to add the missing config variables to your custom config in either '+
-    //   '`config/custom.js` or `config.local.js`.'+
-    //   '\n'+
-    //   '(If you don\'t have a Mailgun domain or API key, you can sign up at https://mailgun.com to receive a sandbox domain and test API key.)';
-
-    //   errMsg += '\n\n'+
-    //   'Here is a summary of the incoming correspondence, just so we at least have it in our logs:\n'+
-    //   '------------------\n'+
-    //   messageSummary+'\n'+
-    //   '------------------';
-    //   return exits.error(new Error(errMsg));
-    // }
-
 
     if (!_.startsWith(path.basename(inputs.template), 'email-')) {
       sails.log.warn(
@@ -179,15 +122,13 @@ Instead, just log it to the console.`,
     }
 
     // Compile HTML template.
-    var htmlEmailContents = await sails.renderView(emailTemplatePath, _.extend({
-      // Set special layout for emails.
-      // > Note: We also could set `layout: false` to disable layouts altogether.
-      layout: layout,
-      // Provide access to core `url` package (for building links and image srcs, etc.)
-      url: url,
-      // Provide access to core `util` package (for dumping debug data in internal emails)
-      util: util
-    }, inputs.templateData))
+    // > Note that we set the layout, provide access to core `url` package (for
+    // > building links and image srcs, etc.), and also provide access to core
+    // > `util` package (for dumping debug data in internal emails).
+    var htmlEmailContents = await sails.renderView(
+      emailTemplatePath,
+      Object.assign({layout, url, util }, inputs.templateData)
+    )
     .intercept((err)=>{
       err.message =
       'Could not compile view template.\n'+
@@ -205,6 +146,9 @@ Instead, just log it to the console.`,
     // > a special-cased version of "user@example.com" is used by Trend Micro Mars
     // > scanner to "check apks for malware".)
     var isToAddressConsideredFake = Boolean(inputs.to.match(/@example\.com$/i));
+
+    // If that's the case, or if we're in the "test" environment, then log
+    // the email instead of sending it:
     if (sails.config.environment === 'test' || isToAddressConsideredFake) {
       sails.log(
 `Skipped sending email, either because the current \`sails.config.environment\`
@@ -218,7 +162,38 @@ Body:
 ${htmlEmailContents}
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-`);
     } else {
-      // Otherwise actually send the email.
+      // Otherwise, we'll check that all required Mailgun credentials are set up
+      // and, if so, continue to actually send the email.
+
+      if (!sails.config.custom.mailgunApiKey || !sails.config.custom.mailgunDomain) {
+        throw new Error(
+`Cannot deliver email to "${inputs.to}" because:
+`+(()=>{
+  let problems = [];
+  if (!sails.config.custom.mailgunApiKey) {
+    problems.push(' • Mailgun secret is missing from this app\'s configuration (`sails.config.custom.mailgunSecret`)');
+  }
+  if (!sails.config.custom.mailgunDomain) {
+    problems.push(' • a Mailgun domain is missing from this app\'s configuration (`sails.config.custom.mailgunDomain`)');
+  }
+  return problems.join('\n');
+})()+`
+
+To resolve these configuration issues, add the missing config variables to
+\`config/custom.js\`-- or in staging/production, set them up as system
+environment vars.  (If you don\'t have a Mailgun domain or API key, you can
+sign up for free at https://mailgun.com to receive a sandbox domain and test
+API key.)
+
+> Note that, for convenience during development, there is another alternative:
+> In lieu of setting up real Mailgun credentials, you can "fake" email
+> delivery by using any email address that ends in "@example.com".  This will
+> write automated emails to your logs rather than actually sending them.
+> (To simulate clicking on a link from an email, just copy and paste the link
+> from the terminal output into your browser.)`
+        );
+      }
+
       await sails.stdlib('mailgun').sendHtmlEmail.with({
         htmlMessage: htmlEmailContents,
         toEmail: inputs.to,
