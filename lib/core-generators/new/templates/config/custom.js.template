@@ -52,7 +52,7 @@ module.exports.custom = {
   *                                                                         *
   **************************************************************************/
   // mailgunDomain: 'sandboxaa1234fake678.mailgun.org',
-  // mailgunApiKey: 'key-fakeb183848139913858e8abd9a3',
+  // mailgunSecret: 'key-fakeb183848139913858e8abd9a3',
   //--------------------------------------------------------------------------
   // /\  Configure these to enable support for automated emails.
   // ||  (Important for password recovery, verification, contact form, etc.)
@@ -89,7 +89,7 @@ module.exports.custom = {
   *                                                                          *
   ***************************************************************************/<% if (!caviar) { %>
   // mailgunDomain: 'transactional-mail.example.com',
-  // mailgunApiKey: 'key-testkeyb183848139913858e8abd9a3',
+  // mailgunSecret: 'key-testkeyb183848139913858e8abd9a3',
   // stripeSecret: 'sk_test_Zzd814nldl91104qor5911gjald',<% } %>
   // …
 

@@ -83,7 +83,7 @@ module.exports = Object.assign({}, PRODUCTION_CONFIG, {
     // ||  messages in staging (or use `sails_custom__internalEmailAddress`)
     //--------------------------------------------------------------------------
 
-    // mailgunApiKey: 'key-sandbox_fake_bd32301385130a0bafe030c',
+    // mailgunSecret: 'key-sandbox_fake_bd32301385130a0bafe030c',
     // stripeSecret: 'sk_sandbox__fake_Nfgh82401348jaDa3lkZ0d9Hm',
     // stripePublishableKey: 'pk_sandbox__fake_fKd3mZJs1mlYrzWt7JQtkcRb',
     //--------------------------------------------------------------------------

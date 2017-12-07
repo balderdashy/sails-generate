@@ -31,7 +31,7 @@ module.exports = function defineCustomHook(sails) {
 
       // Check Stripe/Mailgun configuration (for billing and emails).
       var MANDATORY_STRIPE_CONFIG = ['stripeSecret', 'stripePublishableKey'];
-      var MANDATORY_MAILGUN_CONFIG = ['mailgunApiKey', 'mailgunDomain', 'internalEmailAddress'];
+      var MANDATORY_MAILGUN_CONFIG = ['mailgunSecret', 'mailgunDomain', 'internalEmailAddress'];
       var isMissingStripeConfig = _.difference(MANDATORY_STRIPE_CONFIG, Object.keys(sails.config.custom)).length > 0;
       var isMissingMailgunConfig = _.difference(MANDATORY_MAILGUN_CONFIG, Object.keys(sails.config.custom)).length > 0;
 
@@ -62,8 +62,8 @@ module.exports = function defineCustomHook(sails) {
         if (sails.config.custom.stripePublishableKey === undefined) {
           problems.push('No `sails.config.custom.stripePublishableKey` was configured.');
         }
-        if (sails.config.custom.mailgunApiKey === undefined) {
-          problems.push('No `sails.config.custom.mailgunApiKey` was configured.');
+        if (sails.config.custom.mailgunSecret === undefined) {
+          problems.push('No `sails.config.custom.mailgunSecret` was configured.');
         }
         if (sails.config.custom.mailgunDomain === undefined) {
           problems.push('No `sails.config.custom.mailgunDomain` was configured.');
@@ -95,7 +95,7 @@ will be disabled and/or hidden in the UI.
 
       // Always set up Mailgun credentials on load, no matter what.
       sails.stdlib('mailgun').configure({
-        apiKey: sails.config.custom.mailgunApiKey,
+        apiKey: sails.config.custom.mailgunSecret,
         domain: sails.config.custom.mailgunDomain,
         fromEmail: sails.config.custom.fromEmailAddress,
         fromName: sails.config.custom.fromName,

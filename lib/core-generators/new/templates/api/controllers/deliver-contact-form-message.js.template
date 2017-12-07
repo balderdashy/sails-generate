@@ -63,18 +63,18 @@ module.exports = {
     //   if (!sails.config.custom.internalEmailAddress) {
     //     errMsg += ' • there is no internal email address configured for this app (`sails.config.custom.internalEmailAddress`)\n';
     //   }
-    //   if (!sails.config.custom.mailgunApiKey) {
-    //     errMsg += ' • a Mailgun API key is missing from this app\'s configuration (`sails.config.custom.mailgunApiKey`)\n';
+    //   if (!sails.config.custom.mailgunSecret) {
+    //     errMsg += ' • Mailgun secret is missing from this app\'s configuration (`sails.config.custom.mailgunSecret`)\n';
     //   }
     //   if (!sails.config.custom.mailgunDomain) {
-    //     errMsg += ' • a Mailgun domain is missing from this app\'s configuration (`sails.config.custom.mailgunDomain`)\n';
+    //     errMsg += ' • Mailgun domain is missing from this app\'s configuration (`sails.config.custom.mailgunDomain`)\n';
     //   }
 
     //   errMsg += '\n'+
     //   'To enable contact form emails, you\'ll need to add the missing config variables to your custom config in either '+
     //   '`config/custom.js` or `config.local.js`.'+
     //   '\n'+
-    //   '(If you don\'t have a Mailgun domain or API key, you can sign up at https://mailgun.com to receive a sandbox domain and test API key.)';
+    //   '(If you don\'t have a Mailgun domain or secret, you can sign up at https://mailgun.com to receive a sandbox domain and test API key.)';
 
     //   errMsg += '\n\n'+
     //   'Here is a summary of the incoming correspondence, just so we at least have it in our logs:\n'+

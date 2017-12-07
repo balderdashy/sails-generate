@@ -165,12 +165,12 @@ ${htmlEmailContents}
       // Otherwise, we'll check that all required Mailgun credentials are set up
       // and, if so, continue to actually send the email.
 
-      if (!sails.config.custom.mailgunApiKey || !sails.config.custom.mailgunDomain) {
+      if (!sails.config.custom.mailgunSecret || !sails.config.custom.mailgunDomain) {
         throw new Error(
 `Cannot deliver email to "${inputs.to}" because:
 `+(()=>{
   let problems = [];
-  if (!sails.config.custom.mailgunApiKey) {
+  if (!sails.config.custom.mailgunSecret) {
     problems.push(' • Mailgun secret is missing from this app\'s configuration (`sails.config.custom.mailgunSecret`)');
   }
   if (!sails.config.custom.mailgunDomain) {
@@ -181,9 +181,8 @@ ${htmlEmailContents}
 
 To resolve these configuration issues, add the missing config variables to
 \`config/custom.js\`-- or in staging/production, set them up as system
-environment vars.  (If you don\'t have a Mailgun domain or API key, you can
-sign up for free at https://mailgun.com to receive a sandbox domain and test
-API key.)
+environment vars.  (If you don\'t have a Mailgun domain or secret, you can
+sign up for free at https://mailgun.com to receive sandbox credentials.)
 
 > Note that, for convenience during development, there is another alternative:
 > In lieu of setting up real Mailgun credentials, you can "fake" email
