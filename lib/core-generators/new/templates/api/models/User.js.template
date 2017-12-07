@@ -77,14 +77,14 @@ module.exports = {
     },
 
     billingCardExpMonth: {
-      type: 'number',
-      example: 11,
+      type: 'string',
+      example: '08',
       description: 'The expiration month of the credit card stored as this user\'s default Stripe payment source, formatted as MM.'
     },
 
     billingCardExpYear: {
-      type: 'number',
-      example: 2023,
+      type: 'string',
+      example: '2023',
       description: 'The expiration year of the credit card stored as this user\'s default Stripe payment source, formatted as YYYY.'
     },
 
