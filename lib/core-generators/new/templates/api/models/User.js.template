@@ -103,10 +103,13 @@ module.exports = {
       type: 'string',
       isIn: ['pending', 'changed', 'confirmed'],
       defaultsTo: 'confirmed',
-      description: 'The confirmation status of the user\'s email.'
-      // Users created via invites already have "confirmed" addresses, since they need to click an email link in order to complete signup (because they don't have passwords yet)
-      // New users created via the signup form have "pending" emails until they click the confirmation email.
-      // Existing users who want to change their email address have "changed" email status until they click the  confirmation email.
+      description: 'The confirmation status of the user\'s email address.',
+      extendedDescription:
+`Users might be created as "pending" (e.g. normal signup) or as "confirmed" (e.g. hard-coded
+admin users).  When the email verification feature is enabled, new users created via the
+signup form have \`emailStatus: 'pending'\` until they click the link in the confirmation email.
+Similarly, when an existing user changes their email address, they switch to the "changed"
+email status until they click the link in the confirmation email.`
     },
 
     emailChangeCandidate: {
