@@ -170,7 +170,7 @@ will be disabled and/or hidden in the UI.
 
             // Add additional information for convenience when building top-level navigation.
             // (i.e. whether to display "Dashboard", "My Account", etc.)
-            if (!loggedInUser.password || loggedInUser.emailStatus === 'pending') {
+            if (!loggedInUser.password || loggedInUser.emailStatus === 'unconfirmed') {
               loggedInUser.dontDisplayAccountLinkInNav = true;
             }
 

@@ -76,45 +76,48 @@ module.exports = {
     }
 
     // Always update the user's name
-    var changes = {
+    var valuesToSet = {
       fullName: inputs.fullName
     };
 
     // If the email is being changed AND email verification is required,
-    // then update the record accordingly.
+    // then update the record accordingly.  (Note that we don't bother with
+    // an `emailChangeCandidate` if this user didn't have their existing
+    // email verified yet-- we just change the unconfirmed email address.)
     if (changeEmailAddress && sails.config.custom.verifyEmailAddresses) {
-      changes.emailProofToken = await sails.stdlib('strings').random('url-friendly');
-      changes.emailProofTokenExpiresAt = Date.now() + sails.config.custom.emailProofTokenTTL;
-      changes.emailStatus = this.req.me.emailStatus === 'pending' ? 'pending' : 'changed';
-      changes.emailChangeCandidate = inputs.emailAddress;
-      // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-      // FUTURE: we may not want to bother with an `emailChangeCandidate` for pending users.
-      // Since they never had a confirmed email to begin with so it's not really a regression.
-      // ^^
-      // TODO: not sure this is accurate (see other todo above -- what does "pending" mean?)
-      // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+      valuesToSet.emailProofToken = await sails.stdlib('strings').random('url-friendly');
+      valuesToSet.emailProofTokenExpiresAt = Date.now() + sails.config.custom.emailProofTokenTTL;
+      if (this.req.me.emailStatus === 'unconfirmed') {
+        valuesToSet.emailStatus = 'unconfirmed';
+        valuesToSet.emailChangeCandidate = '';
+        valuesToSet.emailAddress = inputs.emailAddress.toLowerCase();
+      } else {
+        valuesToSet.emailStatus = 'changeRequested';
+        valuesToSet.emailChangeCandidate = inputs.emailAddress;
+      }
     } else if(cancelPendingEmailChange) {
       // Clear out the email change candidate.
-      changes.emailChangeCandidate = '';
-      // If the email status is 'changed', we know the previous email address was confirmed.
-      if(this.req.me.emailStatus === 'changed') {
-        changes.emailProofToken = '';
-        changes.emailProofTokenExpiresAt = 0;
-        changes.emailStatus = 'confirmed';
+      valuesToSet.emailChangeCandidate = '';
+      // If the email status is 'changeRequested', we know the previous email address
+      // was already confirmed.
+      if(this.req.me.emailStatus === 'changeRequested') {
+        valuesToSet.emailProofToken = '';
+        valuesToSet.emailProofTokenExpiresAt = 0;
+        valuesToSet.emailStatus = 'confirmed';
       }
       // Otherwise, the previous email address was not confirmed.
       else {
-        changes.emailProofToken = await sails.stdlib('strings').random('url-friendly');
-        changes.emailProofTokenExpiresAt = Date.now() + sails.config.custom.emailProofTokenTTL;
-        changes.emailStatus = 'pending';
+        valuesToSet.emailProofToken = await sails.stdlib('strings').random('url-friendly');
+        valuesToSet.emailProofTokenExpiresAt = Date.now() + sails.config.custom.emailProofTokenTTL;
+        valuesToSet.emailStatus = 'unconfirmed';
       }
     }
     // If the email is being changed and re-confirmation is NOT required, just update the email address.
     else if(changeEmailAddress) {
-      changes.emailAddress = inputs.emailAddress;
+      valuesToSet.emailAddress = inputs.emailAddress.toLowerCase();
     }
 
-    await User.update({id: this.req.me.id }, changes);
+    await User.update({id: this.req.me.id }, valuesToSet);
 
     // If an email address change was requested, and re-confirmation is required,
     // send the "confirm account" email.
@@ -125,7 +128,7 @@ module.exports = {
         template: 'email-verify-new-email',
         templateData: {
           fullName: inputs.fullName,
-          token: changes.emailProofToken
+          token: valuesToSet.emailProofToken
         }
       });
     }
