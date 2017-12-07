@@ -151,8 +151,9 @@ Instead, just log it to the console.`,
     // the email instead of sending it:
     if (sails.config.environment === 'test' || isToAddressConsideredFake) {
       sails.log(
-`Skipped sending email, either because the current \`sails.config.environment\`
-is set to "test", or because the "To" email address looked fake.
+`Skipped sending email, either because the "To" email address ended in "@example.com"
+or because the current \`sails.config.environment\` is set to "test".
+
 But anyway, here is what WOULD have been sent:
 -=-=-=-=-=-=-=-=-=-=-=-=-= Email log =-=-=-=-=-=-=-=-=-=-=-=-=-
 To: ${inputs.to}
