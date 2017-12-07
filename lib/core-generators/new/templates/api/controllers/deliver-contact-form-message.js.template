@@ -23,7 +23,7 @@ module.exports = {
       example: 'I want to buy stuff.'
     },
 
-    humanName: {
+    fullName: {
       required: true,
       type: 'string',
       description: 'The full name of the human sending this message.',
@@ -66,7 +66,7 @@ your custom config -- usually in \`config/custom.js\`, \`config/staging.js\`,
       template: 'internal/email-contact-form',
       layout: false,
       templateData: {
-        contactName: inputs.humanName,
+        contactName: inputs.fullName,
         contactEmail: inputs.emailAddress,
         topic: inputs.topic,
         message: inputs.message
