@@ -19,6 +19,10 @@ html, body {
     a {
       cursor: pointer;
     }
+    .dropdown-menu.account-menu {
+      left: auto;
+      right: 0px;
+    }
   }
 
   // App-wide styles for our ajax buttons
