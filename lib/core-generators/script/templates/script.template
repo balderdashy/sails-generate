@@ -34,7 +34,7 @@ if (verbose) { %>/**
 
     success: {
       outputFriendlyName: <%= util.inspect(inferredSuccessOutputFriendlyName) %>,
-      outputExample: '==='
+      outputType: 'ref'
     },
 
   },<% } %>
@@ -46,6 +46,7 @@ if (inferredSuccessOutputFriendlyName) { %>
     // Get <%= inferredSuccessOutputFriendlyName[0].toLowerCase() + inferredSuccessOutputFriendlyName.slice(1) %>.
     var <%= _.camelCase(inferredSuccessOutputFriendlyName) %>;
     // TODO
+    sails.log('Getting <%= inferredSuccessOutputFriendlyName[0].toLowerCase() + inferredSuccessOutputFriendlyName.slice(1) %>...');
 
     // Send back the result through the success exit.
     return exits.success(<%= _.camelCase(inferredSuccessOutputFriendlyName) %>);

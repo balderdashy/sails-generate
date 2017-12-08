@@ -34,36 +34,8 @@ if (inferredSuccessOutputFriendlyName) { %>
 
     success: {
       outputFriendlyName: <%= util.inspect(inferredSuccessOutputFriendlyName) %>,
-      outputExample: '==='
-    }<% }
-
-if (verbose) { %>
-
-    // Exit definitions go here.
-    //
-    // e.g.
-    //
-    // success: {
-    //   outputFriendlyName: 'Average rating',
-    //   outputExample: 3.2
-    // },
-    //
-    // notFound: {
-    //   description: 'No record could be found matching the specified criteria.'
-    // },
-    //
-    // malformedUsername: {
-    //   description: 'Could not use the provided username, because it is not valid.',
-    //   outputFriendlyName: 'API error',
-    //   outputDescription: 'The already-formatted error that should be sent back as response data.'
-    //   outputExample: {
-    //     reason: 'The provided username (`Jon Snow`) is not valid.',
-    //     resolution: 'Double-check to be sure you are using the correct username.',
-    //     rawError: '==='
-    //   }
-    // }
-
-<% } %>
+      outputType: 'ref'
+    },<% } %>
 
   },
 
