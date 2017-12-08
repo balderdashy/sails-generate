@@ -30,17 +30,17 @@ module.exports = function defineCustomHook(sails) {
       sails.stdlib = stdlib;
 
       // Check Stripe/Mailgun configuration (for billing and emails).
-      var MANDATORY_STRIPE_CONFIG = ['stripeSecret', 'stripePublishableKey'];
-      var MANDATORY_MAILGUN_CONFIG = ['mailgunSecret', 'mailgunDomain', 'internalEmailAddress'];
-      var isMissingStripeConfig = _.difference(MANDATORY_STRIPE_CONFIG, Object.keys(sails.config.custom)).length > 0;
-      var isMissingMailgunConfig = _.difference(MANDATORY_MAILGUN_CONFIG, Object.keys(sails.config.custom)).length > 0;
+      var IMPORTANT_STRIPE_CONFIG = ['stripeSecret', 'stripePublishableKey'];
+      var IMPORTANT_MAILGUN_CONFIG = ['mailgunSecret', 'mailgunDomain', 'internalEmailAddress'];
+      var isMissingStripeConfig = _.difference(IMPORTANT_STRIPE_CONFIG, Object.keys(sails.config.custom)).length > 0;
+      var isMissingMailgunConfig = _.difference(IMPORTANT_MAILGUN_CONFIG, Object.keys(sails.config.custom)).length > 0;
 
       if (isMissingStripeConfig || isMissingMailgunConfig) {
 
         let missingFeatureText = isMissingStripeConfig && isMissingMailgunConfig ? 'billing and email' : isMissingStripeConfig ? 'billing' : 'email';
-        let verboseSuffix = '';
-        if (_.contains(['verbose', 'silly'], sails.config.log.level)) {
-          verboseSuffix =
+        let suffix = '';
+        if (_.contains(['silly'], sails.config.log.level)) {
+          suffix =
 `
 > Tip: To exclude sensitive credentials from source control, use:
 > • config/local.js (for local development)
@@ -72,16 +72,16 @@ module.exports = function defineCustomHook(sails) {
           problems.push('No `sails.config.custom.internalEmailAddress` was configured.');
         }
 
-        sails.log.warn(
+        sails.log.verbose(
 `Some optional settings have not been configured yet:
 ---------------------------------------------------------------------
 ${problems.join('\n')}
 
-Until this is resolved, this app's ${missingFeatureText} features
+Until this is addressed, this app's ${missingFeatureText} features
 will be disabled and/or hidden in the UI.
 
  [?] If you're unsure or need advice, come by https://sailsjs.com/support
----------------------------------------------------------------------${verboseSuffix}`);
+---------------------------------------------------------------------${suffix}`);
       }//ﬁ
 
       // Set an additional config keys based on whether Stripe config is available.
