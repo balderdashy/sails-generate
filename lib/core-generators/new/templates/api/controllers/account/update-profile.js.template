@@ -40,7 +40,8 @@ module.exports = {
     var desiredEffectReEmail;// ('changeImmediately', 'beginChange', 'cancelPendingChange', 'modifyPendingChange', or '')
     if (
       newEmailAddress === undefined ||
-      (this.req.me.emailStatus !== 'changeRequested' && newEmailAddress === this.req.me.emailAddress)
+      (this.req.me.emailStatus !== 'changeRequested' && newEmailAddress === this.req.me.emailAddress) ||
+      (this.req.me.emailStatus === 'changeRequested' && newEmailAddress === this.req.me.emailChangeCandidate)
     ) {
       desiredEffectReEmail = '';
     } else if (this.req.me.emailStatus === 'changeRequested' && newEmailAddress === this.req.me.emailAddress) {
