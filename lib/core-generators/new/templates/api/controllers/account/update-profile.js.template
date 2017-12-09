@@ -48,10 +48,7 @@ module.exports = {
       desiredEffectReEmail = 'cancelPendingChange';
     } else if (this.req.me.emailStatus === 'changeRequested' && newEmailAddress !== this.req.me.emailAddress) {
       desiredEffectReEmail = 'modifyPendingChange';
-    } else if (
-      !sails.config.custom.verifyEmailAddresses ||
-      (this.req.me.emailStatus === 'unconfirmed' && newEmailAddress !== this.req.me.emailAddress)
-    ) {
+    } else if (!sails.config.custom.verifyEmailAddresses || this.req.me.emailStatus === 'unconfirmed') {
       desiredEffectReEmail = 'changeImmediately';
     } else {
       desiredEffectReEmail = 'beginChange';
