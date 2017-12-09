@@ -15,7 +15,7 @@
     "lodash": "3.10.1",
     "machinepack-process": "^2.0.2",
     "parasails": "^0.4.0",
-    "prompt": "0.2.14",
+    "read": "1.0.7",
     "reportback": "^2.0.1",
     "sails.io.js-dist": "^1.0.0"
   },
