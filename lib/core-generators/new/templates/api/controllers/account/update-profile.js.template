@@ -132,7 +132,7 @@ module.exports = {
         emailAddress: newEmailAddress
       });
       if (didNotAlreadyHaveCustomerId){
-        await User.update({ id: user.id }).set({
+        await User.update({ id: this.req.me.id }).set({
           stripeCustomerId
         });
       }
