@@ -76,11 +76,14 @@ module.exports.bootstrap = <%= IS_CURRENT_NODE_VERSION_CAPABLE_OF_AWAIT ? 'async
   // ```<% } %><% } %><% if(caviar) { %>
 
   // Save new bootstrap version
-  await sails.stdlib('fs').writeJson(bootstrapLastRunInfoPath, {
-    lastRunVersion: HARD_CODED_DATA_VERSION,
-    lastRunAt: Date.now(),
+  await sails.stdlib('fs').writeJson.with({
+    destination: bootstrapLastRunInfoPath,
+    json: {
+      lastRunVersion: HARD_CODED_DATA_VERSION,
+      lastRunAt: Date.now()
+    },
+    force: true
   })
-  .tolerate('alreadyExists')
   .tolerate((err)=>{
     sails.log.warn('For some reason, could not write bootstrap version .json file.  This could be a result of a problem with your configured paths, or, if you are in production, a limitation of your hosting provider related to `pwd`.  As a workaround, try updating app.js to explicitly pass in `appPath: __dirname` instead of relying on `chdir`.  Current sails.config.appPath: `'+sails.config.appPath+'`.  Full error details: '+err.stack+'\n\n(Proceeding anyway this time...)');
   });<% } %>

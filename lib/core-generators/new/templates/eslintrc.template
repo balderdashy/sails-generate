@@ -42,6 +42,7 @@
     "async": true<% }
 
     if (caviar) { %>,
+    "Promise": true,
     "User": true<% }
 
     if (!_.contains(without,'orm')) { %>
