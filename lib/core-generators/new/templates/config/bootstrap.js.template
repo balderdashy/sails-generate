@@ -37,7 +37,7 @@ module.exports.bootstrap = <%= IS_CURRENT_NODE_VERSION_CAPABLE_OF_AWAIT ? 'async
     }//•
 
     // Compare bootstrap version from code base to the version that was last run
-    var lastRunBootstrapInfo = await sails.stdlib('fs').readJson(bootstrapLastRunInfoPath)
+    var lastRunBootstrapInfo = await sails.helpers.fs.readJson(bootstrapLastRunInfoPath)
     .tolerate('doesNotExist');// (it's ok if the file doesn't exist yet-- just keep going.)
 
     if (lastRunBootstrapInfo && lastRunBootstrapInfo.lastRunVersion === HARD_CODED_DATA_VERSION) {
@@ -60,7 +60,7 @@ module.exports.bootstrap = <%= IS_CURRENT_NODE_VERSION_CAPABLE_OF_AWAIT ? 'async
 <% } %>
   // By convention, this is a good place to set up fake data during development.<% if (IS_CURRENT_NODE_VERSION_CAPABLE_OF_AWAIT && !_.contains(without, 'orm')) { %>
 <% if (caviar) { %>  await User.createEach([
-    { emailAddress: 'admin@example.com', fullName: 'Ryan Dahl', isSuperAdmin: true, password: await sails.stdlib('passwords').hashPassword('abc123') },
+    { emailAddress: 'admin@example.com', fullName: 'Ryan Dahl', isSuperAdmin: true, password: await sails.helpers.passwords.hashPassword('abc123') },
   ]);<% } else { %>  //
   // For example:
   // ```
@@ -77,7 +77,7 @@ module.exports.bootstrap = <%= IS_CURRENT_NODE_VERSION_CAPABLE_OF_AWAIT ? 'async
   // ```<% } %><% } %><% if(caviar) { %>
 
   // Save new bootstrap version
-  await sails.stdlib('fs').writeJson.with({
+  await sails.helpers.fs.writeJson.with({
     destination: bootstrapLastRunInfoPath,
     json: {
       lastRunVersion: HARD_CODED_DATA_VERSION,

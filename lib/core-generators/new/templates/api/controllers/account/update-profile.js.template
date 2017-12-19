@@ -96,7 +96,7 @@ module.exports = {
       case 'modifyPendingChange':
         Object.assign(valuesToSet, {
           emailChangeCandidate: newEmailAddress,
-          emailProofToken: await sails.stdlib('strings').random('url-friendly'),
+          emailProofToken: await sails.helpers.strings.random('url-friendly'),
           emailProofTokenExpiresAt: Date.now() + sails.config.custom.emailProofTokenTTL,
           emailStatus: 'changeRequested'
         });
@@ -127,7 +127,7 @@ module.exports = {
     // > at the time this user was originally created.)
     if(desiredEffectReEmail === 'changeImmediately' && sails.config.custom.enableBillingFeatures) {
       let didNotAlreadyHaveCustomerId = (! this.req.me.stripeCustomerId);
-      let stripeCustomerId = await sails.stdlib('stripe').saveBillingInfo.with({
+      let stripeCustomerId = await sails.helpers.stripe.saveBillingInfo.with({
         stripeCustomerId: this.req.me.stripeCustomerId,
         emailAddress: newEmailAddress
       });
@@ -141,7 +141,7 @@ module.exports = {
     // If an email address change was requested, and re-confirmation is required,
     // send the "confirm account" email.
     if (desiredEffectReEmail === 'beginChange' || desiredEffectReEmail === 'modifyPendingChange') {
-      await sails.helpers.sendTemplateEmail({
+      await sails.helpers.sendTemplateEmail.with({
         to: newEmailAddress,
         subject: 'Your account has been updated',
         template: 'email-verify-new-email',
