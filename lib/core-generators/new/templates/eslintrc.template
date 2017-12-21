@@ -31,9 +31,10 @@
   },
 
   "globals": {<% if (!_.contains(without,'orm')) { %>
-    // If "no-undef" is enabled below and your app uses globals, be sure to list all
-    // relevant globals below (including the globalIds of models, if appropriate):
+    // If "no-undef" is enabled below, be sure to list all global variables that
+    // are used in this app's backend code (including the globalIds of models):
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -<% } %>
+    "Promise": true,
     "sails": true<%
     if (!_.contains(without,'lodash')) { %>,
     "_": true<% }
@@ -42,11 +43,13 @@
     "async": true<% }
 
     if (caviar) { %>,
-    "Promise": true,
-    "User": true<% }
+
+    // Models:
+    "User": true
+    <% }
 
     if (!_.contains(without,'orm')) { %>
-    // ...and any other backend globals (e.g. `"Organization": true`)
+    // …and any others<% if (!caviar) { %> (e.g. `"Organization": true`)<% } else { %>.<% } %>
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -<% } %>
   },
 
