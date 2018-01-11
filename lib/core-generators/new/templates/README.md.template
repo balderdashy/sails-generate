@@ -15,7 +15,9 @@ a [Sails v1](https://sailsjs.com) application
 
 ### Version info
 
-This app was originally generated on <%= String(new Date()) %> using Sails v<%= generatedWithSailsVersion %> _(internally: [`sails-generate@<%= generatedWithSailsGenerateVersion %>`](https://github.com/balderdashy/sails-generate/tree/v<%= generatedWithSailsGenerateVersion %>/lib/core-generators/new))_.
+This app was originally generated on <%= String(new Date()) %> using Sails v<%= generatedWithSailsVersion %>.
+
+<!-- Internally, Sails used [`sails-generate@<%= generatedWithSailsGenerateVersion %>`](https://github.com/balderdashy/sails-generate/tree/v<%= generatedWithSailsGenerateVersion %>/lib/core-generators/new). -->
 
 <% if (caviar) { %>
 This project's boilerplate is based on an expanded seed app provided by the [Sails core team](https://sailsjs.com/about) to make it easier for you to build on top of ready-made features like authentication, enrollment, email verification, and billing.  For more information, [drop us a line](https://sailsjs.com/support).
