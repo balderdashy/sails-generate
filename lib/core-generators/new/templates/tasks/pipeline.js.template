@@ -69,8 +69,7 @@ var jsFilesToInject = [
   // > Be sure to list dependencies that depend on each other in the right order!<% if(caviar) { %>
   'dependencies/lodash.js',
   'dependencies/jquery.min.js',
-  'dependencies/vue.js',
-  'dependencies/bootstrap-4/popper.js',<% } %>
+  'dependencies/vue.js',<% } %>
   'dependencies/**/*.js',
 <% if(caviar) { %>
   // First amongst the app-level files, bring in cloud configuration
