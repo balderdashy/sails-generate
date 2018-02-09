@@ -27,7 +27,10 @@
   },
 
   "parserOptions": {
-    "ecmaVersion": 8
+    "ecmaVersion": 8,
+    "ecmaFeatures": {
+      "experimentalObjectRestSpread": true
+    }
   },
 
   "globals": {<% if (!_.contains(without,'orm')) { %>
