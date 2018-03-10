@@ -139,6 +139,16 @@ will be disabled and/or hidden in the UI.
 
             }//ﬁ
 
+            // Next, check if this is a GET request to the `webhooks.` or `click.`
+            // subdomains.  If so, we'll automatically go ahead and redirect to the
+            // corresponding path under our base URL, which is environment-specific.
+            // > Note that we DO NOT redirect virtual socket requests and we DO NOT
+            // > redirect non-GET requests (because it can confuse some 3rd party
+            // > platforms that send webhook requests.)
+            if (!req.isSocket && req.method === 'GET' && (req.subdomains[0] === 'webhooks' || req.subdomains[0] === 'links')) {
+              sails.log.info('Redirecting GET request from `'+req.subdomains[0]+'.` subdomain...');
+              return res.redirect(sails.config.custom.baseUrl+req.url);
+            }//•
 
             // No session? Proceed as usual.
             // (e.g. request for a static asset)
