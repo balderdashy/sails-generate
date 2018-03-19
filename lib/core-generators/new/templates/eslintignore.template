@@ -1,4 +1,5 @@
-################################################
+<% /* BEWARE!  Comments in this file can mess up some eslint parsers!!! */
+if (verbose) {%>################################################
 #   ╔═╗╔═╗╦  ╦╔╗╔╔╦╗┬┌─┐┌┐┌┌─┐┬─┐┌─┐
 #   ║╣ ╚═╗║  ║║║║ ║ ││ ┬││││ │├┬┘├┤
 #  o╚═╝╚═╝╩═╝╩╝╚╝ ╩ ┴└─┘┘└┘└─┘┴└─└─┘
@@ -19,7 +20,7 @@
 #
 # Modify/extend/prune to fit your needs!
 #
-################################################
+################################################<% } %>
 <% if (typeof frontend === 'undefined' || frontend !== false) { %>
 assets/dependencies/**/*.js<% } %>
-<% if (!_.contains(without, 'views') && (typeof frontend === 'undefined' || frontend !== false)) { %>views/**/*.ejs // (but see https://github.com/roadhump/SublimeLinter-eslint/issues/87)<% } %>
+<% if (!_.contains(without, 'views') && (typeof frontend === 'undefined' || frontend !== false)) { %>views/**/*.ejs<% if (verbose) { %> // (but see https://github.com/roadhump/SublimeLinter-eslint/issues/87)<% } %><% } %>
