@@ -22,7 +22,8 @@ if (verbose) {%>################################################
 #
 ################################################<% }
 
-if (typeof frontend === 'undefined' || frontend !== false) { %>
-assets/dependencies/**/*.js<% }
+if (typeof frontend === 'undefined' || frontend !== false) { %>assets/dependencies/**/*.js
+<% }
 
-if (!_.contains(without, 'views') && (typeof frontend === 'undefined' || frontend !== false)) { %>views/**/*.ejs<% if (verbose) { %> // (but see https://github.com/roadhump/SublimeLinter-eslint/issues/87)<% } %><% } %>
+if (!_.contains(without, 'views') && (typeof frontend === 'undefined' || frontend !== false)) { %>views/**/*.ejs<% if (verbose) { %> // (but see https://github.com/roadhump/SublimeLinter-eslint/issues/87)<% } %>
+<% } %>
