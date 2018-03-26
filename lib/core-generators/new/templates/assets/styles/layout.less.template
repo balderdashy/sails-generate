@@ -1,7 +1,7 @@
 @footer-height: 40px;
 @container-md-max-width: 1100px;
 
-[v-cloak] { display: none }
+[v-cloak] { display: none; }
 
 html, body {
   height: 100%;
@@ -9,9 +9,7 @@ html, body {
 }
 
 #page-wrap {
-  height: 100%;
-  height: auto!important;
-  min-height: 100%;
+  .stretch-page();
   position: relative;
   padding-bottom: @footer-height;
 
