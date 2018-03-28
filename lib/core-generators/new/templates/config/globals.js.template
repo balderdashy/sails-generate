@@ -17,13 +17,13 @@ module.exports.globals = {
   _: false,<% }
   else { %>  /****************************************************************************
   *                                                                           *
-  * Whether to expose the locally-installed `lodash` as a global variable     *
+  * Whether to expose the locally-installed Lodash as a global variable       *
   * (`_`), making  it accessible throughout your app.                         *
   * (See the link above for help.)                                            *
   *                                                                           *
   ****************************************************************************/
 
-  _: require('lodash'),<% } %>
+  _: require('@sailshq/lodash'),<% } %>
 
 <% if (_.contains(without, 'async')) { %>  // This app was generated without the `async` package.
   // To use `async`, run `npm install async --save` and require it in the file(s) where you need it.
