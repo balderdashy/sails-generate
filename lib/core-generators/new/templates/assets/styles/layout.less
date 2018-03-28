@@ -41,6 +41,15 @@ html, body {
   }
 }
 
+body.detected-mobile {
+  // Above and beyond the media queries below, this selector (which relies on
+  // `parasails` automatically attaching this class, if appropriate) contains
+  // styles intended to be activated specifically when loaded from a recognized
+  // mobile device, regardless of viewport dimensions.  This includes tablet
+  // devices (like the iPad) as well as handset devices (like the iPhone).
+  // …
+}
+
 @media (max-width: 800px) {
   #page-wrap {
     padding-bottom: 75px;
@@ -72,4 +81,3 @@ html, body {
     }
   }
 }
-
