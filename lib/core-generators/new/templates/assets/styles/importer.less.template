@@ -26,6 +26,7 @@ else { %>// Overall styleguide
 @import 'styleguide/index.less';
 
 // Overall layout
+@import 'bootstrap-overrides.less';
 @import 'layout.less';
 
 // Per-page styles
