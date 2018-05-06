@@ -79,6 +79,9 @@ module.exports.models = {
     // ```
     // id: { type: 'string', columnName: '_id' },
     // ```
+    //
+    // Plus, don't forget to configure MongoDB as your default datastore:
+    // https://sailsjs.com/docs/tutorials/using-mongo-db
     //--------------------------------------------------------------------------
   },
 
