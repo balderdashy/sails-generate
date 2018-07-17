@@ -40,7 +40,7 @@ if (inferredSuccessOutputFriendlyName) { %>
   },<% } %>
 
 
-  fn: <%= IS_CURRENT_NODE_VERSION_CAPABLE_OF_AWAIT ? 'async function' : 'function' %> (inputs, exits) {<%
+  fn: <%= IS_CURRENT_NODE_VERSION_CAPABLE_OF_AWAIT ? 'async function' : 'function' %> (<% if (verbose) { %>inputs<% } %>) {<%
 if (inferredSuccessOutputFriendlyName) { %>
 
     // Get <%= inferredSuccessOutputFriendlyName[0].toLowerCase() + inferredSuccessOutputFriendlyName.slice(1) %>.
@@ -48,15 +48,11 @@ if (inferredSuccessOutputFriendlyName) { %>
     // TODO
     sails.log('Getting <%= inferredSuccessOutputFriendlyName[0].toLowerCase() + inferredSuccessOutputFriendlyName.slice(1) %>...');
 
-    // Send back the result through the success exit.
-    return exits.success(<%= _.camelCase(inferredSuccessOutputFriendlyName) %>);
+    return <%= _.camelCase(inferredSuccessOutputFriendlyName) %>;
 
   <% } else { %>
 
-    sails.log('Running custom shell script... (`<%= scriptName %>`)');
-
-    // All done.
-    return exits.success();
+    sails.log('Running custom shell script... (`sails run <%= scriptName %>`)');
 
   <% } %>}
 
