@@ -11,11 +11,10 @@ if (verbose) { %>/**
   friendlyName: <%= util.inspect(friendlyName) %>,
 
 
-  description: <%= util.inspect(description) %>,
+  description: <%= util.inspect(description) %>,<% if (verbose) { %>
 
 
   inputs: {
-<% if (verbose) { %>
 
     // Input definitions go here.
     //
@@ -26,8 +25,9 @@ if (verbose) { %>/**
     //   required: true
     // },
 
-<% } %>
-  },<% if (inferredSuccessOutputFriendlyName) { %>
+  },
+<% }
+if (inferredSuccessOutputFriendlyName) { %>
 
 
   exits: {
