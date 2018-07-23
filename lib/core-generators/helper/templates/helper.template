@@ -34,13 +34,12 @@ if (inferredSuccessOutputFriendlyName) { %>
 
     success: {
       outputFriendlyName: <%= util.inspect(inferredSuccessOutputFriendlyName) %>,
-      outputType: 'ref'
     },<% } %>
 
   },
 
 
-  fn: <%= IS_CURRENT_NODE_VERSION_CAPABLE_OF_AWAIT ? 'async function' : 'function' %> (inputs, exits) {<%
+  fn: <%= IS_CURRENT_NODE_VERSION_CAPABLE_OF_AWAIT ? 'async function' : 'function' %> (inputs) {<%
 if (inferredSuccessOutputFriendlyName) { %>
 
     // Get <%= inferredSuccessOutputFriendlyName[0].toLowerCase() + inferredSuccessOutputFriendlyName.slice(1) %>.
@@ -48,12 +47,7 @@ if (inferredSuccessOutputFriendlyName) { %>
     // TODO
 
     // Send back the result through the success exit.
-    return exits.success(<%= _.camelCase(inferredSuccessOutputFriendlyName) %>);
-
-  <% } else { %>
-
-    // All done.
-    return exits.success();
+    return <%= _.camelCase(inferredSuccessOutputFriendlyName) %>;
 
   <% } %>}
 
@@ -115,17 +109,13 @@ if (verbose) { %>
 <% } %>
 
 
-  fn: (inputs, exits) -><% if (inferredSuccessOutputFriendlyName) { %>
+  fn: (inputs) -><% if (inferredSuccessOutputFriendlyName) { %>
     # Get <%= inferredSuccessOutputFriendlyName[0].toLowerCase() + inferredSuccessOutputFriendlyName.slice(1) %>.
     <%= _.camelCase(inferredSuccessOutputFriendlyName) %>
     # TODO
 
     # Send back the result through the success exit.
-    exits.success(<%= _.camelCase(inferredSuccessOutputFriendlyName) %>)
-
-  <% } else { %>
-    # All done.
-    exits.success()
+    return <%= _.camelCase(inferredSuccessOutputFriendlyName) %>
 
   <% } %>
 

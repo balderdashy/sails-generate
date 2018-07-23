@@ -51,12 +51,17 @@ if (verbose) { %>
     //
     // --and/or--
     //
-    // malformedUsername: {
-    //   statusCode: 400
+    // success: {
+    //   outputFriendlyName: 'A list of pets.',
+    //   outputType: [ {} ]
     // },
     //
-    // accessDenied: {
-    //   statusCode: 403
+    // malformedUsername: {
+    //   responseType: 'badRequest'
+    // },
+    //
+    // coolYourJets: {
+    //   statusCode: 420
     // }
 
 <% } %>
@@ -64,12 +69,10 @@ if (verbose) { %>
   },
 
 
-  fn: <%= IS_CURRENT_NODE_VERSION_CAPABLE_OF_AWAIT ? 'async function' : 'function' %> (inputs, exits) {
-<%if (verbose) { %>
-    var req = this.req;
-<% } %>
+  fn: <%= IS_CURRENT_NODE_VERSION_CAPABLE_OF_AWAIT ? 'async function' : 'function' %> (<% if (!inferredViewTemplatePath) { %>inputs<% } %>) {
+
     <% if (inferredViewTemplatePath) { %>// Respond with view.
-    <% } %>return exits.success();
+    <% } %>return {};
 
   }
 
