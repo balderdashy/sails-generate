@@ -11,10 +11,8 @@ module.exports = function defineCustomHook(sails) {
 
     /**
      * Runs when a Sails app loads/lifts.
-     *
-     * @param {Function} done
      */
-    initialize: async function (done) {
+    initialize: async function () {
 
       sails.log.info('Initializing hook... (`api/hooks/custom`)');
 
@@ -96,8 +94,6 @@ will be disabled and/or hidden in the UI.
 
       // ... Any other app-specific setup code that needs to run on lift,
       // even in production, goes here ...
-
-      return done();
 
     },
 

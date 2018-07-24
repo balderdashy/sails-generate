@@ -1,15 +1,15 @@
 /**
- * Bootstrap
+ * Seed Function
  * (sails.config.bootstrap)
  *
- * An asynchronous bootstrap function that runs just before your Sails app gets lifted.
- * > Need more flexibility?  You can also do this by creating a hook.
+ * A function that runs just before your Sails app gets lifted.
+ * > Need more flexibility?  You can also create a hook.
  *
- * For more information on bootstrapping your app, check out:
+ * For more information on seeding your app with fake data, check out:
  * https://sailsjs.com/config/bootstrap
  */
 
-module.exports.bootstrap = <%= IS_CURRENT_NODE_VERSION_CAPABLE_OF_AWAIT ? 'async function' : 'function' %>(done) {
+module.exports.bootstrap = <%= IS_CURRENT_NODE_VERSION_CAPABLE_OF_AWAIT ? 'async function' : 'function' %>() {
 <% if (caviar) { %>
   // Import dependencies
   var path = require('path');
@@ -33,7 +33,7 @@ module.exports.bootstrap = <%= IS_CURRENT_NODE_VERSION_CAPABLE_OF_AWAIT ? 'async
     // `migrate: safe` enabled, then prevent accidentally removing all data!
     if (process.env.NODE_ENV==='production' || sails.config.models.migrate === 'safe') {
       sails.log.warn('Since we are running with migrate: \'safe\' and/or NODE_ENV=production (in the "'+sails.config.environment+'" Sails environment, to be precise), skipping the rest of the bootstrap to avoid data loss...');
-      return done();
+      return;
     }//•
 
     // Compare bootstrap version from code base to the version that was last run
@@ -43,7 +43,7 @@ module.exports.bootstrap = <%= IS_CURRENT_NODE_VERSION_CAPABLE_OF_AWAIT ? 'async
     if (lastRunBootstrapInfo && lastRunBootstrapInfo.lastRunVersion === HARD_CODED_DATA_VERSION) {
       sails.log('Skipping v'+HARD_CODED_DATA_VERSION+' bootstrap script...  (because it\'s already been run)');
       sails.log('(last run on this computer: @ '+(new Date(lastRunBootstrapInfo.lastRunAt))+')');
-      return done();
+      return;
     }//•
 
     sails.log('Running v'+HARD_CODED_DATA_VERSION+' bootstrap script...  ('+(lastRunBootstrapInfo ? 'before this, the last time the bootstrap ran on this computer was for v'+lastRunBootstrapInfo.lastRunVersion+' @ '+(new Date(lastRunBootstrapInfo.lastRunAt)) : 'looks like this is the first time the bootstrap has run on this computer')+')');
@@ -66,7 +66,7 @@ module.exports.bootstrap = <%= IS_CURRENT_NODE_VERSION_CAPABLE_OF_AWAIT ? 'async
   // ```
   // // Set up fake development data (or if we already have some, avast)
   // if (await User.count() > 0) {
-  //   return done();
+  //   return;
   // }
   //
   // await User.createEach([
@@ -88,9 +88,5 @@ module.exports.bootstrap = <%= IS_CURRENT_NODE_VERSION_CAPABLE_OF_AWAIT ? 'async
   .tolerate((err)=>{
     sails.log.warn('For some reason, could not write bootstrap version .json file.  This could be a result of a problem with your configured paths, or, if you are in production, a limitation of your hosting provider related to `pwd`.  As a workaround, try updating app.js to explicitly pass in `appPath: __dirname` instead of relying on `chdir`.  Current sails.config.appPath: `'+sails.config.appPath+'`.  Full error details: '+err.stack+'\n\n(Proceeding anyway this time...)');
   });<% } %>
-
-  // Don't forget to trigger `done()` when this bootstrap function's logic is finished.
-  // (otherwise your server will never lift, since it's waiting on the bootstrap)
-  return done();
 
 };

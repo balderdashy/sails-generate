@@ -11,10 +11,8 @@ module.exports = function <%= _.camelCase('define '+id+' hook') %>(sails) {
 
     /**
      * Runs when this Sails app loads/lifts.
-     *
-     * @param {Function} done
      */
-    initialize: async function () {
+    initialize: async function() {
 
       sails.log.info('Initializing custom hook (`<%= id %>`)');
 
