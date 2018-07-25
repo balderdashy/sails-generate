@@ -27,8 +27,8 @@ module.exports.globals = {
   _: require('@sailshq/lodash'),<% } %>
 
 <% if (_.contains(without, 'async')) { %>  // This app was generated without a dependency on the `async` package.
-  // Note that this package is unrelated to JavaScript's async/await feature -- your code
-  // can (and should) take advantage of `await` as much as possible!
+  // Note that this package is unrelated to JavaScript's async/await feature --
+  // Your code can (and should) take advantage of `await` as much as possible!
   async: false,<% }
   else { %>  /****************************************************************************
   *                                                                           *
