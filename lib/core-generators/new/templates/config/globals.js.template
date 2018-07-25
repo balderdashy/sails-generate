@@ -20,15 +20,20 @@ module.exports.globals = {
   *                                                                           *
   * Whether to expose the locally-installed Lodash as a global variable       *
   * (`_`), making  it accessible throughout your app.                         *
-  * (See the link above for help.)                                            *
   *                                                                           *
   ****************************************************************************/
 
   _: require('@sailshq/lodash'),<% } %>
 
-<% if (_.contains(without, 'async')) { %>  // This app was generated without a dependency on the `async` package.
-  // Note that this package is unrelated to JavaScript's async/await feature --
-  // Your code can (and should) take advantage of `await` as much as possible!
+<% if (_.contains(without, 'async')) { %>  /****************************************************************************
+  *                                                                           *
+  * This app was generated without a dependency on the "async" NPM package.   *
+  *                                                                           *
+  * > Don't worry!  This is totally unrelated to JavaScript's "async/await".  *
+  * > Your code can (and probably should) use `await` as much as possible.    *
+  *                                                                           *
+  ****************************************************************************/
+
   async: false,<% }
   else { %>  /****************************************************************************
   *                                                                           *
