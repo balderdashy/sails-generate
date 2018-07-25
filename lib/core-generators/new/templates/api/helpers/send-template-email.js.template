@@ -82,7 +82,7 @@ Instead, just log it to the console.`,
   },
 
 
-  fn: async function(inputs, exits) {
+  fn: async function(inputs) {
 
     var path = require('path');
     var url = require('url');
@@ -204,9 +204,9 @@ sign up for free at https://mailgun.com to receive sandbox credentials.)
     }//ﬁ
 
     // All done!
-    return exits.success({
+    return {
       loggedInsteadOfSending: isToAddressConsideredFake
-    });
+    };
 
   }
 

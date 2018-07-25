@@ -47,6 +47,10 @@ the account verification message.)`,
 
   exits: {
 
+    success: {
+      description: 'New user account was created successfully.'
+    },
+
     invalid: {
       responseType: 'badRequest',
       description: 'The provided fullName, password and/or email address are invalid.',
@@ -62,7 +66,7 @@ the account verification message.)`,
   },
 
 
-  fn: async function (inputs, exits) {
+  fn: async function (inputs) {
 
     var newEmailAddress = inputs.emailAddress.toLowerCase();
 
@@ -114,9 +118,6 @@ the account verification message.)`,
     } else {
       sails.log.info('Skipping new account email verification... (since `verifyEmailAddresses` is disabled)');
     }
-
-    // Since everything went ok, send our 200 response.
-    return exits.success();
 
   }
 

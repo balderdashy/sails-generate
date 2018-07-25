@@ -50,7 +50,7 @@ module.exports = {
   },
 
 
-  fn: async function (inputs, exits) {
+  fn: async function (inputs) {
 
     // Add, update, or remove the default payment source for the logged-in user's
     // customer entry in Stripe.
@@ -73,7 +73,6 @@ module.exports = {
       billingCardExpYear: inputs.stripeToken ? inputs.billingCardExpYear : ''
     });
 
-    return exits.success();
   }
 
 

@@ -48,7 +48,7 @@ module.exports = {
   },
 
 
-  fn: async function(inputs, exits) {
+  fn: async function(inputs) {
 
     if (!sails.config.custom.internalEmailAddress) {
       throw new Error(
@@ -72,8 +72,6 @@ your custom config -- usually in \`config/custom.js\`, \`config/staging.js\`,
         message: inputs.message
       }
     });
-
-    return exits.success();
 
   }
 

@@ -30,7 +30,7 @@ module.exports = {
   },
 
 
-  fn: async function (inputs, exits) {
+  fn: async function (inputs) {
 
     var newEmailAddress = inputs.emailAddress;
     if (newEmailAddress !== undefined) {
@@ -151,8 +151,6 @@ module.exports = {
         }
       });
     }
-
-    return exits.success();
 
   }
 
