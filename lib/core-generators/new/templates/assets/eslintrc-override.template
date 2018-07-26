@@ -46,8 +46,9 @@
     "StripeCheckout": true,
     "Stripe": true,
     "Vue": true,
-    "VueRouter": true<% } %>,
-    // "moment": true,
+    "VueRouter": true,
+    "moment": true<% } %>,
+    // "google": true,
     // ...etc.
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
