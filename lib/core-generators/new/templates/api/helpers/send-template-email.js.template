@@ -127,7 +127,7 @@ Instead, just log it to the console.`,
     // > `util` package (for dumping debug data in internal emails).
     var htmlEmailContents = await sails.renderView(
       emailTemplatePath,
-      Object.assign({layout, url, util }, inputs.templateData)
+      _.extend({layout, url, util }, inputs.templateData)
     )
     .intercept((err)=>{
       err.message =

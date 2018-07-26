@@ -82,7 +82,7 @@ module.exports = {
 
       // Change now
       case 'change-immediately':
-        Object.assign(valuesToSet, {
+        _.extend(valuesToSet, {
           emailAddress: newEmailAddress,
           emailChangeCandidate: '',
           emailProofToken: '',
@@ -94,7 +94,7 @@ module.exports = {
       // Begin new email change, or modify a pending email change
       case 'begin-change':
       case 'modify-pending-change':
-        Object.assign(valuesToSet, {
+        _.extend(valuesToSet, {
           emailChangeCandidate: newEmailAddress,
           emailProofToken: await sails.helpers.strings.random('url-friendly'),
           emailProofTokenExpiresAt: Date.now() + sails.config.custom.emailProofTokenTTL,
@@ -104,7 +104,7 @@ module.exports = {
 
       // Cancel pending email change
       case 'cancel-pending-change':
-        Object.assign(valuesToSet, {
+        _.extend(valuesToSet, {
           emailChangeCandidate: '',
           emailProofToken: '',
           emailProofTokenExpiresAt: 0,
