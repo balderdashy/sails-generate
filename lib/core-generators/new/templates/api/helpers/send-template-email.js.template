@@ -151,11 +151,11 @@ module.exports = {
         '\n'+
         'But anyway, here is what WOULD have been sent:\n'+
         '-=-=-=-=-=-=-=-=-=-=-=-=-= Email log =-=-=-=-=-=-=-=-=-=-=-=-=-\n'+
-        'To: ${inputs.to}\n'+
-        'Subject: ${inputs.subject}\n'+
+        'To: '+inputs.to+'\n'+
+        'Subject: '+inputs.subject+'\n'+
         '\n'+
         'Body:\n'+
-        '${htmlEmailContents}\n'+
+        htmlEmailContents+'\n'+
         '-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-'
       );
     } else {
