@@ -43,13 +43,13 @@ module.exports = {
     var desiredEffectReEmail;// ('changeImmediately', 'beginChange', 'cancelPendingChange', 'modifyPendingChange', or '')
     if (
       newEmailAddress === undefined ||
-      (this.req.me.emailStatus !== 'changeRequested' && newEmailAddress === this.req.me.emailAddress) ||
-      (this.req.me.emailStatus === 'changeRequested' && newEmailAddress === this.req.me.emailChangeCandidate)
+      (this.req.me.emailStatus !== 'change-requested' && newEmailAddress === this.req.me.emailAddress) ||
+      (this.req.me.emailStatus === 'change-requested' && newEmailAddress === this.req.me.emailChangeCandidate)
     ) {
       desiredEffectReEmail = '';
-    } else if (this.req.me.emailStatus === 'changeRequested' && newEmailAddress === this.req.me.emailAddress) {
+    } else if (this.req.me.emailStatus === 'change-requested' && newEmailAddress === this.req.me.emailAddress) {
       desiredEffectReEmail = 'cancelPendingChange';
-    } else if (this.req.me.emailStatus === 'changeRequested' && newEmailAddress !== this.req.me.emailAddress) {
+    } else if (this.req.me.emailStatus === 'change-requested' && newEmailAddress !== this.req.me.emailAddress) {
       desiredEffectReEmail = 'modifyPendingChange';
     } else if (!sails.config.custom.verifyEmailAddresses || this.req.me.emailStatus === 'unconfirmed') {
       desiredEffectReEmail = 'changeImmediately';
@@ -98,7 +98,7 @@ module.exports = {
           emailChangeCandidate: newEmailAddress,
           emailProofToken: await sails.helpers.strings.random('url-friendly'),
           emailProofTokenExpiresAt: Date.now() + sails.config.custom.emailProofTokenTTL,
-          emailStatus: 'changeRequested'
+          emailStatus: 'change-requested'
         });
         break;
 
