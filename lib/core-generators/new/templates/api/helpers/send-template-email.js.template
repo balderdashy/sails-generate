@@ -164,7 +164,7 @@ module.exports = {
 
       if (!sails.config.custom.mailgunSecret || !sails.config.custom.mailgunDomain) {
         throw new Error(
-          'Cannot deliver email to "${inputs.to}" because:\n'+
+          'Cannot deliver email to "'+inputs.to+'" because:\n'+
           (()=>{
             let problems = [];
             if (!sails.config.custom.mailgunSecret) {
