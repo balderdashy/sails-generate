@@ -70,7 +70,8 @@ var jsFilesToInject = [
   'dependencies/lodash.js',
   'dependencies/jquery.min.js',
   'dependencies/bowser.js',
-  'dependencies/vue.js',<% } %>
+  'dependencies/vue.js',
+  'dependencies/vue-router.js',<% } %>
   'dependencies/**/*.js',
 <% if(caviar) { %>
   // First amongst the app-level files, bring in cloud configuration
