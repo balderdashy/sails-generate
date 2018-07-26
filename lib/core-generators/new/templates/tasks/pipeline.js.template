@@ -69,7 +69,6 @@ var jsFilesToInject = [
   // > Be sure to list dependencies that depend on each other in the right order!<% if(caviar) { %>
   'dependencies/lodash.js',
   'dependencies/jquery.min.js',
-  'dependencies/bowser.js',
   'dependencies/vue.js',
   'dependencies/vue-router.js',<% } %>
   'dependencies/**/*.js',
