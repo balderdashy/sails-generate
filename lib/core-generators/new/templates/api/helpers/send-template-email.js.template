@@ -144,7 +144,10 @@ module.exports = {
 
     // If that's the case, or if we're in the "test" environment, then log
     // the email instead of sending it:
-    if (sails.config.environment === 'test' || isToAddressConsideredFake) {
+    var didLogInsteadOfSending = (
+      sails.config.environment === 'test' || isToAddressConsideredFake
+    );
+    if (didLogInsteadOfSending) {
       sails.log(
         'Skipped sending email, either because the "To" email address ended in "@example.com"\n'+
         'or because the current \`sails.config.environment\` is set to "test".\n'+
@@ -201,7 +204,7 @@ module.exports = {
 
     // All done!
     return {
-      loggedInsteadOfSending: isToAddressConsideredFake
+      loggedInsteadOfSending: didLogInsteadOfSending
     };
 
   }
