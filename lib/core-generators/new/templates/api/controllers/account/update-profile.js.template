@@ -131,8 +131,7 @@ module.exports = {
       let stripeCustomerId = await sails.helpers.stripe.saveBillingInfo.with({
         stripeCustomerId: this.req.me.stripeCustomerId,
         emailAddress: newEmailAddress
-      })
-      .retry();
+      }).timeout(5000).retry();
       if (didNotAlreadyHaveCustomerId){
         await User.updateOne({ id: this.req.me.id })
         .set({
