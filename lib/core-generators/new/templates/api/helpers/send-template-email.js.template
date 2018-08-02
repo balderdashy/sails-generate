@@ -212,7 +212,7 @@ module.exports = {
         await deferred;
       } else {
         // FUTURE: take advantage of .background() here instead (when available)
-        π.exec((err)=>{
+        deferred.exec((err)=>{
           if (err) {
             sails.log.error(
               'Background instruction failed:  Could not deliver email:\n'+
