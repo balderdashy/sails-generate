@@ -59,6 +59,13 @@ module.exports = {
         'from `views/layouts/`) to an override email layout.',
       defaultsTo: 'layout-email',
       custom: (layout)=>layout===false || _.isString(layout)
+    },
+
+    ensureAck: {
+      description: 'Whether to wait for acknowledgement (to hear back) that the email was successfully sent (or at least queued for sending) before returning.',
+      extendedDescription: 'Otherwise by default, this returns immediately and delivers the request to deliver this email in the background.',
+      type: 'boolean',
+      defaultsTo: false
     }
 
   },
@@ -144,10 +151,10 @@ module.exports = {
 
     // If that's the case, or if we're in the "test" environment, then log
     // the email instead of sending it:
-    var didLogInsteadOfSending = (
+    var dontActuallySend = (
       sails.config.environment === 'test' || isToAddressConsideredFake
     );
-    if (didLogInsteadOfSending) {
+    if (dontActuallySend) {
       sails.log(
         'Skipped sending email, either because the "To" email address ended in "@example.com"\n'+
         'or because the current \`sails.config.environment\` is set to "test".\n'+
@@ -195,16 +202,37 @@ module.exports = {
         );
       }
 
-      await sails.helpers.mailgun.sendHtmlEmail.with({
+      var deferred = sails.helpers.mailgun.sendHtmlEmail.with({
         htmlMessage: htmlEmailContents,
         to: inputs.to,
         subject: inputs.subject
       });
+
+      if (inputs.ensureAck) {
+        await deferred;
+      } else {
+        // FUTURE: take advantage of .background() here instead (when available)
+        π.exec((err)=>{
+          if (err) {
+            sails.log.error(
+              'Background instruction failed:  Could not deliver email:\n'+
+              util.inspect(inputs,{depth:null})+'\n',
+              'Error details:\n'+
+              util.inspect(err)
+            );
+          } else {
+            sails.log.info(
+              'Background instruction complete:  Email sent:\n'+
+              util.inspect(inputs,{depth:null})
+            );
+          }
+        });//_∏_
+      }
     }//ﬁ
 
     // All done!
     return {
-      loggedInsteadOfSending: didLogInsteadOfSending
+      loggedInsteadOfSending: dontActuallySend
     };
 
   }
