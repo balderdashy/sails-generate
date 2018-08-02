@@ -222,7 +222,7 @@ module.exports = {
             );
           } else {
             sails.log.info(
-              'Background instruction complete:  Email sent:\n'+
+              'Background instruction complete:  Email sent (or at least queued):\n'+
               util.inspect(inputs,{depth:null})
             );
           }
