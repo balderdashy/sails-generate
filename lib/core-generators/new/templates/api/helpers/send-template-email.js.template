@@ -195,8 +195,7 @@ module.exports = {
       await sails.helpers.mailgun.sendHtmlEmail.with({
         htmlMessage: htmlEmailContents,
         to: inputs.to,
-        subject: inputs.subject,
-        testMode: false
+        subject: inputs.subject
       });
     }//ﬁ
 
