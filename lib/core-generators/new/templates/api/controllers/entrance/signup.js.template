@@ -91,7 +91,8 @@ the account verification message.)`,
     if (sails.config.custom.enableBillingFeatures) {
       let stripeCustomerId = await sails.helpers.stripe.saveBillingInfo.with({
         emailAddress: newEmailAddress
-      });
+      })
+      .retry();
       await User.updateOne(newUserRecord.id)
       .set({
         stripeCustomerId

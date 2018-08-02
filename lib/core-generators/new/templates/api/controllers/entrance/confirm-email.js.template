@@ -111,7 +111,8 @@ then redirect to either a special landing page (for newly-signed up users), or t
         let stripeCustomerId = await sails.helpers.stripe.saveBillingInfo.with({
           stripeCustomerId: user.stripeCustomerId,
           emailAddress: user.emailChangeCandidate
-        });
+        })
+        .retry();
         if (didNotAlreadyHaveCustomerId){
           await User.updateOne({ id: user.id }).set({
             stripeCustomerId
