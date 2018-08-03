@@ -22,12 +22,15 @@
 // @import 'pages/signup.less';
 //
 // etc.<% }
-else { %>// Overall styleguide
+else { %>// Styleguide  (LESS mixins, no global selectors)
 @import 'styleguide/index.less';
 
-// Overall layout
+// Overall layout  (contains global selectors)
 @import 'bootstrap-overrides.less';
 @import 'layout.less';
+
+// Per-component styles
+// @import 'components/datepicker.component.less';
 
 // Per-page styles
 @import 'pages/homepage.less';
