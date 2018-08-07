@@ -72,7 +72,8 @@ if (verbose) { %>
   fn: <%= IS_CURRENT_NODE_VERSION_CAPABLE_OF_AWAIT ? 'async function' : 'function' %> (<% if (!inferredViewTemplatePath) { %>inputs<% } %>) {
 
     <% if (inferredViewTemplatePath) { %>// Respond with view.
-    <% } %>return {};
+    return {};<% } else { %>// All done.
+    return;<% } %>
 
   }
 
