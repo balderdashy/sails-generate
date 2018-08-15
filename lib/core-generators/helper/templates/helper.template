@@ -29,12 +29,12 @@ if (verbose) { %>/**
   },
 
 
-  exits: {<%
-if (inferredSuccessOutputFriendlyName) { %>
+  exits: {
 
     success: {
-      outputFriendlyName: <%= util.inspect(inferredSuccessOutputFriendlyName) %>,
-    },<% } %>
+      <% if (inferredSuccessOutputFriendlyName) { %>outputFriendlyName: <%= util.inspect(inferredSuccessOutputFriendlyName) %>,<% }
+      else { %>description: 'All done.',<% } %>
+    },
 
   },
 
@@ -49,7 +49,9 @@ if (inferredSuccessOutputFriendlyName) { %>
     // Send back the result through the success exit.
     return <%= _.camelCase(inferredSuccessOutputFriendlyName) %>;
 
-  <% } %>}
+  <% } else { %>
+    // TODO
+  <% }%>}
 
 
 };
