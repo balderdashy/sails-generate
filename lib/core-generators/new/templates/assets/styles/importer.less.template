@@ -22,7 +22,7 @@
 // @import 'pages/signup.less';
 //
 // etc.<% }
-else { %>// Styleguide  (LESS mixins, no global selectors)
+else { %>// Styleguide  (LESS mixins/variables only, no global selectors)
 @import 'styleguide/index.less';
 
 // Overall layout  (contains global selectors)
@@ -34,7 +34,7 @@ else { %>// Styleguide  (LESS mixins, no global selectors)
 
 // Per-page styles
 @import 'pages/homepage.less';
-@import 'pages/welcome.less';
+@import 'pages/dashboard/welcome.less';
 @import 'pages/entrance/signup.less';
 @import 'pages/entrance/confirmed-email.less';
 @import 'pages/entrance/login.less';
