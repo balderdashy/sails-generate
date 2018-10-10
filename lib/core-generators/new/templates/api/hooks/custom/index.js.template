@@ -137,19 +137,23 @@ will be disabled and/or hidden in the UI.
             }//ﬁ
 
             // Next, if we're running in our actual "production" or "staging" Sails
-            // environment, check if this is a GET request via some other subdomain,
-            // for example something like `webhooks.` or `click.`.  If so, we'll
+            // environment, check if this is a GET request via some other host,
+            // for example a subdomain like `webhooks.` or `click.`.  If so, we'll
             // automatically go ahead and redirect to the corresponding path under
             // our base URL, which is environment-specific.
             // > Note that we DO NOT redirect virtual socket requests and we DO NOT
             // > redirect non-GET requests (because it can confuse some 3rd party
-            // > platforms that send webhook requests.)
-            var configuredBaseSubdomain;
+            // > platforms that send webhook requests.)  We also DO NOT redirect
+            // > requests in other environments to allow for flexibility during
+            // > development (e.g. so you can preview an app running locally on
+            // > your laptop using a local IP address or a tool like ngrok, in
+            // > case you want to run it on a real, physical mobile/IoT device)
+            var configuredBaseHostname;
             try {
-              configuredBaseSubdomain = url.parse(sails.config.custom.baseUrl).host.match(/^([^\.]+)\./)[1];
+              configuredBaseHostname = url.parse(sails.config.custom.baseUrl).host;
             } catch (unusedErr) { /*…*/}
-            if ((sails.config.environment === 'staging' || sails.config.environment === 'production') && !req.isSocket && req.method === 'GET' && req.subdomains[0] !== configuredBaseSubdomain) {
-              sails.log.info('Redirecting GET request from `'+req.subdomains[0]+'.` subdomain...');
+            if ((sails.config.environment === 'staging' || sails.config.environment === 'production') && !req.isSocket && req.method === 'GET' && req.hostname !== configuredBaseHostname) {
+              sails.log.info('Redirecting GET request from `'+req.hostname+'` to configured expected host (`'+configuredBaseHostname+'`)...');
               return res.redirect(sails.config.custom.baseUrl+req.url);
             }//•
 
