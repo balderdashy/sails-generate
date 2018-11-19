@@ -19,8 +19,8 @@
   },
 
   "parserOptions": {
-    "ecmaVersion": 5
-    // ^^This can be changed to `8` if this package doesn't need to support <= Node v6.
+    "ecmaVersion": <% if (typeof ecmaVersion === 'undefined' || (+ecmaVersion) >= 6) { %><%= typeof ecmaVersion === 'undefined' ? 8 : ecmaVersion %><% } else { %>5
+    // ^^This can be increased (e.g. to `8`) if this package doesn't need to support <= Node v6.<% } %>
   },
 
   "globals": {
@@ -62,7 +62,8 @@
     "no-unreachable":               ["warn"],
     "no-unused-vars":               ["warn", {"caughtErrors":"all", "caughtErrorsIgnorePattern": "^unused($|[A-Z].*$)", "argsIgnorePattern": "^unused($|[A-Z].*$)", "varsIgnorePattern": "^unused($|[A-Z].*$)" }],
     "no-use-before-define":         ["error", {"functions":false}],
-    "one-var":                      ["warn", "never"],
+    "one-var":                      ["warn", "never"],<% if (typeof ecmaVersion === 'undefined' || (+ecmaVersion) >= 6) { %>
+    "prefer-arrow-callback":        ["warn", {"allowNamedFunctions":false}],<% } %>
     "quotes":                       ["warn", "single", {"avoidEscape":false, "allowTemplateLiterals":true}],
     "semi":                         ["warn", "always"],
     "semi-spacing":                 ["warn", {"before":false, "after":true}],
