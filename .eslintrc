@@ -19,7 +19,8 @@
   },
 
   "parserOptions": {
-    "ecmaVersion": 8
+    "ecmaVersion": 5
+    // ^^This can be changed to `8` if this package doesn't need to support <= Node v6.
   },
 
   "globals": {
@@ -62,7 +63,6 @@
     "no-unused-vars":               ["warn", {"caughtErrors":"all", "caughtErrorsIgnorePattern": "^unused($|[A-Z].*$)", "argsIgnorePattern": "^unused($|[A-Z].*$)", "varsIgnorePattern": "^unused($|[A-Z].*$)" }],
     "no-use-before-define":         ["error", {"functions":false}],
     "one-var":                      ["warn", "never"],
-    "prefer-arrow-callback":        ["warn", {"allowNamedFunctions":false}],
     "quotes":                       ["warn", "single", {"avoidEscape":false, "allowTemplateLiterals":true}],
     "semi":                         ["warn", "always"],
     "semi-spacing":                 ["warn", {"before":false, "after":true}],
