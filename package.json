@@ -12,8 +12,8 @@
     "cross-spawn": "4.0.2",
     "flaverr": "^1.0.0",
     "fs-extra": "0.30.0",
-    "lodash": "3.10.1",
-    "machinepack-process": "^2.0.2",
+    "lodash": "^4.17.11",
+    "machinepack-process": "^4.0.0",
     "parasails": "^0.7.1",
     "read": "1.0.7",
     "reportback": "^2.0.1",
@@ -22,7 +22,7 @@
   "devDependencies": {
     "checksum": "0.1.1",
     "eslint": "4.11.0",
-    "mocha": "3.0.2"
+    "mocha": "^5.2.0"
   },
   "scripts": {
     "test": "npm run lint && npm run custom-tests",

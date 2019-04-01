@@ -166,7 +166,7 @@ module.exports = function FileHeap(options) {
    * @returns whether the pathToNewFile has been allocated
    */
   this.contains = function(pathToNewFile) {
-    return _.contains(_files, pathToNewFile);
+    return _.includes(_files, pathToNewFile);
   };
 
 };
