@@ -31,6 +31,7 @@ else { %>// Styleguide  (LESS mixins/variables only, no global selectors)
 
 // Per-component styles
 // @import 'components/datepicker.component.less';
+// @import 'components/ajax-button.component.less';
 
 // Per-page styles
 @import 'pages/homepage.less';
