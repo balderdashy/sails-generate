@@ -2,10 +2,10 @@
   //   ╔═╗╔═╗╦  ╦╔╗╔╔╦╗┬─┐┌─┐
   //   ║╣ ╚═╗║  ║║║║ ║ ├┬┘│
   //  o╚═╝╚═╝╩═╝╩╝╚╝ ╩ ┴└─└─┘
-  // A set of basic conventions (similar to .jshintrc) for use within any
-  // arbitrary JavaScript / Node.js package -- inside or outside Sails.js.
-  // For the master copy of this file, see the `.eslintrc` template file in
-  // the `sails-generate` package (https://www.npmjs.com/package/sails-generate.)
+  // A set of basic conventions for use within any arbitrary Node.js package --
+  // inside or outside the Sails framework.  For the master copy of this file,
+  // see the `.eslintrc` template file in the `sails-generate` package
+  // (https://www.npmjs.com/package/sails-generate.)
   // Designed for ESLint v4.
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // For more information about any of the rules below, check out the relevant
@@ -19,8 +19,8 @@
   },
 
   "parserOptions": {
-    "ecmaVersion": 5
-    // ^^This can be changed to `8` if this package doesn't need to support <= Node v6.
+    "ecmaVersion": <% if (typeof ecmaVersion === 'undefined' || (+ecmaVersion) >= 6) { %><%= typeof ecmaVersion === 'undefined' ? 8 : ecmaVersion %><% } else { %>5
+    // ^^This can be increased (e.g. to `8`) if this package doesn't need to support <= Node v6.<% } %>
   },
 
   "globals": {
@@ -29,6 +29,7 @@
   },
 
   "rules": {
+    "block-scoped-var":             ["error"],
     "callback-return":              ["error", ["done", "proceed", "next", "onwards", "callback", "cb"]],
     "camelcase":                    ["warn", {"properties": "always"}],
     "comma-style":                  ["warn", "last"],
@@ -61,7 +62,8 @@
     "no-unreachable":               ["warn"],
     "no-unused-vars":               ["warn", {"caughtErrors":"all", "caughtErrorsIgnorePattern": "^unused($|[A-Z].*$)", "argsIgnorePattern": "^unused($|[A-Z].*$)", "varsIgnorePattern": "^unused($|[A-Z].*$)" }],
     "no-use-before-define":         ["error", {"functions":false}],
-    "one-var":                      ["warn", "never"],
+    "one-var":                      ["warn", "never"],<% if (typeof ecmaVersion === 'undefined' || (+ecmaVersion) >= 6) { %>
+    "prefer-arrow-callback":        ["warn", {"allowNamedFunctions":false}],<% } %>
     "quotes":                       ["warn", "single", {"avoidEscape":false, "allowTemplateLiterals":true}],
     "semi":                         ["warn", "always"],
     "semi-spacing":                 ["warn", {"before":false, "after":true}],

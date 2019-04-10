@@ -2,9 +2,9 @@
   //   ╔═╗╔═╗╦  ╦╔╗╔╔╦╗┬─┐┌─┐
   //   ║╣ ╚═╗║  ║║║║ ║ ├┬┘│
   //  o╚═╝╚═╝╩═╝╩╝╚╝ ╩ ┴└─└─┘
-  // A set of basic code conventions (similar to a .jshintrc file) designed to
-  // encourage quality and consistency across your Sails app's code base.
-  // These rules are checked against automatically any time you run `npm test`.
+  // A set of basic code conventions designed to encourage quality and consistency
+  // across your Sails app's code base.  These rules are checked against
+  // automatically any time you run `npm test`.
   // <% if (typeof frontend === 'undefined' || frontend !== false) { %>
   // > An additional eslintrc override file is included in the `assets/` folder
   // > right out of the box.  This is specifically to allow for variations in acceptable
@@ -57,6 +57,7 @@
   },
 
   "rules": {
+    "block-scoped-var":             ["error"],
     "callback-return":              ["error", ["done", "proceed", "next", "onwards", "callback", "cb"]],
     "camelcase":                    ["warn", {"properties":"always"}],
     "comma-style":                  ["warn", "last"],
