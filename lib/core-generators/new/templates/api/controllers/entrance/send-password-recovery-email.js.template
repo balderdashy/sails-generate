@@ -43,7 +43,7 @@ module.exports = {
 
     // Store the token on the user record
     // (This allows us to look up the user when the link from the email is clicked.)
-    await User.update({ id: userRecord.id })
+    await User.updateOne({ id: userRecord.id })
     .set({
       passwordResetToken: token,
       passwordResetTokenExpiresAt: Date.now() + sails.config.custom.passwordResetTokenTTL,
