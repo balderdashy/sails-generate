@@ -48,11 +48,15 @@ module.exports.custom = {
   * other default settings related to "how" and "where" automated emails    *
   * are sent.                                                               *
   *                                                                         *
+  * EU accounts on Mailgun needs to use 'api.eu.mailgun.com' as host, while *
+  * every one else can ignore the setting.                                  *
+  *                                                                         *
   * (https://app.mailgun.com/app/domains)                                   *
   *                                                                         *
   **************************************************************************/
   // mailgunDomain: 'sandboxaa1234fake678.mailgun.org',
   // mailgunSecret: 'key-fakeb183848139913858e8abd9a3',
+  // mailgunHost: 'api.eu.mailgun.net',
   //--------------------------------------------------------------------------
   // /\  Configure these to enable support for automated emails.
   // ||  (Important for password recovery, verification, contact form, etc.)
