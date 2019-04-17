@@ -12,7 +12,7 @@
     "cross-spawn": "4.0.2",
     "flaverr": "^1.0.0",
     "fs-extra": "0.30.0",
-    "lodash": "3.10.1",
+    "@sailshq/lodash" : "^3.10.3",
     "machinepack-process": "^2.0.2",
     "parasails": "^0.7.1",
     "read": "1.0.7",
