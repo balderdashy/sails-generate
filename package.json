@@ -13,7 +13,7 @@
     "flaverr": "^1.0.0",
     "fs-extra": "0.30.0",
     "lodash": "3.10.1",
-    "machinepack-process": "^2.0.2",
+    "machinepack-process": "^4.0.0",
     "parasails": "^0.7.1",
     "read": "1.0.7",
     "reportback": "^2.0.1",
