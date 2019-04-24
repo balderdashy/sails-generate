@@ -42,6 +42,7 @@ lib-cov
 .idea
 .netbeans
 nbproject
+.vscode
 
 ############################
 # misc
