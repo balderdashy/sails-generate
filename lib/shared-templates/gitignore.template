@@ -40,6 +40,7 @@ lib-cov
 .\#*
 *~
 .idea
+*.iml
 .netbeans
 nbproject
 .vscode
