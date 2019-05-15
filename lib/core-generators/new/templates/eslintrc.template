@@ -28,7 +28,7 @@
 
   "parserOptions": {
     "ecmaVersion": 2018
-    ^^See https://eslint.org/docs/user-guide/migrating-to-5.0.0#experimental-object-rest-spread
+    // ^^See https://eslint.org/docs/user-guide/migrating-to-5.0.0#experimental-object-rest-spread
   },
 
   "globals": {<% if (!_.contains(without,'orm')) { %>
