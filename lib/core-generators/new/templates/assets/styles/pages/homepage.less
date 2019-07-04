@@ -1,5 +1,14 @@
 #homepage {
 
+  a:not(.btn), small a:not(.btn) {
+    color: @brand;
+    border-bottom: 1px solid @text-normal;
+    &:hover {
+      text-decoration: none;
+      color: @text-normal;
+    }
+  }
+
   .hero {
     padding-top: 100px;
     padding-bottom: 25px;
