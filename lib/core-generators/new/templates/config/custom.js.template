@@ -60,7 +60,7 @@ module.exports.custom = {
 
   // The sender that all outgoing emails will appear to come from.
   fromEmailAddress: 'noreply@example.com',
-  fromName: 'The NEW_APP_NAME Team',
+  fromName: 'The <%= sails.config.custom.platformName %> Team',
 
   // Email address for receiving support messages & other correspondences.
   // > If you're using the default privacy policy, this will be referenced
@@ -90,7 +90,16 @@ module.exports.custom = {
   *                                                                          *
   * Any other custom config this Sails app should use during development.    *
   *                                                                          *
-  ***************************************************************************/<% if (!caviar) { %>
+  ***************************************************************************/
+  
+  platformCopyrightYear: '2019',
+  platformName:  'NEW_APP_NAME',
+  platformCompanyName: 'NEW_APP_COMPANY_NAME',
+  platformCompanyAboutHref: 'https://sailsjs.com/about',
+  privacyPolicyUpdatedAt: 'July 16, 2019',
+  termsOfServiceUpdatedAt: 'July 16, 2019'
+
+  <% if (!caviar) { %>
   // mailgunDomain: 'transactional-mail.example.com',
   // mailgunSecret: 'key-testkeyb183848139913858e8abd9a3',
   // stripeSecret: 'sk_test_Zzd814nldl91104qor5911gjald',<% } %>
