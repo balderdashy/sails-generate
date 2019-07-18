@@ -96,8 +96,8 @@ module.exports.custom = {
   platformName:  'NEW_APP_NAME',
   platformCompanyName: 'NEW_APP_COMPANY_NAME',
   platformCompanyAboutHref: 'https://sailsjs.com/about',
-  privacyPolicyUpdatedAt: 'July 16, 2019',
-  termsOfServiceUpdatedAt: 'July 16, 2019'
+  privacyPolicyUpdatedAt: 'DATE_PRIVACY_POLICY_LAST_UPDATED',
+  termsOfServiceUpdatedAt: 'DATE_TERMS_OF_SERVICE_LAST_UPDATED'
 
   <% if (!caviar) { %>
   // mailgunDomain: 'transactional-mail.example.com',
