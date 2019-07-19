@@ -38,7 +38,7 @@ module.exports.custom = {
   platformCompanyName: 'NEW_APP_COMPANY_NAME',
   platformCompanyAboutHref: 'https://sailsjs.com/about',
   privacyPolicyUpdatedAt: 'DATE_PRIVACY_POLICY_LAST_UPDATED',
-  termsOfServiceUpdatedAt: 'DATE_TERMS_OF_SERVICE_LAST_UPDATED'
+  termsOfServiceUpdatedAt: 'DATE_TERMS_OF_SERVICE_LAST_UPDATED',
 
   /**************************************************************************
   *                                                                         *
