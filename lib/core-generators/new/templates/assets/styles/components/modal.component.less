@@ -1,0 +1,25 @@
+
+/**
+ * <modal>
+ *
+ * App-wide styles for our modals.
+ */
+
+[parasails-component='modal'] {
+  .modal {
+    -webkit-overflow-scrolling: touch;//« makes this actually scrollable on certain phones
+    .petticoat {
+      position: fixed;
+      width: 100%;
+      height: 75px;// should cover topbar
+      z-index: 50;
+      left: 0px;
+      top: 0px;
+      background-color: @accent-white;
+    }
+    .modal-dialog {
+      z-index: 100;
+      position: relative;
+    }
+  }
+}

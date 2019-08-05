@@ -26,11 +26,11 @@ else { %>// Styleguide  (LESS mixins/variables only, no global selectors)
 @import 'styleguide/index.less';
 
 // Overall layout  (contains global selectors)
-@import 'bootstrap-overrides.less';
+@import 'bootstrap-patches.less';
 @import 'layout.less';
 
 // Per-component styles
-// @import 'components/datepicker.component.less';
+@import 'components/modal.component.less';
 @import 'components/ajax-button.component.less';
 
 // Per-page styles
