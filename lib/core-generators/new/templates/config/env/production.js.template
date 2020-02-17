@@ -306,6 +306,9 @@ module.exports = {
     * The number of milliseconds to cache static assets in production.         *
     * (the "max-age" to include in the "Cache-Control" response header)        *
     *                                                                          *
+    * If you are caching assets with a tool like Cloudflare, you may want to   *
+    * reduce this considerably to allow more flexability in purging the cache. *
+    *                                                                          *
     ***************************************************************************/
     cache: 365.25 * 24 * 60 * 60 * 1000, // One year
 
