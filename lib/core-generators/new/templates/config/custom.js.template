@@ -60,17 +60,16 @@ module.exports.custom = {
   *                                                                         *
   * Automated email configuration                                           *
   *                                                                         *
-  * Sandbox Mailgun credentials for use during development, as well as any  *
+  * Sandbox Sendgrid credentials for use during development, as well as any *
   * other default settings related to "how" and "where" automated emails    *
   * are sent.                                                               *
   *                                                                         *
-  * (https://app.mailgun.com/app/domains)                                   *
+  * (https://app.sendgrid.com/settings/api_keys)                            *
   *                                                                         *
   **************************************************************************/
-  // mailgunDomain: 'sandboxaa1234fake678.mailgun.org',
-  // mailgunSecret: 'key-fakeb183848139913858e8abd9a3',
+  // sendgridSecret: 'SG.fake.3e0Bn0qSQVnwb1E4qNPz9JZP5vLZYqjh7sn8S93oSHU',
   //--------------------------------------------------------------------------
-  // /\  Configure these to enable support for automated emails.
+  // /\  Configure this to enable support for automated emails.
   // ||  (Important for password recovery, verification, contact form, etc.)
   //--------------------------------------------------------------------------
 

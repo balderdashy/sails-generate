@@ -14,6 +14,7 @@ module.exports = {
 
   inputs: {
 
+
     template: {
       description: 'The relative path to an EJS template within our `views/emails/` folder -- WITHOUT the file extension.',
       extendedDescription: 'Use strings like "foo" or "foo/bar", but NEVER "foo/bar.ejs".  For example, '+
@@ -44,14 +45,31 @@ module.exports = {
       description: 'The email address of the primary recipient.',
       extendedDescription: 'If this is any address ending in "@example.com", then don\'t actually deliver the message. '+
         'Instead, just log it to the console.',
-      example: 'foo@bar.com',
-      required: true
+      example: 'nola.thacker@example.com',
+      required: true,
+      isEmail: true,
+    },
+
+    toName: {
+      description: 'Full name of the primary recipient.',
+      example: 'Nola Thacker',
     },
 
     subject: {
       description: 'The subject of the email.',
       example: 'Hello there.',
       defaultsTo: ''
+    },
+
+    from: {
+      description: 'An override for the default "from" email that\'s been configured.',
+      example: 'anne.martin@example.com',
+      isEmail: true,
+    },
+
+    fromName: {
+      description: 'An override for the default "from" name.',
+      example: 'Anne Martin',
     },
 
     layout: {
@@ -66,7 +84,27 @@ module.exports = {
       extendedDescription: 'Otherwise by default, this returns immediately and delivers the request to deliver this email in the background.',
       type: 'boolean',
       defaultsTo: false
-    }
+    },
+
+    bcc: {
+      description: 'The email addresses of recipients secretly copied on the email.',
+      example: ['jahnna.n.malcolm@example.com'],
+    },
+
+    attachments: {
+      description: 'Attachments to include in the email, with the file content encoded as base64.',
+      whereToGet: {
+        description: 'If you have `sails-hook-uploads` installed, you can use `sails.reservoir` to get an attachment into the expected format.',
+      },
+      example: [
+        {
+          contentBytes: 'iVBORw0KGgoAA…',
+          name: 'sails.png',
+          type: 'image/png',
+        }
+      ],
+      defaultsTo: [],
+    },
 
   },
 
@@ -84,14 +122,14 @@ module.exports = {
   },
 
 
-  fn: async function(inputs) {
+  fn: async function({template, templateData, to, toName, subject, from, fromName, layout, ensureAck, bcc, attachments}) {
 
     var path = require('path');
     var url = require('url');
     var util = require('util');
 
 
-    if (!_.startsWith(path.basename(inputs.template), 'email-')) {
+    if (!_.startsWith(path.basename(template), 'email-')) {
       sails.log.warn(
         'The "template" that was passed in to `sendTemplateEmail()` does not begin with '+
         '"email-" -- but by convention, all email template files in `views/emails/` should '+
@@ -101,7 +139,7 @@ module.exports = {
       );
     }
 
-    if (_.startsWith(inputs.template, 'views/') || _.startsWith(inputs.template, 'emails/')) {
+    if (_.startsWith(template, 'views/') || _.startsWith(template, 'emails/')) {
       throw new Error(
         'The "template" that was passed in to `sendTemplateEmail()` was prefixed with\n'+
         '`emails/` or `views/` -- but that part is supposed to be omitted.  Instead, please\n'+
@@ -115,12 +153,12 @@ module.exports = {
     }//•
 
     // Determine appropriate email layout and template to use.
-    var emailTemplatePath = path.join('emails/', inputs.template);
-    var layout;
-    if (inputs.layout) {
-      layout = path.relative(path.dirname(emailTemplatePath), path.resolve('layouts/', inputs.layout));
+    var emailTemplatePath = path.join('emails/', template);
+    var emailTemplateLayout;
+    if (layout) {
+      emailTemplateLayout = path.relative(path.dirname(emailTemplatePath), path.resolve('layouts/', layout));
     } else {
-      layout = false;
+      emailTemplateLayout = false;
     }
 
     // Compile HTML template.
@@ -129,7 +167,7 @@ module.exports = {
     // > `util` package (for dumping debug data in internal emails).
     var htmlEmailContents = await sails.renderView(
       emailTemplatePath,
-      _.extend({layout, url, util }, inputs.templateData)
+      _.extend({layout: emailTemplateLayout, url, util }, templateData)
     )
     .intercept((err)=>{
       err.message =
@@ -147,7 +185,7 @@ module.exports = {
     // > for convenience during development, but also for safety.  (For example,
     // > a special-cased version of "user@example.com" is used by Trend Micro Mars
     // > scanner to "check apks for malware".)
-    var isToAddressConsideredFake = Boolean(inputs.to.match(/@example\.com$/i));
+    var isToAddressConsideredFake = Boolean(to.match(/@example\.com$/i));
 
     // If that's the case, or if we're in the "test" environment, then log
     // the email instead of sending it:
@@ -161,8 +199,8 @@ module.exports = {
         '\n'+
         'But anyway, here is what WOULD have been sent:\n'+
         '-=-=-=-=-=-=-=-=-=-=-=-=-= Email log =-=-=-=-=-=-=-=-=-=-=-=-=-\n'+
-        'To: '+inputs.to+'\n'+
-        'Subject: '+inputs.subject+'\n'+
+        'To: '+to+'\n'+
+        'Subject: '+subject+'\n'+
         '\n'+
         'Body:\n'+
         htmlEmailContents+'\n'+
@@ -172,27 +210,24 @@ module.exports = {
       // Otherwise, we'll check that all required Mailgun credentials are set up
       // and, if so, continue to actually send the email.
 
-      if (!sails.config.custom.mailgunSecret || !sails.config.custom.mailgunDomain) {
+      if (!sails.config.custom.sendgridSecret) {
         throw new Error(
-          'Cannot deliver email to "'+inputs.to+'" because:\n'+
+          'Cannot deliver email to "'+to+'" because:\n'+
           (()=>{
             let problems = [];
-            if (!sails.config.custom.mailgunSecret) {
-              problems.push(' • Mailgun secret is missing from this app\'s configuration (`sails.config.custom.mailgunSecret`)');
-            }
-            if (!sails.config.custom.mailgunDomain) {
-              problems.push(' • Mailgun domain is missing from this app\'s configuration (`sails.config.custom.mailgunDomain`)');
+            if (!sails.config.custom.sendgridSecret) {
+              problems.push(' • Sendgrid secret is missing from this app\'s configuration (`sails.config.custom.sendgridSecret`)');
             }
             return problems.join('\n');
           })()+
           '\n'+
           'To resolve these configuration issues, add the missing config variables to\n'+
           '\`config/custom.js\`-- or in staging/production, set them up as system\n'+
-          'environment vars.  (If you don\'t have a Mailgun domain or secret, you can\n'+
-          'sign up for free at https://mailgun.com to receive sandbox credentials.)\n'+
+          'environment vars.  (If you don\'t have a Sendgrid secret, you can\n'+
+          'sign up for free at https://sendgrid.com to receive credentials.)\n'+
           '\n'+
           '> Note that, for convenience during development, there is another alternative:\n'+
-          '> In lieu of setting up real Mailgun credentials, you can "fake" email\n'+
+          '> In lieu of setting up real Sendgrid credentials, you can "fake" email\n'+
           '> delivery by using any email address that ends in "@example.com".  This will\n'+
           '> write automated emails to your logs rather than actually sending them.\n'+
           '> (To simulate clicking on a link from an email, just copy and paste the link\n'+
@@ -202,13 +237,20 @@ module.exports = {
         );
       }
 
-      var deferred = sails.helpers.mailgun.sendHtmlEmail.with({
+      var subjectLinePrefix = sails.config.environment === 'production' ? '' : sails.config.environment === 'staging' ? '[FROM STAGING] ' : '[FROM LOCALHOST] ';
+      var messageData = {
         htmlMessage: htmlEmailContents,
-        to: inputs.to,
-        subject: inputs.subject
-      });
+        to: to,
+        toName: toName,
+        bcc: bcc,
+        subject: subjectLinePrefix+subject,
+        from: from,
+        fromName: fromName,
+        attachments
+      };
 
-      if (inputs.ensureAck) {
+      var deferred = sails.helpers.sendgrid.sendHtmlEmail.with(messageData);
+      if (ensureAck) {
         await deferred;
       } else {
         // FUTURE: take advantage of .background() here instead (when available)
@@ -216,14 +258,14 @@ module.exports = {
           if (err) {
             sails.log.error(
               'Background instruction failed:  Could not deliver email:\n'+
-              util.inspect(inputs,{depth:null})+'\n',
+              util.inspect({template, templateData, to, toName, subject, from, fromName, layout, ensureAck, bcc, attachments},{depth:null})+'\n',
               'Error details:\n'+
               util.inspect(err)
             );
           } else {
             sails.log.info(
-              'Background instruction complete:  Email sent (or at least queued):\n'+
-              util.inspect(inputs,{depth:null})
+              'Background instruction complete:  Email sent via email delivery service (or at least queued):\n'+
+              util.inspect({to, toName, subject, from, fromName, bcc},{depth:null})
             );
           }
         });//_∏_
@@ -232,7 +274,7 @@ module.exports = {
 
     // All done!
     return {
-      loggedInsteadOfSending: dontActuallySend
+      loggedInsteadOfSending: dontActuallySend,
     };
 
   }
