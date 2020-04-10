@@ -84,6 +84,7 @@ will be disabled and/or hidden in the UI.
         sails.helpers.mailgun.configure({
           secret: sails.config.custom.mailgunSecret,
           domain: sails.config.custom.mailgunDomain,
+          hosy: sails.config.custom.mailgunHost,
           from: sails.config.custom.fromEmailAddress,
           fromName: sails.config.custom.fromName,
         });
