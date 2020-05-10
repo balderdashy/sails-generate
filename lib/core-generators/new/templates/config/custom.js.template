@@ -14,7 +14,7 @@ module.exports.custom = {
   *                                                                         *
   * The base URL to use during development.                                 *
   *                                                                         *
-  * • No trailing slash at the end                                          *
+  * • No trailing slash at the end                                          *
   * • `http://` or `https://` at the beginning.                             *
   *                                                                         *
   * > This is for use in custom logic that builds URLs.                     *
@@ -60,16 +60,17 @@ module.exports.custom = {
   *                                                                         *
   * Automated email configuration                                           *
   *                                                                         *
-  * Sandbox Sendgrid credentials for use during development, as well as any *
+  * Sandbox Mailgun credentials for use during development, as well as any  *
   * other default settings related to "how" and "where" automated emails    *
   * are sent.                                                               *
   *                                                                         *
-  * (https://app.sendgrid.com/settings/api_keys)                            *
+  * (https://app.mailgun.com/app/domains)                                   *
   *                                                                         *
   **************************************************************************/
-  // sendgridSecret: 'SG.fake.3e0Bn0qSQVnwb1E4qNPz9JZP5vLZYqjh7sn8S93oSHU',
+  // mailgunDomain: 'sandboxaa1234fake678.mailgun.org',
+  // mailgunSecret: 'key-fakeb183848139913858e8abd9a3',
   //--------------------------------------------------------------------------
-  // /\  Configure this to enable support for automated emails.
+  // /\  Configure these to enable support for automated emails.
   // ||  (Important for password recovery, verification, contact form, etc.)
   //--------------------------------------------------------------------------
 
@@ -106,7 +107,8 @@ module.exports.custom = {
   * Any other custom config this Sails app should use during development.    *
   *                                                                          *
   ***************************************************************************/<% if (!caviar) { %>
-  // sendgridSecret: 'SG.fake.3e0Bn0qSQVnwb1E4qNPz9JZP5vLZYqjh7sn8S93oSHU',
+  // mailgunDomain: 'transactional-mail.example.com',
+  // mailgunSecret: 'key-testkeyb183848139913858e8abd9a3',
   // stripeSecret: 'sk_test_Zzd814nldl91104qor5911gjald',<% } %>
   // …
 

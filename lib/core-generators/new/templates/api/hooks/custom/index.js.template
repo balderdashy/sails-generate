@@ -14,15 +14,15 @@ module.exports = function defineCustomHook(sails) {
 
       sails.log.info('Initializing project hook... (`api/hooks/custom/`)');
 
-      // Check Stripe/Sendgrid configuration (for billing and emails).
+      // Check Stripe/Mailgun configuration (for billing and emails).
       var IMPORTANT_STRIPE_CONFIG = ['stripeSecret', 'stripePublishableKey'];
-      var IMPORTANT_SENDGRID_CONFIG = ['sendgridSecret', 'internalEmailAddress'];
+      var IMPORTANT_MAILGUN_CONFIG = ['mailgunSecret', 'mailgunDomain', 'internalEmailAddress'];
       var isMissingStripeConfig = _.difference(IMPORTANT_STRIPE_CONFIG, Object.keys(sails.config.custom)).length > 0;
-      var isMissingSendgridConfig = _.difference(IMPORTANT_SENDGRID_CONFIG, Object.keys(sails.config.custom)).length > 0;
+      var isMissingMailgunConfig = _.difference(IMPORTANT_MAILGUN_CONFIG, Object.keys(sails.config.custom)).length > 0;
 
-      if (isMissingStripeConfig || isMissingSendgridConfig) {
+      if (isMissingStripeConfig || isMissingMailgunConfig) {
 
-        let missingFeatureText = isMissingStripeConfig && isMissingSendgridConfig ? 'billing and email' : isMissingStripeConfig ? 'billing' : 'email';
+        let missingFeatureText = isMissingStripeConfig && isMissingMailgunConfig ? 'billing and email' : isMissingStripeConfig ? 'billing' : 'email';
         let suffix = '';
         if (_.contains(['silly'], sails.config.log.level)) {
           suffix =
@@ -47,8 +47,11 @@ module.exports = function defineCustomHook(sails) {
         if (sails.config.custom.stripePublishableKey === undefined) {
           problems.push('No `sails.config.custom.stripePublishableKey` was configured.');
         }
-        if (sails.config.custom.sendgridSecret === undefined) {
-          problems.push('No `sails.config.custom.sendgridSecret` was configured.');
+        if (sails.config.custom.mailgunSecret === undefined) {
+          problems.push('No `sails.config.custom.mailgunSecret` was configured.');
+        }
+        if (sails.config.custom.mailgunDomain === undefined) {
+          problems.push('No `sails.config.custom.mailgunDomain` was configured.');
         }
         if (sails.config.custom.internalEmailAddress === undefined) {
           problems.push('No `sails.config.custom.internalEmailAddress` was configured.');
@@ -71,15 +74,16 @@ will be disabled and/or hidden in the UI.
       sails.config.custom.enableBillingFeatures = !isMissingStripeConfig;
 
       // After "sails-hook-organics" finishes initializing, configure Stripe
-      // and Sendgrid packs with any available credentials.
+      // and Mailgun packs with any available credentials.
       sails.after('hook:organics:loaded', ()=>{
 
         sails.helpers.stripe.configure({
           secret: sails.config.custom.stripeSecret
         });
 
-        sails.helpers.sendgrid.configure({
-          secret: sails.config.custom.sendgridSecret,
+        sails.helpers.mailgun.configure({
+          secret: sails.config.custom.mailgunSecret,
+          domain: sails.config.custom.mailgunDomain,
           from: sails.config.custom.fromEmailAddress,
           fromName: sails.config.custom.fromName,
         });
