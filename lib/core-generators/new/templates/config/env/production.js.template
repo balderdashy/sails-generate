@@ -60,15 +60,15 @@ module.exports = {
       //--------------------------------------------------------------------------
 
       /****************************************************************************
-      *                                                                           *
+      *                                                                           *
       * More adapter-specific options                                             *
-      *                                                                           *
+      *                                                                           *
       * > For example, for some hosted PostgreSQL providers (like Heroku), the    *
       * > extra `ssl: true` option is mandatory and must be provided.             *
-      *                                                                           *
-      * More info:                                                                *
-      * https://sailsjs.com/config/datastores                                     *
-      *                                                                           *
+      *                                                                           *
+      * More info:                                                                *
+      * https://sailsjs.com/config/datastores                                     *
+      *                                                                           *
       ****************************************************************************/
       // ssl: true,
 
@@ -379,7 +379,8 @@ module.exports = {
     baseUrl: 'https://example.com',
     internalEmailAddress: 'support@example.com',
 
-    // sendgridSecret: 'SG.fake.3e0Bn0qSQVnwb1E4qNPz9JZP5vLZYqjh7sn8S93oSHU',
+    // mailgunDomain: 'mg.example.com',
+    // mailgunSecret: 'key-prod_fake_bd32301385130a0bafe030c',
     // stripeSecret: 'sk_prod__fake_Nfgh82401348jaDa3lkZ0d9Hm',
     //--------------------------------------------------------------------------
     // /\   OR, to avoid checking them in to version control, you might opt to
@@ -387,7 +388,8 @@ module.exports = {
     //
     // For example:
     // ```
-    // sendgridSecret=SG.fake.3e0Bn0qSQVnwb1E4qNPz9JZP5vLZYqjh7sn8S93oSHU
+    // sails_custom__mailgunDomain=mg.example.com
+    // sails_custom__mailgunSecret=key-prod_fake_bd32301385130a0bafe030c
     // sails_custom__stripeSecret=sk_prod__fake_Nfgh82401348jaDa3lkZ0d9Hm
     // ```
     //--------------------------------------------------------------------------
