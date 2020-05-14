@@ -21,7 +21,9 @@
 // @import 'pages/login.less';
 // @import 'pages/signup.less';
 //
-// etc.<% }
+// etc.
+
+/*! This special bang (!) comment is here to trick the `hash` Grunt task into working out-of-the-box, without any real CSS. You can delete this once you've imported ≥1 .less file as demonstrated above. */<% }
 else { %>// Styleguide  (LESS mixins/variables only, no global selectors)
 @import 'styleguide/index.less';
 
