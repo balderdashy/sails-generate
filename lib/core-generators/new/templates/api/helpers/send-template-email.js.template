@@ -51,7 +51,7 @@ module.exports = {
     },
 
     toName: {
-      description: 'Full name of the primary recipient.',
+      description: 'Name of the primary recipient as displayed in their inbox.',
       example: 'Nola Thacker',
     },
 
