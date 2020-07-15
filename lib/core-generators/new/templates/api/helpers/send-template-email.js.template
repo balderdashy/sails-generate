@@ -17,8 +17,8 @@ module.exports = {
 
     template: {
       description: 'The relative path to an EJS template within our `views/emails/` folder -- WITHOUT the file extension.',
-      extendedDescription: 'Use strings like "foo" or "foo/bar", but NEVER "foo/bar.ejs".  For example, '+
-        '"marketing/welcome" would send an email using the "views/emails/marketing/welcome.ejs" template.',
+      extendedDescription: 'Use strings like "foo" or "foo/bar", but NEVER "foo/bar.ejs" or "/foo/bar".  For example, '+
+        '"internal/email-contact-form" would send an email using the "views/emails/internal/email-contact-form.ejs" template.',
       example: 'email-reset-password',
       type: 'string',
       required: true
