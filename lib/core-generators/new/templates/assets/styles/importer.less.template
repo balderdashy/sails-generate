@@ -35,6 +35,7 @@ else { %>// Styleguide  (LESS mixins/variables only, no global selectors)
 @import 'components/ajax-button.component.less';
 @import 'components/modal.component.less';
 @import 'components/cloud-error.component.less';
+@import 'components/stripe-card-element.component.less';
 
 // Per-page styles
 @import 'pages/homepage.less';
