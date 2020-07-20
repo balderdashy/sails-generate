@@ -66,16 +66,16 @@ the account verification message.)`,
   },
 
 
-  fn: async function (inputs) {
+  fn: async function ({emailAddress, password, fullName}) {
 
-    var newEmailAddress = inputs.emailAddress.toLowerCase();
+    var newEmailAddress = emailAddress.toLowerCase();
 
     // Build up data for the new user record and save it to the database.
     // (Also use `fetch` to retrieve the new ID so that we can use it below.)
     var newUserRecord = await User.create(_.extend({
+      fullName,
       emailAddress: newEmailAddress,
-      password: await sails.helpers.passwords.hashPassword(inputs.password),
-      fullName: inputs.fullName,
+      password: await sails.helpers.passwords.hashPassword(password),
       tosAcceptedByIp: this.req.ip
     }, sails.config.custom.verifyEmailAddresses? {
       emailProofToken: await sails.helpers.strings.random('url-friendly'),
@@ -112,7 +112,7 @@ the account verification message.)`,
         subject: 'Please confirm your account',
         template: 'email-verify-account',
         templateData: {
-          fullName: inputs.fullName,
+          fullName,
           token: newUserRecord.emailProofToken
         }
       });
