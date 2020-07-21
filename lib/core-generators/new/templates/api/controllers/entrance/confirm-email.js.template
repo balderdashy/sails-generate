@@ -46,15 +46,15 @@ then redirect to either a special landing page (for newly-signed up users), or t
   },
 
 
-  fn: async function (inputs) {
+  fn: async function ({token}) {
 
     // If no token was provided, this is automatically invalid.
-    if (!inputs.token) {
+    if (!token) {
       throw 'invalidOrExpiredToken';
     }
 
     // Get the user with the matching email token.
-    var user = await User.findOne({ emailProofToken: inputs.token });
+    var user = await User.findOne({ emailProofToken: token });
 
     // If no such user exists, or their token is expired, bail.
     if (!user || user.emailProofTokenExpiresAt <= Date.now()) {
