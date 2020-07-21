@@ -1,106 +1,33 @@
 #homepage {
 
-  .hero {
-    padding-top: 100px;
-    padding-bottom: 25px;
-    color: @brand;
-    position: relative;
-    .hero-image {
-      width: 220px;
-      height: 170px;
+  .cloud {
+    .fly-fade();
+    opacity: 0;
+    &.cloud-1 {
+      .animation-delay(3.5s);
+    }
+  }
+  .ship {
+    .skid();
+  }
+  .more-info-text {
+    .bob();
+  }
+  .feature {
+    .icon {
+      background-color: @brand;
+      color: @accent-white;
+      width: 75px;
+      height: 75px;
       margin-left: auto;
       margin-right: auto;
-      position: relative;
-      img {
-        position: absolute;
-      }
-      .sky {
-        width: 170px;
-        left: 25px;
-        top: 25px;
-      }
-      .cloud {
-        .fly-fade();
-        width: 80px;
-        &.cloud-1 {
-          top: 55px;
-          left: -40px;
-          opacity: 0;
-          .animation-delay(3.5s);
-        }
-        &.cloud-2 {
-          top: 45px;
-          left: -40px;
-          opacity: 0;
-        }
-      }
-      .ship {
-        .skid();
-        width: 160px;
-        bottom: 50px;
-        left: 18px;
-      }
-      .water {
-        width: 170px;
-        bottom: 40px;
-        left: 25px;
-      }
-    }
-    h1 {
-      padding-bottom: 50px;
-    }
-    .more-info-text {
-      .bob();
-      cursor: pointer;
-      margin-top: 75px;
-      position: absolute;
-      width: 100%;
-      bottom: 25px;
-      left: 0px;
-      .text {
-        font-size: 16px;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        font-weight: 700;
-      }
-      .icon {
-        font-size: 20px;
-      }
+      margin-bottom: 25px;
+      border-radius: 50%;
+      font-size: 35px;
+      line-height: 75px;
+      text-align: center;
     }
   }
-
-  .about-wrapper {
-    background-color: #eef5f9b8;
-    .about {
-      padding-top: 75px;
-      padding-bottom: 50px;
-      p {
-        max-width: 800px;
-        margin-left: auto;
-        margin-right: auto;
-      }
-    }
-    .features {
-      padding-top: 25px;
-      padding-bottom: 100px;
-      .feature {
-        .icon {
-          background-color: @brand;
-          color: @accent-white;
-          width: 75px;
-          height: 75px;
-          margin-left: auto;
-          margin-right: auto;
-          margin-bottom: 25px;
-          border-radius: 50%;
-          font-size: 35px;
-          line-height: 75px;
-          text-align: center;
-        }
-      }
-    }
-  }
-
 
   .setup {
     padding-top: 75px;
