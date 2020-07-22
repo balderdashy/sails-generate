@@ -14,7 +14,7 @@
     "flaverr": "^1.0.0",
     "fs-extra": "0.30.0",
     "machinepack-process": "^4.0.0",
-    "parasails": "^0.7.1",
+    "parasails": "^0.9.2",
     "read": "1.0.7",
     "reportback": "^2.0.1",
     "sails.io.js-dist": "^1.0.0"
