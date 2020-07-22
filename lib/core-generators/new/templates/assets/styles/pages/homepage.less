@@ -13,39 +13,8 @@
   .more-info-text {
     .bob();
   }
-  .feature {
-    .icon {
-      background-color: @brand;
-      color: @accent-white;
-      width: 75px;
-      height: 75px;
-      margin-left: auto;
-      margin-right: auto;
-      margin-bottom: 25px;
-      border-radius: 50%;
-      font-size: 35px;
-      line-height: 75px;
-      text-align: center;
-    }
-  }
-
-  .setup {
-    padding-top: 75px;
-    .step {
-      margin-top: 75px;
-      margin-bottom: 75px;
-      padding-left: 240px;
-      position: relative;
-      .step-image {
-        position: absolute;
-        left: 0px;
-        top: 0px;
-        width: 140px;
-        img {
-          width: 100%;
-        }
-      }
-    }
+  [purpose='setup-step'] {
+    padding-left: 240px;
   }
 
   .pep-talk {
@@ -69,12 +38,10 @@
   }
 
   @media (max-width: 991px) {
-    .setup {
-      .step {
-        padding-left: 0px;
-        .step-image {
-          display: none;
-        }
+    [purpose='setup-step'] {
+      padding-left: 0px;
+      [purpose='setup-step-image-wrapper'] {
+        display: none;
       }
     }
   }
