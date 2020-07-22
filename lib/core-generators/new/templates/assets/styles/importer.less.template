@@ -32,6 +32,7 @@ else { %>// Mixins and variables  (LESS mixins/variables only, no global selecto
 @import 'layout.less';
 
 // Per-component styles
+@import 'components/stripe-card-element.component.less';
 @import 'components/ajax-button.component.less';
 @import 'components/modal.component.less';
 @import 'components/cloud-error.component.less';
