@@ -18,6 +18,12 @@
   [purpose='setup-step'] {
     padding-left: 240px;
   }
+  &.uninitialized {
+    height: 100%;
+    .hero, .about, .features, .setup, .pep-talk {
+      opacity: 0;
+    }
+  }
 
   @media (max-width: 991px) {
     [purpose='setup-step'] {
