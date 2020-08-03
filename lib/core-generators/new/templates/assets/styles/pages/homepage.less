@@ -1,35 +1,27 @@
 #homepage {
 
-  .cloud {
+  [purpose='cloud-1'] {
     .fly-fade();
     opacity: 0;
-    &.cloud-1 {
-      .animation-delay(3.5s);
     }
+  [purpose='cloud-2']  {
+    .fly-fade();
+    .animation-delay(3.5s);
+    opacity: 0;
   }
-  .ship {
+  [purpose='ship'] {
     .skid();
   }
-  .more-info-text {
+  [purpose='more-info-text'] {
     .bob();
   }
   [purpose='setup-step'] {
     padding-left: 240px;
   }
 
-  &.uninitialized {
-    height: 100%;
-    .hero, .about, .features, .setup, .pep-talk {
-      opacity: 0;
-    }
-  }
-
   @media (max-width: 991px) {
     [purpose='setup-step'] {
       padding-left: 0px;
-      [purpose='setup-step-image-wrapper'] {
-        display: none;
-      }
     }
   }
 }
