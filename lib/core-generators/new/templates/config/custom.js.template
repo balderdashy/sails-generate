@@ -26,19 +26,13 @@ module.exports.custom = {
 
   /**************************************************************************
   *                                                                         *
-  * Display names/dates for your app                                        *
+  * Display dates for your app                                              *
   *                                                                         *
-  * > These are here to make it easier to change out the placeholder        *
-  * > platform name, company name, etc. that are displayed all over the     *
-  * > app when it's first generated.                                        *
+  * > This is here to make it easier to change out the copyright date       *
+  * > that is displayed all over the app when it's first generated.         *
   *                                                                         *
   **************************************************************************/
-  platformCopyrightYear: '2019',
-  platformName:  'NEW_APP_NAME',
-  platformCompanyName: 'NEW_APP_COMPANY_NAME',
-  platformCompanyAboutHref: 'https://sailsjs.com/about',
-  privacyPolicyUpdatedAt: 'DATE_PRIVACY_POLICY_LAST_UPDATED',
-  termsOfServiceUpdatedAt: 'DATE_TERMS_OF_SERVICE_LAST_UPDATED',
+  platformCopyrightYear: '2020',
 
   /**************************************************************************
   *                                                                         *
