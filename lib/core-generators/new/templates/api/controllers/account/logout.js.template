@@ -34,11 +34,13 @@ actually logged in.  (If they weren't, then this action is just a no-op.)`,
 
   fn: async function () {
 
-    let roomName = `session${_.deburr(this.req.sessionID)}`;
-    sails.sockets.broadcast(roomName, 'session', {verb: 'signedOut'});
 
     // Clear the `userId` property from this session.
     delete this.req.session.userId;
+
+    if (sails.hooks.sockets) {
+      await sails.helpers.broadcastSessionChange(this.req);
+    }
 
     // Then finish up, sending an appropriate response.
     // > Under the covers, this persists the now-logged-out session back
