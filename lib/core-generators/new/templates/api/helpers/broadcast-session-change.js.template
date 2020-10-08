@@ -34,7 +34,7 @@ module.exports = {
     }
 
     let roomName = `session${_.deburr(req.sessionID)}`;
-    let messageText = `You have signed out or signed in as a different user in another tab or window. Reload the page to refresh your session.`;
+    let messageText = `You have signed out or signed into a different session in another tab or window. Reload the page to refresh your session.`;
     sails.sockets.broadcast(roomName, 'session', { notificationText: messageText }, req);
 
 
