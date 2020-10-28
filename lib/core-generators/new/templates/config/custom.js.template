@@ -26,6 +26,16 @@ module.exports.custom = {
 
   /**************************************************************************
   *                                                                         *
+  * Display dates for your app                                              *
+  *                                                                         *
+  * > This is here to make it easier to change out the copyright date       *
+  * > that is displayed all over the app when it's first generated.         *
+  *                                                                         *
+  **************************************************************************/
+  platformCopyrightYear: '2020',
+
+  /**************************************************************************
+  *                                                                         *
   * The TTL (time-to-live) for various sorts of tokens before they expire.  *
   *                                                                         *
   **************************************************************************/
@@ -44,17 +54,16 @@ module.exports.custom = {
   *                                                                         *
   * Automated email configuration                                           *
   *                                                                         *
-  * Sandbox Mailgun credentials for use during development, as well as any  *
+  * Sandbox Sendgrid credentials for use during development, as well as any *
   * other default settings related to "how" and "where" automated emails    *
   * are sent.                                                               *
   *                                                                         *
-  * (https://app.mailgun.com/app/domains)                                   *
+  * (https://app.sendgrid.com/settings/api_keys)                            *
   *                                                                         *
   **************************************************************************/
-  // mailgunDomain: 'sandboxaa1234fake678.mailgun.org',
-  // mailgunSecret: 'key-fakeb183848139913858e8abd9a3',
+  // sendgridSecret: 'SG.fake.3e0Bn0qSQVnwb1E4qNPz9JZP5vLZYqjh7sn8S93oSHU',
   //--------------------------------------------------------------------------
-  // /\  Configure these to enable support for automated emails.
+  // /\  Configure this to enable support for automated emails.
   // ||  (Important for password recovery, verification, contact form, etc.)
   //--------------------------------------------------------------------------
 
@@ -63,6 +72,9 @@ module.exports.custom = {
   fromName: 'The NEW_APP_NAME Team',
 
   // Email address for receiving support messages & other correspondences.
+  // > If you're using the default privacy policy, this will be referenced
+  // > as the contact email of your "data protection officer" for the purpose
+  // > of compliance with regulations such as GDPR.
   internalEmailAddress: 'support+development@example.com',
 
   // Whether to require proof of email address ownership any time a new user
@@ -88,8 +100,7 @@ module.exports.custom = {
   * Any other custom config this Sails app should use during development.    *
   *                                                                          *
   ***************************************************************************/<% if (!caviar) { %>
-  // mailgunDomain: 'transactional-mail.example.com',
-  // mailgunSecret: 'key-testkeyb183848139913858e8abd9a3',
+  // sendgridSecret: 'SG.fake.3e0Bn0qSQVnwb1E4qNPz9JZP5vLZYqjh7sn8S93oSHU',
   // stripeSecret: 'sk_test_Zzd814nldl91104qor5911gjald',<% } %>
   // …
 

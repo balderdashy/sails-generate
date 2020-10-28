@@ -1,7 +1,5 @@
 /**
- * custom hook
- *
- * @description :: A hook definition.  Extends Sails by adding shadow routes, implicit actions, and/or initialization logic.
+ * @description :: The conventional "custom" hook.  Extends this app with custom server-start-time and request-time logic.
  * @docs        :: https://sailsjs.com/docs/concepts/extending-sails/hooks
  */
 
@@ -14,17 +12,17 @@ module.exports = function defineCustomHook(sails) {
      */
     initialize: async function () {
 
-      sails.log.info('Initializing hook... (`api/hooks/custom`)');
+      sails.log.info('Initializing project hook... (`api/hooks/custom/`)');
 
-      // Check Stripe/Mailgun configuration (for billing and emails).
+      // Check Stripe/Sendgrid configuration (for billing and emails).
       var IMPORTANT_STRIPE_CONFIG = ['stripeSecret', 'stripePublishableKey'];
-      var IMPORTANT_MAILGUN_CONFIG = ['mailgunSecret', 'mailgunDomain', 'internalEmailAddress'];
+      var IMPORTANT_SENDGRID_CONFIG = ['sendgridSecret', 'internalEmailAddress'];
       var isMissingStripeConfig = _.difference(IMPORTANT_STRIPE_CONFIG, Object.keys(sails.config.custom)).length > 0;
-      var isMissingMailgunConfig = _.difference(IMPORTANT_MAILGUN_CONFIG, Object.keys(sails.config.custom)).length > 0;
+      var isMissingSendgridConfig = _.difference(IMPORTANT_SENDGRID_CONFIG, Object.keys(sails.config.custom)).length > 0;
 
-      if (isMissingStripeConfig || isMissingMailgunConfig) {
+      if (isMissingStripeConfig || isMissingSendgridConfig) {
 
-        let missingFeatureText = isMissingStripeConfig && isMissingMailgunConfig ? 'billing and email' : isMissingStripeConfig ? 'billing' : 'email';
+        let missingFeatureText = isMissingStripeConfig && isMissingSendgridConfig ? 'billing and email' : isMissingStripeConfig ? 'billing' : 'email';
         let suffix = '';
         if (_.contains(['silly'], sails.config.log.level)) {
           suffix =
@@ -49,11 +47,8 @@ module.exports = function defineCustomHook(sails) {
         if (sails.config.custom.stripePublishableKey === undefined) {
           problems.push('No `sails.config.custom.stripePublishableKey` was configured.');
         }
-        if (sails.config.custom.mailgunSecret === undefined) {
-          problems.push('No `sails.config.custom.mailgunSecret` was configured.');
-        }
-        if (sails.config.custom.mailgunDomain === undefined) {
-          problems.push('No `sails.config.custom.mailgunDomain` was configured.');
+        if (sails.config.custom.sendgridSecret === undefined) {
+          problems.push('No `sails.config.custom.sendgridSecret` was configured.');
         }
         if (sails.config.custom.internalEmailAddress === undefined) {
           problems.push('No `sails.config.custom.internalEmailAddress` was configured.');
@@ -76,16 +71,15 @@ will be disabled and/or hidden in the UI.
       sails.config.custom.enableBillingFeatures = !isMissingStripeConfig;
 
       // After "sails-hook-organics" finishes initializing, configure Stripe
-      // and Mailgun packs with any available credentials.
+      // and Sendgrid packs with any available credentials.
       sails.after('hook:organics:loaded', ()=>{
 
         sails.helpers.stripe.configure({
           secret: sails.config.custom.stripeSecret
         });
 
-        sails.helpers.mailgun.configure({
-          secret: sails.config.custom.mailgunSecret,
-          domain: sails.config.custom.mailgunDomain,
+        sails.helpers.sendgrid.configure({
+          secret: sails.config.custom.sendgridSecret,
           from: sails.config.custom.fromEmailAddress,
           fromName: sails.config.custom.fromName,
         });
@@ -137,19 +131,23 @@ will be disabled and/or hidden in the UI.
             }//ﬁ
 
             // Next, if we're running in our actual "production" or "staging" Sails
-            // environment, check if this is a GET request via some other subdomain,
-            // for example something like `webhooks.` or `click.`.  If so, we'll
+            // environment, check if this is a GET request via some other host,
+            // for example a subdomain like `webhooks.` or `click.`.  If so, we'll
             // automatically go ahead and redirect to the corresponding path under
             // our base URL, which is environment-specific.
             // > Note that we DO NOT redirect virtual socket requests and we DO NOT
             // > redirect non-GET requests (because it can confuse some 3rd party
-            // > platforms that send webhook requests.)
-            var configuredBaseSubdomain;
+            // > platforms that send webhook requests.)  We also DO NOT redirect
+            // > requests in other environments to allow for flexibility during
+            // > development (e.g. so you can preview an app running locally on
+            // > your laptop using a local IP address or a tool like ngrok, in
+            // > case you want to run it on a real, physical mobile/IoT device)
+            var configuredBaseHostname;
             try {
-              configuredBaseSubdomain = url.parse(sails.config.custom.baseUrl).host.match(/^([^\.]+)\./)[1];
+              configuredBaseHostname = url.parse(sails.config.custom.baseUrl).host;
             } catch (unusedErr) { /*…*/}
-            if ((sails.config.environment === 'staging' || sails.config.environment === 'production') && !req.isSocket && req.method === 'GET' && req.subdomains[0] !== configuredBaseSubdomain) {
-              sails.log.info('Redirecting GET request from `'+req.subdomains[0]+'.` subdomain...');
+            if ((sails.config.environment === 'staging' || sails.config.environment === 'production') && !req.isSocket && req.method === 'GET' && req.hostname !== configuredBaseHostname) {
+              sails.log.info('Redirecting GET request from `'+req.hostname+'` to configured expected host (`'+configuredBaseHostname+'`)...');
               return res.redirect(sails.config.custom.baseUrl+req.url);
             }//•
 
@@ -217,11 +215,7 @@ will be disabled and/or hidden in the UI.
 
               // Exclude any fields corresponding with attributes that have `protect: true`.
               var sanitizedUser = _.extend({}, loggedInUser);
-              for (let attrName in User.attributes) {
-                if (User.attributes[attrName].protect) {
-                  delete sanitizedUser[attrName];
-                }
-              }//∞
+              sails.helpers.redactUser(sanitizedUser);
 
               // If there is still a "password" in sanitized user data, then delete it just to be safe.
               // (But also log a warning so this isn't hopelessly confusing.)

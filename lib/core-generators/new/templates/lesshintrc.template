@@ -7,7 +7,7 @@
   // selector and CSS rule issues.
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // For more information about any of the rules below, check out the reference page
-  // of all rules at https://github.com/lesshint/lesshint/blob/v4.6.4/lib/linters/README.md
+  // of all rules at https://github.com/lesshint/lesshint/blob/v6.3.6/lib/linters/README.md
   // If you're unsure or could use some advice, come by https://sailsjs.com/support.
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   "singleLinePerSelector": false,
@@ -41,6 +41,6 @@
   // In this case, the ampersand has a distinct meaning, and it does not refer
   // to an element.  (It's referring to the case where that class is matched at
   // the parent level, rather than talking about a descendant.)
-  // https://github.com/lesshint/lesshint/blob/v4.6.4/lib/linters/README.md#qualifyingelement
+  // https://github.com/lesshint/lesshint/blob/v6.3.6/lib/linters/README.md#qualifyingelement
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }

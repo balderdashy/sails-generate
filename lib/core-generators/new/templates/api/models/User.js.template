@@ -36,7 +36,8 @@ email status until they click the link in the confirmation email.`
 
     emailChangeCandidate: {
       type: 'string',
-      description: 'A still-unconfirmed email address that this user wants to change to.'
+      isEmail: true,
+      description: 'A still-unconfirmed email address that this user wants to change to (if relevant).'
     },
 
     password: {
