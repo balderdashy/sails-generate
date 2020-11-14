@@ -127,7 +127,7 @@ module.exports = {
     var path = require('path');
     var url = require('url');
     var util = require('util');
-
+    var nodemailer = require('nodemailer');
 
     if (!_.startsWith(path.basename(template), 'email-')) {
       sails.log.warn(
@@ -205,6 +205,26 @@ module.exports = {
         'Body:\n'+
         htmlEmailContents+'\n'+
         '-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-'
+      );
+    } else if (sails.config.environment === 'development' && sails.config.custom.mailtrap) {
+      // Send an email using Mailtrap in development environment
+
+      var transport = nodemailer.createTransport(sails.config.custom.mailtrap);
+
+      var fromNameString = fromName || sails.config.custom.fromName;
+      var fromEmailString = from || sails.config.custom.fromEmailAddress;
+      var message = {
+        from: fromNameString ? `"${sails.config.custom.fromName}" <${sails.config.custom.fromEmailAddress}>` : fromEmailString,
+        to: toName ? `"${toName}" <${to}>` : inputs.to,
+        bcc,
+        subject: inputs.subject,
+        html: htmlEmailContents,
+        attachments
+      }
+      var info = await transport.sendMail(message);
+
+      sails.log.info(
+        `Message ${info.messageId} was sent via MailTrap in Development`
       );
     } else {
       // Otherwise, we'll check that all required Mailgun credentials are set up
