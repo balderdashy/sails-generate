@@ -215,7 +215,7 @@ module.exports = {
       var fromEmailString = from || sails.config.custom.fromEmailAddress;
       var message = {
         from: fromNameString ? `"${sails.config.custom.fromName}" <${sails.config.custom.fromEmailAddress}>` : fromEmailString,
-        to: toName ? `"${toName}" <${to}>` : inputs.to,
+        to: toName ? `"${toName}" <${to}>` : to,
         bcc,
         subject: inputs.subject,
         html: htmlEmailContents,
