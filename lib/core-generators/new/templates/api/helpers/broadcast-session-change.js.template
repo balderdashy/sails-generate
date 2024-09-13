@@ -28,7 +28,7 @@ module.exports = {
 
   fn: async function ({ req }) {
 
-    // If there's no sessionID, we don't need to broadcase a message about the old session.
+    // If there's no sessionID, we don't need to broadcast a message about the old session.
     if(!req.sessionID) {
       return;
     }
