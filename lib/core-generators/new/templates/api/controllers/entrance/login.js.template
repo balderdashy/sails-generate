@@ -87,26 +87,32 @@ and exposed as \`req.me\`.)`
     await sails.helpers.passwords.checkPassword(password, userRecord.password)
     .intercept('incorrect', 'badCombo');
 
-    // If "Remember Me" was enabled, then keep the session alive for
-    // a longer amount of time.  (This causes an updated "Set Cookie"
-    // response header to be sent as the result of this request -- thus
-    // we must be dealing with a traditional HTTP request in order for
-    // this to work.)
-    if (rememberMe) {
-      if (this.req.isSocket) {
-        sails.log.warn(
-          'Received `rememberMe: true` from a virtual request, but it was ignored\n'+
-          'because a browser\'s session cookie cannot be reset over sockets.\n'+
-          'Please use a traditional HTTP request instead.'
-        );
-      } else {
-        this.req.session.cookie.maxAge = sails.config.custom.rememberMeCookieMaxAge;
-      }
-    }//ﬁ
+    // Regenerate the session upon login: this prevents a class of Session fixation
+    // attacks, including CSRF token fixation.
+    await new Promise((resolve, reject) => {
+      this.req.session.regenerate(function(err) {
+        this.req.session.userId = userRecord.id;
 
-    // Modify the active session instance.
-    // (This will be persisted when the response is sent.)
-    this.req.session.userId = userRecord.id;
+        // If "Remember Me" was enabled, then keep the session alive for
+        // a longer amount of time.  (This causes an updated "Set Cookie"
+        // response header to be sent as the result of this request -- thus
+        // we must be dealing with a traditional HTTP request in order for
+        // this to work.)
+        if (rememberMe) {
+          if (this.req.isSocket) {
+            sails.log.warn(
+              'Received `rememberMe: true` from a virtual request, but it was ignored\n'+
+              'because a browser\'s session cookie cannot be reset over sockets.\n'+
+              'Please use a traditional HTTP request instead.'
+            );
+          } else {
+            this.req.session.cookie.maxAge = sails.config.custom.rememberMeCookieMaxAge;
+          }
+        }
+
+        resolve();
+      }.bind(this));
+    });
 
     // In case there was an existing session (e.g. if we allow users to go to the login page
     // when they're already logged in), broadcast a message that we can display in other open tabs.

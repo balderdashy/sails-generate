@@ -98,12 +98,17 @@ the account verification message.)`,
       });
     }
 
-    // Store the user's new id in their session.<% if (verbose) {%>
+    // Regenerate the session and store the user's new id in their session.<% if (verbose) {%>
     // > We can use this (`req.session.userId`) to authenticate this user's future
     // > requests-- i.e. to tell that they came from from a "logged in" user, and
     // > from _this_ user, in particular.  (That'll work until their session expires,
     // > we log them out, or they clear their cookies.)<% }%>
-    this.req.session.userId = newUserRecord.id;
+    await new Promise((resolve, reject) => {
+      this.req.session.regenerate(function(err) {
+        this.req.session.userId = newUserRecord.id;
+        resolve();
+      }.bind(this));
+    });
 
     // In case there was an existing session (e.g. if we allow users to go to the signup page
     // when they're already logged in), broadcast a message that we can display in other open tabs.
