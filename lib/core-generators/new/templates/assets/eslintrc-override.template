@@ -52,7 +52,7 @@
     // ...etc.
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    // Make sure backend globals aren't indadvertently tolerated in our client-side JS:
+    // Make sure backend globals aren't inadvertently tolerated in our client-side JS:
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     "sails": false<%
     if (!caviar && !_.contains(without,'lodash')) { %>,

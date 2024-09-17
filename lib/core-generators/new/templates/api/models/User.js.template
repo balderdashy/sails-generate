@@ -109,7 +109,7 @@ It just means they have a customer entry in Stripe, which might or might not hav
       type: 'boolean',
       description: 'Whether this user has a default billing card hooked up as their payment method.',
       extendedDescription:
-`More specifically, this indcates whether this user record's linked customer entry in Stripe has
+`More specifically, this indicates whether this user record's linked customer entry in Stripe has
 a default payment source (i.e. credit card).  Note that a user have a \`stripeCustomerId\`
 without necessarily having a billing card.`
     },
