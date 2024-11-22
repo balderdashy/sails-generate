@@ -10,7 +10,6 @@
     "@sailshq/lodash": "^3.10.3",
     "async": "2.6.4",
     "chalk": "2.3.0",
-    "cross-spawn": "4.0.2",
     "flaverr": "^1.0.0",
     "fs-extra": "0.30.0",
     "machinepack-process": "^4.0.0",
