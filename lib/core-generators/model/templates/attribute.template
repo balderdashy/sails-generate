@@ -8,7 +8,14 @@
  *
  */
 %>
-<%if (lang === 'js') {%>    <%= name %>: { type: '<%= type %>' }
+<% if (lang === 'js') { %>
+<%= name %>: { 
+  <% if(type.includes(['[',']')) { %>
+  collection: '<%= type.replace('[','').replace(']','').toLowerCase() %>'
+  <% } else { %>
+  type: '<%= type %>'
+  <% } %>
+}
 <%} else if (lang === 'coffee'){ %>    <%=name%>:
     type: '<%= type %>'
 <%}%>
