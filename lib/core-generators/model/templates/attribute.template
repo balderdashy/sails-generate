@@ -10,15 +10,21 @@
 %>
 <% if (lang === 'js') { %>
   <%= name %>: { 
-  <% if(type.includes(['[',']')) { %>
-    collection: '<%= type.replace('[','').replace(']','').toLowerCase() %>'
+  <%
+    if(type.includes(['[',']')) { 
+    type = type.replace('[','').replace(']','').toLowerCase();
+  %>
+    <% if(type[type.length-1] == 's') { %>collection:<% } else { %>model:<% } %> '<%= type %>'
   <% } else { %>
     type: '<%= type %>'
   <% } %>
 }
 <%} else if (lang === 'coffee'){ %>    <%=name%>:
-<% if(type.includes(['[',']')) { %>
-    collection: '<%= type.replace('[','').replace(']','').toLowerCase() %>'
+<% 
+    if(type.includes(['[',']')) {
+    type = type.replace('[','').replace(']','').toLowerCase();
+%>
+    <% if(type[type.length-1] == 's') { %>collection:<% } else { %>model:<% } %> '<%= type %>'
   <% } else { %>
     type: '<%= type %>'
   <% } %>
