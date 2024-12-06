@@ -9,13 +9,17 @@
  */
 %>
 <% if (lang === 'js') { %>
-<%= name %>: { 
+  <%= name %>: { 
   <% if(type.includes(['[',']')) { %>
-  collection: '<%= type.replace('[','').replace(']','').toLowerCase() %>'
+    collection: '<%= type.replace('[','').replace(']','').toLowerCase() %>'
   <% } else { %>
-  type: '<%= type %>'
+    type: '<%= type %>'
   <% } %>
 }
 <%} else if (lang === 'coffee'){ %>    <%=name%>:
+<% if(type.includes(['[',']')) { %>
+    collection: '<%= type.replace('[','').replace(']','').toLowerCase() %>'
+  <% } else { %>
     type: '<%= type %>'
+  <% } %>
 <%}%>
