@@ -14,7 +14,7 @@
     if(type.includes(['[',']')) { 
     type = type.replace('[','').replace(']','').toLowerCase();
   %>
-    <% if(type[type.length-1] == 's') { %>collection:<% } else { %>model:<% } %> '<%= type %>'
+    <% if(name[name.length-1] == 's') { %>collection:<% } else { %>model:<% } %> '<%= type %>'
   <% } else { %>
     type: '<%= type %>'
   <% } %>
@@ -24,7 +24,7 @@
     if(type.includes(['[',']')) {
     type = type.replace('[','').replace(']','').toLowerCase();
 %>
-    <% if(type[type.length-1] == 's') { %>collection:<% } else { %>model:<% } %> '<%= type %>'
+    <% if(name[name.length-1] == 's') { %>collection:<% } else { %>model:<% } %> '<%= type %>'
   <% } else { %>
     type: '<%= type %>'
   <% } %>
