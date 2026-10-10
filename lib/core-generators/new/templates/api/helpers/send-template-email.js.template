@@ -134,7 +134,7 @@ module.exports = {
   },
 
 
-  fn: async function({template, templateData, to, toName, subject, from, fromName, layout, ensureAck, bcc, attachments}) {
+  fn: async function({template, templateData, to, toName, replyTo, subject, from, fromName, layout, ensureAck, bcc, attachments}) {
 
     var path = require('path');
     var url = require('url');
