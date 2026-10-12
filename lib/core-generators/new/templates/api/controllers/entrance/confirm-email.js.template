@@ -10,6 +10,13 @@ then redirect to either a special landing page (for newly-signed up users), or t
 (for existing users who just changed their email address).`,
 
 
+  sideEffects: '',
+  // ^ Sometimes it is handy to bind this action to 'GET /email/confirm' for a nice UX.
+  // This `''` (as opposed to `sideEffects: 'cacheable'`) indicates there are side effects,
+  // which can be useful for declaring what actions are truly read-only, for example when
+  // using Sails as an MCP server.
+
+
   inputs: {
 
     token: {

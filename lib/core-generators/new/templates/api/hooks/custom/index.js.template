@@ -142,11 +142,14 @@ will be disabled and/or hidden in the UI.
             // > development (e.g. so you can preview an app running locally on
             // > your laptop using a local IP address or a tool like ngrok, in
             // > case you want to run it on a real, physical mobile/IoT device)
+            // > We also skip requests with no hostname at all: those are virtual
+            // > requests from inside the app itself (e.g. a hook calling one of
+            // > the app's own actions), and redirecting them would just break them.
             var configuredBaseHostname;
             try {
               configuredBaseHostname = url.parse(sails.config.custom.baseUrl).host;
             } catch (unusedErr) { /*…*/}
-            if ((sails.config.environment === 'staging' || sails.config.environment === 'production') && !req.isSocket && req.method === 'GET' && req.hostname !== configuredBaseHostname) {
+            if ((sails.config.environment === 'staging' || sails.config.environment === 'production') && !req.isSocket && req.method === 'GET' && req.hostname && req.hostname !== configuredBaseHostname) {
               sails.log.info('Redirecting GET request from `'+req.hostname+'` to configured expected host (`'+configuredBaseHostname+'`)...');
               return res.redirect(sails.config.custom.baseUrl+req.url);
             }//•

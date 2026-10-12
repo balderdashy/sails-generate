@@ -7,6 +7,13 @@ module.exports = {
   description: 'Log out of this app.',
 
 
+  sideEffects: '',
+  // ^ Sometimes it is handy to bind this action to 'GET /logout' for convenience.
+  // This `''` (as opposed to `sideEffects: 'cacheable'`) indicates there are side effects,
+  // which can be useful for declaring what actions are truly read-only, for example when
+  // using Sails as an MCP server.
+
+
   extendedDescription:
 `This action deletes the \`req.session.userId\` key from the session of the requesting user agent.
 Actual garbage collection of session data depends on this app's session store, and
